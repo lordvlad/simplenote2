@@ -184,8 +184,8 @@
       this.timeout = null;
       this.interval = null;
       this.root = null;
-      this.element = $(element);
-      this.pop = this.element.find("audio");
+      this.element = null;
+      this.pop = null;
       this.current = obs(null);
       this.nodes = obs([]);
       this.tags = obs([]);
@@ -493,17 +493,19 @@
 
   }).call(this);
 
-  (function($, model) {
+  (function($, view, model) {
     return $(function() {
       $.extend(true, window, {
         SimpleNote: SimpleNote,
         Node: Node
       });
+      model.element = $(view);
+      model.pop = $('audio', view);
       ko.applyBindings(model, model.element[0]);
       model.revive();
       model.applyKeyBindings();
       return model.startPeriodicalSave();
     });
-  })(jQuery, window.note = new SimpleNote("body"));
+  })(jQuery, "body", window.note = new SimpleNote);
 
 }).call(this);

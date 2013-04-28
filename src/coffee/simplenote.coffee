@@ -8,8 +8,8 @@ class SimpleNote
     @timeout = null
     @interval = null
     @root = null
-    @element = $( element )
-    @pop = @element.find "audio"
+    @element = null
+    @pop = null
     # observable variable
     @current = obs null
     # observable Arrays

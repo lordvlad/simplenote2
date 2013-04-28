@@ -1,5 +1,5 @@
 # jquery closure
-do ( $ = jQuery, model = window.note = new SimpleNote "body" ) ->
+do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
   # jquery onload event
   $ ->
     # extend window with simplenote classes
@@ -7,6 +7,9 @@ do ( $ = jQuery, model = window.note = new SimpleNote "body" ) ->
       SimpleNote  : SimpleNote
       Node    : Node
     }
+    # attach view to model
+    model.element = $( view )
+    model.pop = $( 'audio', view )
     # apply knockout bindings
     ko.applyBindings model, model.element[0]
     # revive model
