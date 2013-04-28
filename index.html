@@ -28,32 +28,18 @@
     <script src="lib/wre/wre.knockout.bindingHandlers.js"></script>
     <script src="lib/wre/wre.knockout.extenders.js"></script>
     <script src="lib/wre/wre.knockout.filter.js"></script>
+    <script src="lib/wre/wre.jquery.inject.js"></script>
+    <!-- inject knockout templates -->
+    <script>
+      $.injectScript(
+        {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"},
+        {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"}
+      );
+    </script>
 		<!-- own stylesheets -->
     
     <!-- own scripts -->
     
-    <!-- knockout templates -->
-    <script type="text/html" id="nodeTemplate"></script>
-    <script type="text/html" id="actionsTemplate"></script>
-    
-    <!-- load the knockout templates -->
-    <script>      
-      (function($, window){ 
-        var templates = ["#actionsTemplate", "#nodeTemplate"],
-          deferredtemplates = [], 
-          readytemplates = templates.length;
-        window.deferredtemplates = deferredtemplates;
-        window.templatesReady = $.Deferred();
-        $.each( templates, function(i,n){
-          deferredtemplates[i] = $.Deferred();
-          $( n ).load( "tmpl/"+n.replace("#","")+".html", function(){ deferredtemplates[i].resolve(); } );
-        });
-        $.when.apply( $, deferredtemplates ).done( function(){
-          console.log("ready");
-        });
-        
-      }(jQuery,window));
-    </script>
   </head>
   <body>
 
