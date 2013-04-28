@@ -4,32 +4,28 @@
 class Node
   constructor : ( options ) ->
     # simple variables
-    @smplnt = options.smplnt
+    @smplnt = options?.smplnt || window.note
     @id = uuid()
     # observable variables      
-    @parent = obs options.parent or null
     @title = obs ""
     @title.extend parse : Node.parseHeadline
-    @note = obs ""
-    @note.extend parse : Node.parseNote
+    @notes = obs ""
+    @notes.extend parse : Node.parseNote
     @deadline = obs null
     @deadline.extend parse : Node.parseDate
     @bookmarked = obs false
+    @selected = obs false
     @done = obs false
     @expanded = obs false
     @listStyleType = obs []
-    @position = obs 0
     @editingTitle = obs false
     @editingNote = obs false
-    @selected = obs false
-    @current = obs false
     # observable arrays  
-    @parents = obs []
+    @children = obs []
     @tags = obs []
     @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
     @files = obs []
-    @children = obs []
-    @hasNote = obs => @note().length
+    @hasNote = obs => @notes().length
     @hasChildren = obs => @children.length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
     @bullet = obs => ( @hasNote() or @hasChildren ) and ( not @expanded() and "&#9658;" or @expanded() and "&#9660" ) or "&9679;"
@@ -43,6 +39,10 @@ class Node
     
     # push self to simplenote nodes
     @smplnt.nodes.push @
+    # push self to parent
+    if options?.parent
+      options.parent.children.push @
+    @
     
   alarm : ->
     @deadline null
@@ -50,7 +50,7 @@ class Node
     alert @title()
     return ""
   editTags : ( n, e ) =>
-    $("#tagsMenu")
+    @smplnt.$tagsMenu
       .trigger "position", e.target
       .on "menuselect", (e, ui) ->
         return unless ui and ui.item
@@ -58,17 +58,26 @@ class Node
   
   
   toJSON : =>
-    $.extend ko.toJS @, { __constructor : 'Node' }
+    {
+      __constructor : 'Node'
+      id : @id
+      title : @title()
+      notes : @notes()
+      deadline : @deadline()
+      bookmarked : @bookmarked()
+      done : @done()
+      expanded : @expanded()
+      listStyleType : @listStyleType()
+      children : @children()
+    }
   
   # STATIC revive from JSON data
   # @param {Object} data json object containting all needed data
   @fromJSON : ( data ) =>
-    instance = new @
+    delete data.__constructor
+    instance = new Node
     koMap instance, data
-  # STATIC parseNote
+  # STATIC parser functions
   @parseNote : (v) => v
   @parseHeadline : (v) => v
   @parseDate : (v) => v = new Date v; v = null if not isDate v; v
-  
-  
-  

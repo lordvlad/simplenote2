@@ -8,10 +8,9 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
       Node    : Node
     }
     # attach view to model
-    model.element = $( view )
-    model.pop = $( 'audio', view )
+    model.attachElements view
     # apply knockout bindings
-    ko.applyBindings model, model.element[0]
+    ko.applyBindings model, model.view
     # revive model
     model.revive()
     # apply key bindings

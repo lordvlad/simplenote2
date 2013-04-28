@@ -17,13 +17,30 @@ class SimpleNote
     @tags = obs []
     @selectedNodes = obs => @nodes.filter 'selected'
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
-    @breadcrumbs = obs => @current.parents?()
+    @breadcrumbs = obs =>
+      crumbs = []
+      getParent = (node) =>
+        p = @nodes.find (n)->n.children.has( node );
+        if p
+          crumbs.push node
+          console.log p 
+          # getParent(node)
+      getParent( @current() )
+      crumbs
+      
     @
       
+      
+  attachElements : ( view ) =>
+    @$view = $( view )
+    @view = @$view[ 0 ]
+    @pop = $( 'audio', view )[0]
+    @$tagsMenu = $( '#tagsMenu', view )
+
   # only return nodes and tags on serialization
   toJSON : =>
-    return {
-      nodes   : @nodes()
+    {
+      root   : @root
       tags  : @tags()
     }
     
@@ -31,10 +48,10 @@ class SimpleNote
   # @param {Object} data json object containting all needed data
   revive : =>
     if data = store.get "simpleNote", true
-      koMap @, data
-      @root = @nodes.find("id","simpleNoteRoot")
+      @root = data.nodes
+      @tags data.tags
     else 
-      root = new Node { smplnt : @ }
+      root = new Node
       root.id = "simpleNoteRoot"
       @root = root
     @current @root
@@ -42,20 +59,22 @@ class SimpleNote
   
   # saves own data to localStorage
   save : =>
-    timout.clear @timeout
-    @timeout = timeout.set 100, -> store.set @id, @
+    timeout.clear @timeout
+    @timeout = timeout.set 100, => store.set "simpleNote", @toJSON()
     @
   
   # apply keyBindings
-  applyKeyBindings : =>
-    @element.on "click", ".headline", (e)->
+  applyKeyBindings : ->
+    @$view.on "click", ".headline", (e)->
       $t = $ e.target
       $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .ellipsis, .additional")
-    # @element.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
-    @element.on "keyup, click", => @save()
+    # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
+    @$view.on "keyup, click", => @save()
+    @
   
   # functions on self
   startPeriodicalSave : ->
+    @save()
     @interval = interval.set 6e4, @save
     @
   stopPeriodicalSave : ->
@@ -92,11 +111,10 @@ class SimpleNote
   # functions that create nodes
   addNodeTo : ( parent, options ) =>
     options = {} unless isObj options
-    self = @
-    Node $.extend options, { parent: parent, smplnt: self }
-  insertNodeHere : ( options ) ->
+    new Node $.extend options, { parent: parent }
+  addNodeHere : ( options ) =>
     @addNodeTo @current(), options
-  insertNodeAfter : ( node, options ) ->
+  insertNodeAfter : ( node, options ) =>
     @addNodeTo @current().parent(), options
   
   

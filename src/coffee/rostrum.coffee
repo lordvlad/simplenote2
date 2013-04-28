@@ -1,3 +1,11 @@
+# borrow from jQuery
+isFn = jQuery.isFunction
+isArr = jQuery.isArray
+isObj = jQuery.isPlainObject
+isNum = jQuery.isNumeric
+isStr = ( v ) -> typeof v is "string"
+isDate = ( v ) -> if Object.prototype.toString.call(v) isnt '[object Date]' then return false else return not isNaN v.getTime()
+
 # setTimeout and interval
 timeout =
   set : ( ms, fn ) -> setTimeout fn, ms
@@ -8,14 +16,14 @@ interval =
 
 # create storage
 store = 
-  set : ( key, val ) -> localStorage.setItem key, ( if isString val then val else JSON.stringify val )
+  set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
   get : ( key, rev ) -> ret = localStorage.getItem key; if rev then JSON.parse ret, revive else JSON.parse ret
   remove : ( key ) -> localStorage.removeItem key
   
 # revive objects
 revive = ( key, value ) ->
   if value and value.__constructor and ( c = window[ value.__constructor ] or revive.constructors[ value.class ] ) and typeof c.fromJSON is "function" 
-    cl.fromJSON( value )
+    c.fromJSON( value )
   else value
 revive.constructors = []
   
@@ -43,14 +51,6 @@ time = do() ->
   a = obs 0
   interval.set 1e3, ->a new Date
   a
-
-# borrow from jQuery
-isFn = jQuery.isFunction
-isArr = jQuery.isArray
-isObj = jQuery.isPlainObject
-isNum = jQuery.isNumeric
-isStr = ( v ) -> typeof v is "string"
-isDate = ( v ) -> if Object.prototype.toString.call(v) isnt '[object Date]' then return false else return not isNaN v.getTime()
   
 # get length of an object, array or string
 sizeOf = ( v ) ->

@@ -4,6 +4,26 @@
     __hasProp = {}.hasOwnProperty,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+  isFn = jQuery.isFunction;
+
+  isArr = jQuery.isArray;
+
+  isObj = jQuery.isPlainObject;
+
+  isNum = jQuery.isNumeric;
+
+  isStr = function(v) {
+    return typeof v === "string";
+  };
+
+  isDate = function(v) {
+    if (Object.prototype.toString.call(v) !== '[object Date]') {
+      return false;
+    } else {
+      return !isNaN(v.getTime());
+    }
+  };
+
   timeout = {
     set: function(ms, fn) {
       return setTimeout(fn, ms);
@@ -24,7 +44,7 @@
 
   store = {
     set: function(key, val) {
-      return localStorage.setItem(key, (isString(val) ? val : JSON.stringify(val)));
+      return localStorage.setItem(key, (isStr(val) ? val : JSON.stringify(val)));
     },
     get: function(key, rev) {
       var ret;
@@ -45,7 +65,7 @@
     var c;
 
     if (value && value.__constructor && (c = window[value.__constructor] || revive.constructors[value["class"]]) && typeof c.fromJSON === "function") {
-      return cl.fromJSON(value);
+      return c.fromJSON(value);
     } else {
       return value;
     }
@@ -99,26 +119,6 @@
     return a;
   })();
 
-  isFn = jQuery.isFunction;
-
-  isArr = jQuery.isArray;
-
-  isObj = jQuery.isPlainObject;
-
-  isNum = jQuery.isNumeric;
-
-  isStr = function(v) {
-    return typeof v === "string";
-  };
-
-  isDate = function(v) {
-    if (Object.prototype.toString.call(v) !== '[object Date]') {
-      return false;
-    } else {
-      return !isNaN(v.getTime());
-    }
-  };
-
   sizeOf = function(v) {
     var k;
 
@@ -164,6 +164,8 @@
 
   SimpleNote = (function() {
     function SimpleNote(element) {
+      this.insertNodeAfter = __bind(this.insertNodeAfter, this);
+      this.addNodeHere = __bind(this.addNodeHere, this);
       this.addNodeTo = __bind(this.addNodeTo, this);
       this.textEmbed = __bind(this.textEmbed, this);
       this.textLink = __bind(this.textLink, this);
@@ -175,10 +177,10 @@
       this.selectionInvert = __bind(this.selectionInvert, this);
       this.selectionUnselect = __bind(this.selectionUnselect, this);
       this.selectionRemove = __bind(this.selectionRemove, this);
-      this.applyKeyBindings = __bind(this.applyKeyBindings, this);
       this.save = __bind(this.save, this);
       this.revive = __bind(this.revive, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.attachElements = __bind(this.attachElements, this);
       var _this = this;
 
       this.timeout = null;
@@ -196,16 +198,36 @@
         return _this.nodes.filter('bookmarked');
       });
       this.breadcrumbs = obs(function() {
-        var _base;
+        var crumbs, getParent;
 
-        return typeof (_base = _this.current).parents === "function" ? _base.parents() : void 0;
+        crumbs = [];
+        getParent = function(node) {
+          var p;
+
+          p = _this.nodes.find(function(n) {
+            return n.children.has(node);
+          });
+          if (p) {
+            crumbs.push(node);
+            return console.log(p);
+          }
+        };
+        getParent(_this.current());
+        return crumbs;
       });
       this;
     }
 
+    SimpleNote.prototype.attachElements = function(view) {
+      this.$view = $(view);
+      this.view = this.$view[0];
+      this.pop = $('audio', view)[0];
+      return this.$tagsMenu = $('#tagsMenu', view);
+    };
+
     SimpleNote.prototype.toJSON = function() {
       return {
-        nodes: this.nodes(),
+        root: this.root,
         tags: this.tags()
       };
     };
@@ -214,12 +236,10 @@
       var data, root;
 
       if (data = store.get("simpleNote", true)) {
-        koMap(this, data);
-        this.root = this.nodes.find("id", "simpleNoteRoot");
+        this.root = data.nodes;
+        this.tags(data.tags);
       } else {
-        root = new Node({
-          smplnt: this
-        });
+        root = new Node;
         root.id = "simpleNoteRoot";
         this.root = root;
       }
@@ -228,9 +248,11 @@
     };
 
     SimpleNote.prototype.save = function() {
-      timout.clear(this.timeout);
+      var _this = this;
+
+      timeout.clear(this.timeout);
       this.timeout = timeout.set(100, function() {
-        return store.set(this.id, this);
+        return store.set("simpleNote", _this.toJSON());
       });
       return this;
     };
@@ -238,7 +260,7 @@
     SimpleNote.prototype.applyKeyBindings = function() {
       var _this = this;
 
-      this.element.on("click", ".headline", function(e) {
+      this.$view.on("click", ".headline", function(e) {
         var $t;
 
         $t = $(e.target);
@@ -246,12 +268,14 @@
           return $t.parents(".headline").find("title").focus();
         }
       });
-      return this.element.on("keyup, click", function() {
+      this.$view.on("keyup, click", function() {
         return _this.save();
       });
+      return this;
     };
 
     SimpleNote.prototype.startPeriodicalSave = function() {
+      this.save();
       this.interval = interval.set(6e4, this.save);
       return this;
     };
@@ -315,19 +339,15 @@
     SimpleNote.prototype.textEmbed = function() {};
 
     SimpleNote.prototype.addNodeTo = function(parent, options) {
-      var self;
-
       if (!isObj(options)) {
         options = {};
       }
-      self = this;
-      return Node($.extend(options, {
-        parent: parent,
-        smplnt: self
+      return new Node($.extend(options, {
+        parent: parent
       }));
     };
 
-    SimpleNote.prototype.insertNodeHere = function(options) {
+    SimpleNote.prototype.addNodeHere = function(options) {
       return this.addNodeTo(this.current(), options);
     };
 
@@ -378,15 +398,14 @@
       this.editTags = __bind(this.editTags, this);
       var _this = this;
 
-      this.smplnt = options.smplnt;
+      this.smplnt = (options != null ? options.smplnt : void 0) || window.note;
       this.id = uuid();
-      this.parent = obs(options.parent || null);
       this.title = obs("");
       this.title.extend({
         parse: Node.parseHeadline
       });
-      this.note = obs("");
-      this.note.extend({
+      this.notes = obs("");
+      this.notes.extend({
         parse: Node.parseNote
       });
       this.deadline = obs(null);
@@ -394,15 +413,13 @@
         parse: Node.parseDate
       });
       this.bookmarked = obs(false);
+      this.selected = obs(false);
       this.done = obs(false);
       this.expanded = obs(false);
       this.listStyleType = obs([]);
-      this.position = obs(0);
       this.editingTitle = obs(false);
       this.editingNote = obs(false);
-      this.selected = obs(false);
-      this.current = obs(false);
-      this.parents = obs([]);
+      this.children = obs([]);
       this.tags = obs([]);
       this.tags.extend({
         pickFrom: {
@@ -411,9 +428,8 @@
         }
       });
       this.files = obs([]);
-      this.children = obs([]);
       this.hasNote = obs(function() {
-        return _this.note().length;
+        return _this.notes().length;
       });
       this.hasChildren = obs(function() {
         return _this.children.length;
@@ -440,6 +456,10 @@
         }
       });
       this.smplnt.nodes.push(this);
+      if (options != null ? options.parent : void 0) {
+        options.parent.children.push(this);
+      }
+      this;
     }
 
     Node.prototype.alarm = function() {
@@ -450,7 +470,7 @@
     };
 
     Node.prototype.editTags = function(n, e) {
-      return $("#tagsMenu").trigger("position", e.target.on("menuselect", function(e, ui) {
+      return this.smplnt.$tagsMenu.trigger("position", e.target.on("menuselect", function(e, ui) {
         if (!(ui && ui.item)) {
           return;
         }
@@ -461,14 +481,24 @@
     };
 
     Node.prototype.toJSON = function() {
-      return $.extend(ko.toJS(this, {
-        __constructor: 'Node'
-      }));
+      return {
+        __constructor: 'Node',
+        id: this.id,
+        title: this.title(),
+        notes: this.notes(),
+        deadline: this.deadline(),
+        bookmarked: this.bookmarked(),
+        done: this.done(),
+        expanded: this.expanded(),
+        listStyleType: this.listStyleType(),
+        children: this.children()
+      };
     };
 
     Node.fromJSON = function(data) {
       var instance;
 
+      delete data.__constructor;
       instance = new Node;
       return koMap(instance, data);
     };
@@ -499,9 +529,8 @@
         SimpleNote: SimpleNote,
         Node: Node
       });
-      model.element = $(view);
-      model.pop = $('audio', view);
-      ko.applyBindings(model, model.element[0]);
+      model.attachElements(view);
+      ko.applyBindings(model, model.view);
       model.revive();
       model.applyKeyBindings();
       return model.startPeriodicalSave();

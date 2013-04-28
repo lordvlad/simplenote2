@@ -44,15 +44,20 @@
   <body>
     
     <div id="notebook">
-      <div id="breadcrumbs"></div>
+      <div id="breadcrumbs" data-bind="foreach: breadcrumbs, visible: current()!==root" >
+        <a data-bind="attr:{'href':'#'+id}, text: title" href=""></a>
+      </div>
       <div id="editOptions"></div>
       <div id="selectOptions"></div>
       <div id="topActions"></div>
-      <div id="sheet" class="node">
+      <div id="sheet" class="node" data-bind="with:current">
         <div class="body">
-          <div id="topNotes" class="notes"></div>
+          <div id="topNotes" class="notes" data-bind="html:notes"></div>
         </div>
         <div id="topChildren" class="children"></div>
+        <div id="addChild" data-bind="click: $root.addNodeHere">
+          <i class="icon-plus"></i>&nbsp;add something
+        </div>
       </div>
       <audio src="snd/pop.mp3"></audio>
     </div>
