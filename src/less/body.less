@@ -1,0 +1,38 @@
+@sheet : #eeeeee;
+@page : #dfdfdf;
+@text : #222222;
+
+body {
+  background-color: @page;
+  color: @text;
+}
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+.drop-shadow ( @color: #888 ){
+  box-shadow: 5px 5px 10px @color;
+}
+
+
+#notebook {
+  .rounded-corners;
+  .drop-shadow;
+  background-color: @sheet;
+  color: @text;
+  margin: 20px auto;
+  width: 800px;
+  min-height: 600px;
+  
+  #breadcrumbs {
+    margin: 1em;
+    padding: 0 0 .5em 0;
+    border-bottom: solid 1px grey;
+  }
+
+}
+  

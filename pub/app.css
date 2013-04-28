@@ -1,0 +1,22 @@
+body {
+  background-color: #dfdfdf;
+  color: #222222;
+}
+#notebook {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px #888888;
+  background-color: #eeeeee;
+  color: #222222;
+  margin: 20px auto;
+  width: 800px;
+  min-height: 600px;
+}
+#notebook #breadcrumbs {
+  margin: 1em;
+  padding: 0 0 .5em 0;
+  border-bottom: solid 1px grey;
+}

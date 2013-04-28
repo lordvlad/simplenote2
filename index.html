@@ -33,16 +33,29 @@
     <script>
       $.injectScript(
         {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"},
-        {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"}
+        {src: "tmpl/actionTemplate.html", type:"text/html", id:"actionTemplate"}
       );
     </script>
 		<!-- own stylesheets -->
-    
+    <link rel="stylesheet" href="pub/app.css" />
     <!-- own scripts -->
-    
+    <script src="pub/app.js" /></script>
   </head>
   <body>
-
+    
+    <div id="notebook">
+      <div id="breadcrumbs"></div>
+      <div id="editOptions"></div>
+      <div id="selectOptions"></div>
+      <div id="topActions"></div>
+      <div id="sheet" class="node">
+        <div class="body">
+          <div id="topNotes" class="notes"></div>
+        </div>
+        <div id="topChildren" class="children"></div>
+      </div>
+      <audio src="snd/pop.mp3"></audio>
+    </div>
 
   </body>
 </html>
