@@ -1,12 +1,14 @@
 fs         = require 'fs'
 {exec}     = require 'child_process'
 util       = require 'util'
+connect    = require 'connect'
 
 lessDir = 'src/less/'
 coffeeDir = 'src/coffee/'
 
 lessFiles = [
   "body"
+  "node"
 ]
 
 coffeeFiles = [
@@ -74,7 +76,7 @@ task 'buildCoffee', 'Build single js file from coffee source files', ->
     util.log '.. mangling'
     fs.writeFile 'pub/app.coffee', coffeeContents.join('\n\n'), 'utf8', (err) ->
       throw err if err
-      exec 'coffee -o ./pub/ --compile pub/app.coffee', (err, stdout, stderr) ->
+      exec 'coffee -o . --compile pub/app.coffee', (err, stdout, stderr) ->
         if err
           util.log ".. Error compiling coffee file.\n #{err}"
         else
@@ -82,3 +84,10 @@ task 'buildCoffee', 'Build single js file from coffee source files', ->
             if err
               util.log '.. Couldn\'t delete app.coffee'
             util.log '.. coffee ready'
+            
+task 'serve', 'serve the app', ->
+  port = 80
+  connect.createServer(
+    connect.static __dirname
+  ).listen port
+  util.log "serving app on localhost:#{port}"

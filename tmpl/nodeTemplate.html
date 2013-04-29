@@ -1,16 +1,14 @@
-<div class="node">
+<div class="node" data-bind="attr:{'id':id}">
   <div class="body">
     <div class="headline">
       <table><tr><td>
-        <span class="bullet" title="(un)fold|move">&bull;</span>
+        <span class="bullet" title="fold|unfold|move">&bull;</span>
       </td><td>
         <span class="listType" title="change type"></span>
       </td><td>							
-        <span class="title"></span>
-      </td><td>
+        <span class="title" data-bind="editable:title"></span>
       </td></tr></table>
     </div>
-    <div class="notes"></div>
+    <div class="notes" data-bind="editable:notes"></div>
   </div>
-  <div class="children"></div>
 </div>

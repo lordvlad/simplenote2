@@ -7,12 +7,9 @@ class Node
     @smplnt = options?.smplnt || window.note
     @id = uuid()
     # observable variables      
-    @title = obs ""
-    @title.extend parse : Node.parseHeadline
-    @notes = obs ""
-    @notes.extend parse : Node.parseNote
-    @deadline = obs null
-    @deadline.extend parse : Node.parseDate
+    @title = obs( "" ).extend parse : Node.parseHeadline
+    @notes = obs( "" ).extend parse : Node.parseNote
+    @deadline = obs( null ).extend parse : Node.parseDate
     @bookmarked = obs false
     @selected = obs false
     @done = obs false
@@ -79,5 +76,5 @@ class Node
     koMap instance, data
   # STATIC parser functions
   @parseNote : (v) => v
-  @parseHeadline : (v) => v
+  @parseHeadline : (v) => console.log(v);v.replace /<br>/ig, ""  
   @parseDate : (v) => v = new Date v; v = null if not isDate v; v
