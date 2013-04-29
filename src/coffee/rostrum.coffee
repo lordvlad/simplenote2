@@ -17,7 +17,7 @@ interval =
 # create storage
 store = 
   set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
-  get : ( key, rev ) -> ret = localStorage.getItem key; if rev then JSON.parse ret, revive else JSON.parse ret
+  get : ( key ) -> JSON.parse localStorage.getItem(key), revive
   remove : ( key ) -> localStorage.removeItem key
   
 # revive objects

@@ -47,12 +47,14 @@ class SimpleNote
   # revive from JSON data
   # @param {Object} data json object containting all needed data
   revive : =>
-    if data = store.get "simpleNote", true
-      @root = data.nodes
+    data = store.get 'simpleNote'
+    if data
+      console.log data
+      @root = data.root
       @tags data.tags
     else 
-      root = new Node
-      root.id = "simpleNoteRoot"
+      root = new Node()
+      root.id = 'simpleNoteRoot'
       @root = root
     @current @root
     @
@@ -74,7 +76,6 @@ class SimpleNote
   
   # functions on self
   startPeriodicalSave : ->
-    @save()
     @interval = interval.set 6e4, @save
     @
   stopPeriodicalSave : ->

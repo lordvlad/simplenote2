@@ -23,3 +23,9 @@ body {
 #notebook #sheet {
   padding: 1em;
 }
+#notebook #addChild {
+  opacity: 0.8;
+}
+#notebook #addChild:hover {
+  opacity: 1;
+}
