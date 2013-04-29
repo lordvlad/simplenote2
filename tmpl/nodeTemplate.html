@@ -1,14 +1,16 @@
 <div class="node" data-bind="attr:{'id':id}">
   <div class="body">
     <div class="headline">
-      <table><tr><td>
-        <span class="bullet" title="fold|unfold|move">&bull;</span>
-      </td><td>
+      <table><tr><td class="bullet-td">
+        <span class="bullet" title="fold|unfold|move" data-bind="html:bullet,click:toggleExpanded">&bull;</span>
+      </td><td class="listType-td">
         <span class="listType" title="change type"></span>
-      </td><td>							
+      </td><td class="title-td">							
         <span class="title" data-bind="editable:title"></span>
+      </td><td class="action-td" data-bind="template:'actionsTemplate'">
       </td></tr></table>
     </div>
-    <div class="notes" data-bind="editable:notes"></div>
+    <div class="notes" data-bind="editable:notes, visible:expanded"></div>
   </div>
+  <div class="children" data-bind="visible:expanded,sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
 </div>

@@ -14,6 +14,6 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     # revive model
     model.revive()
     # apply key bindings
-    model.applyKeyBindings()
+    model.applyEvents()
     # start periodical saving
     model.startPeriodicalSave()

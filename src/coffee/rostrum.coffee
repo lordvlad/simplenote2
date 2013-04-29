@@ -66,7 +66,12 @@ koMap = ( model, map ) ->
     if ko.isWriteableObservable model[ key ] then model[ key ] value
     else model[ key ] = value
   model
-    
-    
+
+# wrap location.hash in a ko.computed
+hash = window.hash = do ->
+  h = obs ""
+  $( window ).on "hashchange", -> h location.hash.replace /#/,""
+  h.subscribe (v) -> location.hash = v
+  h    
     
     

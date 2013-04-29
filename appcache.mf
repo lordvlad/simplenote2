@@ -13,6 +13,7 @@ lib/jqueryui/jquery-ui-1.10.2.custom.min.js
 lib/fancybox/jquery.fancybox.fix.js
 lib/fancybox/jquery.fancybox.min.js
 lib/knockout/knockout.js
+lib/knockout/knockout.sortable.js
 lib/dropbox/dropbox.js
 lib/moment/moment.js
 lib/wre/wre.date.js

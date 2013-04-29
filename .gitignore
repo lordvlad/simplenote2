@@ -1,3 +1,6 @@
 cfg/dropbox.js
 cfg/googledrive.js
 "Cakefile" 
+"node_modules" 
+node_modules
+Cakefile

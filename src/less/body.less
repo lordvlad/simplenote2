@@ -1,6 +1,7 @@
 @sheet : #eeeeee;
 @page : #dfdfdf;
 @text : #222222;
+@highlightText : #444444;
 
 body {
   background-color: @page;
@@ -33,14 +34,33 @@ body {
   
   #breadcrumbs {
     margin: 0 1em 0 1em;
-    padding: 1 0 .5em 0;
+    padding: 1em 0 .5em 0;
     border-bottom: solid 1px grey;
+    a, a:visited, a:active{
+      text-decoration: none;
+      color: @text;
+    }
+    a:hover {
+      color: @highlightText;
+      text-decoration: underline;
+    }
+    a:after {
+      content: " > ";
+    }
+    a:last-child:after {
+      content : "";
+    }
   }
   #sheet {
     padding: 1em;
+    #topChildren {
+      margin-left: 0;
+      margin-right: 0;
+      border-left: none;
+    }
   }
   #addChild {
-    opacity: 0.8;
+    opacity: 0.5;
   }
   #addChild:hover {
     opacity: 1;

@@ -23,9 +23,9 @@ class Node
     @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
     @files = obs []
     @hasNote = obs => @notes().length
-    @hasChildren = obs => @children.length
+    @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
-    @bullet = obs => ( @hasNote() or @hasChildren ) and ( not @expanded() and "&#9658;" or @expanded() and "&#9660" ) or "&9679;"
+    @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and "&#9658;" ) or( @expanded() and "&#9660" ) ) ) or "&#9679;"
     @deadlineDisplay = obs => 
       time()
       d = @deadline()
@@ -46,6 +46,13 @@ class Node
     @smplnt.pop.play()
     alert @title()
     return ""
+    
+    
+  # toggle some switches
+  toggleExpanded : =>
+    @expanded !@expanded()
+  toggleBookmarked : =>
+    @bookmarked !@bookmarked()
   editTags : ( n, e ) =>
     @smplnt.$tagsMenu
       .trigger "position", e.target
@@ -76,5 +83,5 @@ class Node
     koMap instance, data
   # STATIC parser functions
   @parseNote : (v) => v
-  @parseHeadline : (v) => console.log(v);v.replace /<br>/ig, ""  
+  @parseHeadline : (v) => v.replace /<br>|\n|\r/ig, ""  
   @parseDate : (v) => v = new Date v; v = null if not isDate v; v

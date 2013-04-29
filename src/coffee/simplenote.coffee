@@ -18,16 +18,17 @@ class SimpleNote
     @selectedNodes = obs => @nodes.filter 'selected'
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
     @breadcrumbs = obs =>
+      @nodes();
       crumbs = []
       getParent = (node) =>
+        return if !node
+        crumbs.unshift node
         p = @nodes.find (n)->n.children.has( node );
-        if p
-          crumbs.push node
-          console.log p 
-          # getParent(node)
+        if p then getParent(p)
       getParent( @current() )
       crumbs
-      
+    # subscribe to location hash changes
+    hash.subscribe ( val ) => @current @nodes.find 'id', val
     @
       
       
@@ -49,12 +50,12 @@ class SimpleNote
   revive : =>
     data = store.get 'simpleNote'
     if data
-      console.log data
       @root = data.root
       @tags data.tags
     else 
       root = new Node()
       root.id = 'simpleNoteRoot'
+      root.name 'home'
       @root = root
     @current @root
     @
@@ -66,12 +67,13 @@ class SimpleNote
     @
   
   # apply keyBindings
-  applyKeyBindings : ->
+  applyEvents : ->
     @$view.on "click", ".headline", (e)->
       $t = $ e.target
       $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .ellipsis, .additional")
     # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
     @$view.on "keyup, click", => @save()
+    
     @
   
   # functions on self

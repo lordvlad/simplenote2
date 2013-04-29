@@ -22,14 +22,35 @@ i[class^="icon-"],
 }
 #notebook #breadcrumbs {
   margin: 0 1em 0 1em;
-  padding: 1 0 .5em 0;
+  padding: 1em 0 .5em 0;
   border-bottom: solid 1px grey;
+}
+#notebook #breadcrumbs a,
+#notebook #breadcrumbs a:visited,
+#notebook #breadcrumbs a:active {
+  text-decoration: none;
+  color: #222222;
+}
+#notebook #breadcrumbs a:hover {
+  color: #444444;
+  text-decoration: underline;
+}
+#notebook #breadcrumbs a:after {
+  content: " > ";
+}
+#notebook #breadcrumbs a:last-child:after {
+  content: "";
 }
 #notebook #sheet {
   padding: 1em;
 }
+#notebook #sheet #topChildren {
+  margin-left: 0;
+  margin-right: 0;
+  border-left: none;
+}
 #notebook #addChild {
-  opacity: 0.8;
+  opacity: 0.5;
 }
 #notebook #addChild:hover {
   opacity: 1;
@@ -37,4 +58,15 @@ i[class^="icon-"],
 .node > .body > .headline .title:not(:focus):empty:before {
   content: "write something";
   opacity: 0.5;
+}
+.node > .body > .notes {
+  margin-left: .5em;
+  padding-left: .5em;
+  font-size: 80%;
+  color: #a2a2a2;
+}
+.node > .children {
+  margin-left: .5em;
+  padding-left: .5em;
+  border-left: solid 1px #dddddd;
 }
