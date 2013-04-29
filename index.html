@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html manifest="appcache.mf">
+<html>
+<!-- <html  manifest="appcache.mf"> -->
   <head>
     <!-- title -->
     <title>simpleNote</title>
@@ -45,16 +46,20 @@
     
     <div id="notebook">
       <div id="breadcrumbs" data-bind="foreach: breadcrumbs, visible: current()!==root" >
-        <a data-bind="attr:{'href':'#'+id}, text: title" href=""></a>
+        <a data-bind="attr:{'href':'#'+$data.id}, text: title" href=""></a>
       </div>
       <div id="editOptions"></div>
       <div id="selectOptions"></div>
-      <div id="topActions"></div>
+      <div id="topActions" data-bind="template:'actionsTemplate'"></div>
       <div id="sheet" class="node" data-bind="with:current">
         <div class="body">
-          <div id="topNotes" class="notes" data-bind="html:notes"></div>
+          <div 
+            id="topNotes" 
+            class="notes" 
+            data-bind="editable:notes"
+          ></div>
         </div>
-        <div id="topChildren" class="children"></div>
+        <div id="topChildren" class="children" data-bind="sortable:{name:'nodeTemplate',foreach:children}"></div>
         <div id="addChild" data-bind="click: $root.addNodeHere">
           <i class="icon-plus"></i>&nbsp;add something
         </div>
