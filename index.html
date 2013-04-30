@@ -53,11 +53,7 @@
       <div id="topActions" data-bind="template:'actionsTemplate'"></div>
       <div id="sheet" class="node" data-bind="with:current">
         <div class="body">
-          <div 
-            id="topNotes" 
-            class="notes" 
-            data-bind="editable:notes"
-          ></div>
+          <div id="topNotes" class="notes" data-bind="editable:notes"></div>
         </div>
         <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
         <div id="addChild" data-bind="click: $root.addNodeHere">

@@ -12,5 +12,7 @@
     </div>
     <div class="notes" data-bind="editable:notes, visible:expanded"></div>
   </div>
-  <div class="children" data-bind="visible:expanded,sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+  <div data-bind="visible:expanded">
+    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+  </div>
 </div>
