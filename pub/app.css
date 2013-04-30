@@ -2,6 +2,9 @@ body {
   background-color: #dfdfdf;
   color: #222222;
 }
+[contenteditable]:focus {
+  outline: none;
+}
 .bullet,
 i[class^="icon-"],
 #addChild {
@@ -35,14 +38,14 @@ i[class^="icon-"],
   color: #444444;
   text-decoration: underline;
 }
-#notebook #breadcrumbs a:after {
-  content: " > ";
-}
-#notebook #breadcrumbs a:last-child:after {
-  content: "";
+#notebook #breadcrumbs .gt:first-child {
+  display: none;
 }
 #notebook #sheet {
   padding: 1em;
+}
+#notebook #sheet #topNotes {
+  margin-bottom: 1em;
 }
 #notebook #sheet #topChildren {
   margin-left: 0;
@@ -55,8 +58,53 @@ i[class^="icon-"],
 #notebook #addChild:hover {
   opacity: 1;
 }
-.node > .body > .headline .title:not(:focus):empty:before {
+.context-menu {
+  font-size: 80%;
+}
+.context-menu hr {
+  margin: 0;
+  height: 0;
+  border: none;
+  border-top: solid 1px;
+}
+.node > .body > .headline > table {
+  width: 100%;
+}
+.node > .body > .headline > table td {
+  vertical-align: top;
+  padding: 0;
+}
+.node > .body > .headline .bullet-td {
+  width: 1em;
+}
+.node > .body > .headline .listType-td {
+  width: 1px;
+}
+.node > .body > .headline .action-td {
+  text-align: right;
+  white-space: nowrap;
+  padding-left: 1em;
+  width: 1px;
+}
+.node > .body > .headline .action-td .info,
+.node > .body > .headline .action-td .actions,
+.node > .body > .headline .action-td .icon-check-empty {
+  display: none;
+}
+.node > .body > .headline .title-td {
+  word-break: break-word;
+}
+.node > .body > .headline:hover .info,
+.node > .body > .headline:hover .actions,
+.node > .body > .headline:hover .icon-check-empty {
+  display: inline-block;
+}
+.node > .body .title:not(:focus):empty:before {
   content: "write something";
+  opacity: 0.5;
+}
+.node > .body .notes:not(:focus):empty:before {
+  content: "add some details";
   opacity: 0.5;
 }
 .node > .body > .notes {
@@ -65,7 +113,7 @@ i[class^="icon-"],
   font-size: 80%;
   color: #a2a2a2;
 }
-.node > .children {
+.node > div > div.children {
   margin-left: .5em;
   padding-left: .5em;
   border-left: solid 1px #dddddd;

@@ -70,8 +70,9 @@ koMap = ( model, map ) ->
 # wrap location.hash in a ko.computed
 hash = window.hash = do ->
   h = obs ""
-  $( window ).on "hashchange", -> h location.hash.replace /#/,""
+  s =-> h location.hash.replace(/#/,"") or ""
+  $( window ).on "hashchange", s
   h.subscribe (v) -> location.hash = v
-  h    
+  s(); h
     
     

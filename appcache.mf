@@ -8,9 +8,11 @@ lib/normalize/normalize.min.css
 lib/jqueryui/jquery-ui-1.10.2.custom.min.css
 lib/fancybox/jquery.fancybox.min.css
 lib/fontawesome/font-awesome.min.css
+lib/contextMenu/jquery.contextMenu.css
 lib/jquery/jquery-1.9.1.js
 lib/jqueryui/jquery-ui-1.10.2.custom.min.js
 lib/fancybox/jquery.fancybox.fix.js
+lib/contextMenu/jquery.contextMenu.js
 lib/fancybox/jquery.fancybox.min.js
 lib/knockout/knockout.js
 lib/knockout/knockout.sortable.js

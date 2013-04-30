@@ -7,7 +7,9 @@ body {
   background-color: @page;
   color: @text;
 }
-
+[contenteditable]:focus {
+  outline: none;
+}
 .bullet, i[class^="icon-"], #addChild {
   cursor: pointer;
 }
@@ -44,15 +46,15 @@ body {
       color: @highlightText;
       text-decoration: underline;
     }
-    a:after {
-      content: " > ";
-    }
-    a:last-child:after {
-      content : "";
+    .gt:first-child {
+      display: none;
     }
   }
   #sheet {
     padding: 1em;
+    #topNotes {
+      margin-bottom: 1em;
+    }
     #topChildren {
       margin-left: 0;
       margin-right: 0;
@@ -66,5 +68,16 @@ body {
     opacity: 1;
   }
 
+}
+
+.context-menu {
+  font-size: 80%;
+  hr {
+    margin: 0;
+    height: 0;
+    border: none;
+    border-top: solid 1px;
+    
+  }
 }
   

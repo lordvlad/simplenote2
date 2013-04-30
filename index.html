@@ -12,6 +12,7 @@
       <!-- library styles -->
     <link rel="stylesheet" href="lib/normalize/normalize.min.css" />
     <link rel="stylesheet" href="lib/jqueryui/jquery-ui-1.10.2.custom.min.css" />
+    <link rel="stylesheet" href="lib/contextMenu/jquery.contextMenu.css" />
     <link rel="stylesheet" href="lib/fancybox/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="lib/fontawesome/font-awesome.min.css" />
     <!-- libraries' scripts -->
@@ -19,6 +20,7 @@
     <script src="lib/jqueryui/jquery-ui-1.10.2.custom.min.js"></script>
     <script src="lib/fancybox/jquery.fancybox.fix.js"></script>
     <script src="lib/fancybox/jquery.fancybox.min.js"></script>
+    <script src="lib/contextMenu/jquery.contextMenu.js"></script>
     <script src="lib/knockout/knockout.js"></script>
     <script src="lib/knockout/knockout.sortable.js"></script>
     <script src="lib/dropbox/dropbox.js"></script>
@@ -46,13 +48,16 @@
     
     <div id="notebook">
       <div id="breadcrumbs" data-bind="foreach: breadcrumbs, visible: current()!==root" >
-        <a data-bind="attr:{'href':'#'+$data.id}, text: title" href=""></a>
+        <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
       </div>
-      <div id="editOptions"></div>
-      <div id="selectOptions"></div>
-      <div id="topActions" data-bind="template:'actionsTemplate'"></div>
+      <div id="selectOptions" data-bind="visible: selectedNodes().length" >
+        &lt; ACTIONS ON SELECTED NODES &gt;
+      </div>
+      <div id="topActions" data-bind="visible: current()!==root">
+        &lt; TOP LEVEL ACTIONS &gt;
+      </div>
       <div id="sheet" class="node" data-bind="with:current">
-        <div class="body">
+        <div class="body" data-bind="visible: $data!==$root.root" >
           <div id="topNotes" class="notes" data-bind="editable:notes"></div>
         </div>
         <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>

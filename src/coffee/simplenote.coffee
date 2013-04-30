@@ -15,22 +15,15 @@ class SimpleNote
     # observable Arrays
     @nodes = obs []
     @tags = obs []
+    # computed variables
     @selectedNodes = obs => @nodes.filter 'selected'
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
-    @breadcrumbs = obs =>
-      @nodes();
-      crumbs = []
-      getParent = (node) =>
-        return if !node
-        crumbs.unshift node
-        p = @nodes.find (n)->n.children.has( node );
-        if p then getParent(p)
-      getParent( @current() )
-      crumbs
-    # subscribe to location hash changes
-    hash.subscribe ( val ) => @current @nodes.find 'id', val
-    @
-      
+    @breadcrumbs = obs => 
+      @current()
+      ( @current()?.parents?().reverse().concat [@current()] ) or []
+    # subscribe to location hash changes    
+    hash.subscribe ( id ) =>
+      @current ( id and id.length and @nodes.find("id", id) ) or @root
       
   attachElements : ( view ) =>
     @$view = $( view )
@@ -57,7 +50,8 @@ class SimpleNote
       root.id = 'simpleNoteRoot'
       root.name 'home'
       @root = root
-    @current @root
+    # update current viewed node from location.hash
+    hash.valueHasMutated()
     @
   
   # saves own data to localStorage
@@ -104,13 +98,6 @@ class SimpleNote
     @
   selectionEditTags : =>
   
-  # functions on selected text
-  textBold : =>
-  textItalics : =>
-  textUnderline : =>
-  textLink : =>
-  textEmbed : =>
-  
   # functions that create nodes
   addNodeTo : ( parent, options ) =>
     options = {} unless isObj options
@@ -119,6 +106,10 @@ class SimpleNote
     @addNodeTo @current(), options
   insertNodeAfter : ( node, options ) =>
     @addNodeTo @current().parent(), options
+  
+  # functions that work with nodes
+  openNode : ( el ) =>
+    hash (el and el.id) or ( el and el[0] and ko.dataFor(el[0]) )?.id or el or @root.id
   
   
 # static values

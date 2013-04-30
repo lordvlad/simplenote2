@@ -22,10 +22,18 @@ class Node
     @tags = obs []
     @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
     @files = obs []
+    # computed variables
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
     @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and "&#9658;" ) or( @expanded() and "&#9660" ) ) ) or "&#9679;"
+    @parent = obs => @smplnt.nodes.find (n) => n.children.has @
+    @parents = obs =>
+      if @parent() is null then return []
+      p = [@parent()]
+      while ( x = p[p.length-1].parent() ) isnt null
+        p.push x
+      p
     @deadlineDisplay = obs => 
       time()
       d = @deadline()
@@ -40,7 +48,15 @@ class Node
     if options?.parent
       options.parent.children.push @
     @
-    
+  
+  # triggers hash change to open the node
+  open : ->
+    hash( @id )
+  # remove node
+  remove : =>
+    if confirm 'really delete this node?'
+      @parent().children.remove @
+      @smplnt.nodes.remove @
   alarm : ->
     @deadline null
     @smplnt.pop.play()
@@ -49,6 +65,8 @@ class Node
     
     
   # toggle some switches
+  toggleSelected : =>
+    @selected !@selected()
   toggleExpanded : =>
     @expanded !@expanded()
   toggleBookmarked : =>
@@ -59,6 +77,10 @@ class Node
       .on "menuselect", (e, ui) ->
         return unless ui and ui.item
         if not @tags.remove ui.item then @tags.push ui.item
+  editDeadline : =>
+    @deadline (new Date prompt 'set a deadline', new Date()) or null
+  editListType : =>
+  editFiles : =>
   
   
   toJSON : =>
@@ -82,6 +104,6 @@ class Node
     instance = new Node
     koMap instance, data
   # STATIC parser functions
-  @parseNote : (v) => v
+  @parseNote : (v) => v.replace /(<br>|\n|\r)$/i, ""
   @parseHeadline : (v) => v.replace /<br>|\n|\r/ig, ""  
   @parseDate : (v) => v = new Date v; v = null if not isDate v; v

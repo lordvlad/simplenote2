@@ -4,10 +4,42 @@
 .node {
   > .body {
     > .headline {
-      .title:not(:focus):empty:before {
-        content: "write something";
-        opacity: 0.5;
+      > table {
+        width: 100%;
+        td {
+          vertical-align: top;
+          padding: 0;
+        }
       }
+      .bullet-td{
+        width: 1em;
+      }
+      .listType-td{
+        width: 1px;
+      }
+      .action-td {
+        text-align:right;
+        white-space: nowrap;
+        padding-left: 1em;
+        width: 1px;
+        .info, .actions, .icon-check-empty {
+          display: none;
+        }
+      }
+      .title-td {
+        word-break: break-word;
+      }
+      &:hover .info, &:hover .actions, &:hover .icon-check-empty {
+        display: inline-block;
+      }
+    }
+    .title:not(:focus):empty:before {
+      content: "write something";
+      opacity: 0.5;
+    }
+    .notes:not(:focus):empty:before {
+      content: "add some details";
+      opacity: 0.5;
     }
     > .notes {
       margin-left: .5em;
@@ -16,7 +48,7 @@
       color: lighten( @text, 50% );
     }  
   }
-  > .children {
+  > div > div.children {
     margin-left: .5em;
     padding-left: .5em;
     border-left: solid 1px @childrenBorderColor;

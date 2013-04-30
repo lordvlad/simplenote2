@@ -151,15 +151,17 @@
   };
 
   hash = window.hash = (function() {
-    var h;
+    var h, s;
 
     h = obs("");
-    $(window).on("hashchange", function() {
-      return h(location.hash.replace(/#/, ""));
-    });
+    s = function() {
+      return h(location.hash.replace(/#/, "") || "");
+    };
+    $(window).on("hashchange", s);
     h.subscribe(function(v) {
       return location.hash = v;
     });
+    s();
     return h;
   })();
 
@@ -170,14 +172,10 @@
 
   SimpleNote = (function() {
     function SimpleNote(element) {
+      this.openNode = __bind(this.openNode, this);
       this.insertNodeAfter = __bind(this.insertNodeAfter, this);
       this.addNodeHere = __bind(this.addNodeHere, this);
       this.addNodeTo = __bind(this.addNodeTo, this);
-      this.textEmbed = __bind(this.textEmbed, this);
-      this.textLink = __bind(this.textLink, this);
-      this.textUnderline = __bind(this.textUnderline, this);
-      this.textItalics = __bind(this.textItalics, this);
-      this.textBold = __bind(this.textBold, this);
       this.selectionEditTags = __bind(this.selectionEditTags, this);
       this.selectionArchive = __bind(this.selectionArchive, this);
       this.selectionInvert = __bind(this.selectionInvert, this);
@@ -204,31 +202,14 @@
         return _this.nodes.filter('bookmarked');
       });
       this.breadcrumbs = obs(function() {
-        var crumbs, getParent;
+        var _ref;
 
-        _this.nodes();
-        crumbs = [];
-        getParent = function(node) {
-          var p;
-
-          if (!node) {
-            return;
-          }
-          crumbs.unshift(node);
-          p = _this.nodes.find(function(n) {
-            return n.children.has(node);
-          });
-          if (p) {
-            return getParent(p);
-          }
-        };
-        getParent(_this.current());
-        return crumbs;
+        _this.current();
+        return ((_ref = _this.current()) != null ? typeof _ref.parents === "function" ? _ref.parents().reverse().concat([_this.current()]) : void 0 : void 0) || [];
       });
-      hash.subscribe(function(val) {
-        return _this.current(_this.nodes.find('id', val));
+      hash.subscribe(function(id) {
+        return _this.current((id && id.length && _this.nodes.find("id", id)) || _this.root);
       });
-      this;
     }
 
     SimpleNote.prototype.attachElements = function(view) {
@@ -258,7 +239,7 @@
         root.name('home');
         this.root = root;
       }
-      this.current(this.root);
+      hash.valueHasMutated();
       return this;
     };
 
@@ -342,16 +323,6 @@
 
     SimpleNote.prototype.selectionEditTags = function() {};
 
-    SimpleNote.prototype.textBold = function() {};
-
-    SimpleNote.prototype.textItalics = function() {};
-
-    SimpleNote.prototype.textUnderline = function() {};
-
-    SimpleNote.prototype.textLink = function() {};
-
-    SimpleNote.prototype.textEmbed = function() {};
-
     SimpleNote.prototype.addNodeTo = function(parent, options) {
       if (!isObj(options)) {
         options = {};
@@ -367,6 +338,12 @@
 
     SimpleNote.prototype.insertNodeAfter = function(node, options) {
       return this.addNodeTo(this.current().parent(), options);
+    };
+
+    SimpleNote.prototype.openNode = function(el) {
+      var _ref;
+
+      return hash((el && el.id) || ((_ref = el && el[0] && ko.dataFor(el[0])) != null ? _ref.id : void 0) || el || this.root.id);
     };
 
     return SimpleNote;
@@ -409,9 +386,14 @@
   Node = (function() {
     function Node(options) {
       this.toJSON = __bind(this.toJSON, this);
+      this.editFiles = __bind(this.editFiles, this);
+      this.editListType = __bind(this.editListType, this);
+      this.editDeadline = __bind(this.editDeadline, this);
       this.editTags = __bind(this.editTags, this);
       this.toggleBookmarked = __bind(this.toggleBookmarked, this);
       this.toggleExpanded = __bind(this.toggleExpanded, this);
+      this.toggleSelected = __bind(this.toggleSelected, this);
+      this.remove = __bind(this.remove, this);
       var _this = this;
 
       this.smplnt = (options != null ? options.smplnt : void 0) || window.note;
@@ -453,6 +435,23 @@
       this.bullet = obs(function() {
         return ((_this.hasNote() || _this.hasChildren()) && ((!_this.expanded() && "&#9658;") || (_this.expanded() && "&#9660"))) || "&#9679;";
       });
+      this.parent = obs(function() {
+        return _this.smplnt.nodes.find(function(n) {
+          return n.children.has(_this);
+        });
+      });
+      this.parents = obs(function() {
+        var p, x;
+
+        if (_this.parent() === null) {
+          return [];
+        }
+        p = [_this.parent()];
+        while ((x = p[p.length - 1].parent()) !== null) {
+          p.push(x);
+        }
+        return p;
+      });
       this.deadlineDisplay = obs(function() {
         var d;
 
@@ -475,11 +474,26 @@
       this;
     }
 
+    Node.prototype.open = function() {
+      return hash(this.id);
+    };
+
+    Node.prototype.remove = function() {
+      if (confirm('really delete this node?')) {
+        this.parent().children.remove(this);
+        return this.smplnt.nodes.remove(this);
+      }
+    };
+
     Node.prototype.alarm = function() {
       this.deadline(null);
       this.smplnt.pop.play();
       alert(this.title());
       return "";
+    };
+
+    Node.prototype.toggleSelected = function() {
+      return this.selected(!this.selected());
     };
 
     Node.prototype.toggleExpanded = function() {
@@ -500,6 +514,14 @@
         }
       }));
     };
+
+    Node.prototype.editDeadline = function() {
+      return this.deadline((new Date(prompt('set a deadline', new Date()))) || null);
+    };
+
+    Node.prototype.editListType = function() {};
+
+    Node.prototype.editFiles = function() {};
 
     Node.prototype.toJSON = function() {
       return {
@@ -525,7 +547,7 @@
     };
 
     Node.parseNote = function(v) {
-      return v;
+      return v.replace(/(<br>|\n|\r)$/i, "");
     };
 
     Node.parseHeadline = function(v) {
@@ -554,7 +576,49 @@
       ko.applyBindings(model, model.view);
       model.revive();
       model.applyEvents();
-      return model.startPeriodicalSave();
+      model.startPeriodicalSave();
+      return $(view).contextMenu('text-context-menu', {
+        /*
+        '<i class="icon-edit"></i>&nbsp;open node' : {
+          click : model.openNode
+        },
+        '<hr />' : {
+        },
+        */
+
+        '<i class="icon-bold"></i>&nbsp;bold': {
+          click: function() {
+            return document.execCommand('bold', false);
+          }
+        },
+        '<i class="icon-italic"></i>&nbsp;italics': {
+          click: function() {
+            return document.execCommand('italic', false);
+          }
+        },
+        '<i class="icon-underline"></i>&nbsp;underline': {
+          click: function() {
+            return document.execCommand('underline', false);
+          }
+        },
+        '<i class="icon-strikethrough"></i>&nbsp;strike-through': {
+          click: function() {
+            return document.execCommand('strikeThrough', false);
+          }
+        },
+        '<i class="icon-font"></i>&nbsp;drop formatting': {
+          click: function() {
+            return document.execCommand('removeFormat', false);
+          }
+        },
+        '<i class="icon-link"></i>&nbsp;create link': {
+          click: function() {
+            return document.execCommand('createLink', false, prompt('insert url href', ''));
+          }
+        }
+      }, {
+        delegateEventTo: '.title, .notes'
+      });
     });
   })(jQuery, "body", window.note = new SimpleNote);
 
