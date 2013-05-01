@@ -11,6 +11,10 @@
     margin-bottom: .5em;
     &:hover {
       background: darken( @bright, 10% )
+      .info, .actions, .icon-check-empty, .icon-star-empty {
+        display: inline-block;
+        visibility: visible;
+      }
     }
     > .headline {
       > table {
@@ -40,10 +44,6 @@
       }
       .title-td {
         word-break: break-word;
-      }
-      &:hover .info, &:hover .actions, &:hover .icon-check-empty, &:hover .icon-star-empty {
-        display: inline-block;
-        visibility: visible;
       }
     }
     .title:not(:focus):empty:before {
