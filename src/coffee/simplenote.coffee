@@ -48,7 +48,7 @@ class SimpleNote
     else 
       root = new Node()
       root.id = 'simpleNoteRoot'
-      root.name 'home'
+      root.title 'home'
       @root = root
     # update current viewed node from location.hash
     hash.valueHasMutated()
