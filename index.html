@@ -46,17 +46,22 @@
   </head>
   <body>
     
-    <div id="notebook">
-      <div id="breadcrumbs" data-bind="foreach: breadcrumbs, visible: current()!==root" >
-        <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
-      </div>
-      <div id="selectOptions" data-bind="visible: selectedNodes().length" >
+    <div id="notebook" data-bind="with:current">
+      <div id="selectOptions" data-bind="visible: $root.selectedNodes().length">
         &lt; ACTIONS ON SELECTED NODES &gt;
       </div>
-      <div id="topActions" data-bind="visible: current()!==root">
-        &lt; TOP LEVEL ACTIONS &gt;
+      <div id="topActions" data-bind="visible: $data!==$root.root">
+        <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
+        <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
+        <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
+        <i class="icon-trash" title="delete" data-bind="click: remove"></i>
+        &nbsp;&nbsp;
+        <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
       </div>
-      <div id="sheet" class="node" data-bind="with:current">
+      <div id="breadcrumbs" data-bind="foreach: $root.breadcrumbs, visible: $data!==$root.root" >
+        <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
+      </div>
+      <div id="sheet" class="node">
         <div class="body" data-bind="visible: $data!==$root.root" >
           <div id="topNotes" class="notes" data-bind="editable:notes"></div>
         </div>

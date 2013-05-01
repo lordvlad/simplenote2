@@ -1,16 +1,16 @@
 <span class="actionsBar">
   <span class="info">
-    <span class="tags">
+    <span class="tags" data-bind="visible:tags().length">
       <i class="icon-tag"></i>
       <span></span>
     </span>
-    <span class="files">
+    <span class="files" data-bind="visible:files().length">
       <i class="icon-file"></i>
       <span></span>
     </span>
-    <span class="time">
+    <span class="time" data-bind="visible:deadlineDisplay().length">
       <i class="icon-time"></i>
-      <span></span>
+      <span data-bind="text:deadlineDisplay"></span>
     </span>
   </span>
   <span class="actions">
@@ -22,6 +22,7 @@
     <i class="icon-trash" title="delete" data-bind="click:remove"></i>
   </span>
   <span>
+    <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
     <i title="select" data-bind="css:{ 'icon-check': selected, 'icon-check-empty': !selected() },click:toggleSelected"></i>
   </span>
 </span>

@@ -34,13 +34,26 @@ class Node
       while ( x = p[p.length-1].parent() ) isnt null
         p.push x
       p
-    @deadlineDisplay = obs => 
-      time()
-      d = @deadline()
-      if d is not null
-        if d > new Date then moment(d).fromNow()
-        else @alarm()
-      else ""
+    # create a dummy timer which will work only if there is a deadline set
+    # use this timer then in the ko.observable to display a deadline
+    @deadlineDisplay = do () => 
+      personalTimer = obs null
+      subscribed = obs off
+      subscription = null
+      subscribed.subscribe ( v ) ->
+        if v is on then subscription = time.subscribe ( w ) -> personalTimer w
+        else subscription.dispose?()
+      obs(=>
+        personalTimer()
+        d = @deadline()
+        if d is null then return ""
+        if d > now()
+          subscribed on
+          return moment(d).fromNow()
+        subscribed off
+        @alarm()
+        return ""
+      ).extend({throttle:1})
     
     # push self to simplenote nodes
     @smplnt.nodes.push @
@@ -57,12 +70,11 @@ class Node
     if confirm 'really delete this node?'
       @parent().children.remove @
       @smplnt.nodes.remove @
-  alarm : ->
+  alarm : =>
     @deadline null
+    @smplnt.save()
     @smplnt.pop.play()
     alert @title()
-    return ""
-    
     
   # toggle some switches
   toggleSelected : =>
@@ -78,7 +90,7 @@ class Node
         return unless ui and ui.item
         if not @tags.remove ui.item then @tags.push ui.item
   editDeadline : =>
-    @deadline (new Date prompt 'set a deadline', new Date()) or null
+    @deadline (prompt 'set a deadline', new Date()) or null
   editListType : =>
   editFiles : =>
   
@@ -106,4 +118,7 @@ class Node
   # STATIC parser functions
   @parseNote : (v) => v.replace /(<br>|\n|\r)$/i, ""
   @parseHeadline : (v) => v.replace /<br>|\n|\r/ig, ""  
-  @parseDate : (v) => v = new Date v; v = null if not isDate v; v
+  @parseDate : (v) =>
+    if v is null then return null
+    if isDate( x = new Date v ) or isDate( x = new Date parseInt v ) or isDate( x = Date.intelliParse v ) then return x
+    null

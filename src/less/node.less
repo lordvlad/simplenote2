@@ -1,8 +1,17 @@
-@childrenBorderColor: #ddd;
-@text : #222222;
+/* https://kuler.adobe.com/#themeID/2369524 */
+@bright    : #FFFFFF;
+@dark      : #333333;
+@alert     : #FC226F;
+@highlight : #00D0FF;
+@info      : #FFC604;
+
 
 .node {
   > .body {
+    margin-bottom: .5em;
+    &:hover {
+      background: darken( @bright, 10% )
+    }
     > .headline {
       > table {
         width: 100%;
@@ -12,7 +21,7 @@
         }
       }
       .bullet-td{
-        width: 1em;
+        width: 1em;       
       }
       .listType-td{
         width: 1px;
@@ -22,36 +31,41 @@
         white-space: nowrap;
         padding-left: 1em;
         width: 1px;
-        .info, .actions, .icon-check-empty {
+        .actions {
           display: none;
+        }
+        .icon-check-empty, .icon-star-empty {
+          visibility: hidden;
         }
       }
       .title-td {
         word-break: break-word;
       }
-      &:hover .info, &:hover .actions, &:hover .icon-check-empty {
+      &:hover .info, &:hover .actions, &:hover .icon-check-empty, &:hover .icon-star-empty {
         display: inline-block;
+        visibility: visible;
       }
     }
     .title:not(:focus):empty:before {
       content: "write something";
       opacity: 0.5;
     }
+    .notes {
+      margin-left: .8em;
+      padding-left: .5em;
+      font-size: 80%;
+      color: lighten( @dark, 20% );
+    }  
     .notes:not(:focus):empty:before {
       content: "add some details";
       opacity: 0.5;
     }
-    > .notes {
-      margin-left: .5em;
-      padding-left: .5em;
-      font-size: 80%;
-      color: lighten( @text, 50% );
-    }  
   }
   > div > div.children {
     margin-left: .5em;
+    margin-bottom: .5em;
     padding-left: .5em;
-    border-left: solid 1px @childrenBorderColor;
+    border-left: solid 1px lighten( @dark, 50% );
   
   }
 }

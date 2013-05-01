@@ -13,7 +13,8 @@ timeout =
 interval =
   set : ( ms, fn ) -> setInterval fn, ms
   clear : ( i ) -> clearInterval i
-
+postpone = ( fn ) -> timeout.set 1, fn
+  
 # create storage
 store = 
   set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
@@ -46,10 +47,12 @@ uuid = do () ->
     ids.push(e)
     e
     
+# shortcut for new Date()
+now =-> new Date()
 # create a timer
 time = do() ->
   a = obs 0
-  interval.set 1e3, ->a new Date
+  interval.set 1e3, ->a now()
   a
   
 # get length of an object, array or string

@@ -20,13 +20,6 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     
     # create right click context menu-1
     $( view ).contextMenu 'text-context-menu', {
-      ###
-      '<i class="icon-edit"></i>&nbsp;open node' : {
-        click : model.openNode
-      },
-      '<hr />' : {
-      },
-      ###
       '<i class="icon-bold"></i>&nbsp;bold' : {
         click :-> document.execCommand 'bold', false
       },

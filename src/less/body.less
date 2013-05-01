@@ -1,17 +1,33 @@
-@sheet : #eeeeee;
-@page : #dfdfdf;
-@text : #222222;
-@highlightText : #444444;
+/* https://kuler.adobe.com/#themeID/2369524 */
+@bright    : #FFFFFF;
+@dark      : #333333;
+@alert     : #FC226F;
+@highlight : #00D0FF;
+@info      : #FFC604;
+
 
 body {
-  background-color: @page;
-  color: @text;
+  background-color: darken( @bright, 10% );
+  color: @dark;
+}
+a {
+  color : @dark;
+  text-decoration: underline;
+  &:hover {
+    color: @highlight;
+  }
 }
 [contenteditable]:focus {
   outline: none;
 }
 .bullet, i[class^="icon-"], #addChild {
   cursor: pointer;
+}
+.bullet, i[class^="icon-"] {
+  opacity: 0.7;
+}
+.bullet:hover, i[class^="icon-"]:hover {
+  opacity: 1;
 }
 .rounded-corners (@radius: 5px) {
   -webkit-border-radius: @radius;
@@ -21,18 +37,26 @@ body {
   border-radius: @radius;
 }
 .drop-shadow ( @color: #888 ){
-  box-shadow: 5px 5px 10px @color;
+  box-shadow: 0px 0px 10px @color;
 }
 
 
 #notebook {
   .rounded-corners;
   .drop-shadow;
-  background-color: @sheet;
-  color: @text;
+  background-color: @bright;
+  color: @dark;
   margin: 20px auto;
   width: 800px;
+  min-width: 400px;
+  max-width: 90%;
   min-height: 600px;
+  
+  #topActions {
+    float: right;
+    margin-top: .5em;
+    margin-right: .5em;
+  }
   
   #breadcrumbs {
     margin: 0 1em 0 1em;
@@ -40,11 +64,12 @@ body {
     border-bottom: solid 1px grey;
     a, a:visited, a:active{
       text-decoration: none;
-      color: @text;
+      color: @dark;
+      opacity: 0.7;
     }
     a:hover {
-      color: @highlightText;
       text-decoration: underline;
+      opacity: 1;
     }
     .gt:first-child {
       display: none;
