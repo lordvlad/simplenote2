@@ -98,10 +98,10 @@ i[class^="icon-"]:hover {
 .node > .body:hover {
   background: #e6e6e6;
 }
-.node > .body:hover .info,
-.node > .body:hover .actions,
-.node > .body:hover .icon-check-empty,
-.node > .body:hover .icon-star-empty {
+.node > .body:hover .action-td .actionsBar .info,
+.node > .body:hover .action-td .actionsBar .actions,
+.node > .body:hover .action-td .actionsBar .icon-check-empty,
+.node > .body:hover .action-td .actionsBar .icon-star-empty {
   display: inline-block;
   visibility: visible;
 }
