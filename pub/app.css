@@ -98,6 +98,13 @@ i[class^="icon-"]:hover {
 .node > .body:hover {
   background: #e6e6e6;
 }
+.node > .body:hover .info,
+.node > .body:hover .actions,
+.node > .body:hover .icon-check-empty,
+.node > .body:hover .icon-star-empty {
+  display: inline-block;
+  visibility: visible;
+}
 .node > .body > .headline > table {
   width: 100%;
 }
@@ -126,13 +133,6 @@ i[class^="icon-"]:hover {
 }
 .node > .body > .headline .title-td {
   word-break: break-word;
-}
-.node > .body > .headline:hover .info,
-.node > .body > .headline:hover .actions,
-.node > .body > .headline:hover .icon-check-empty,
-.node > .body > .headline:hover .icon-star-empty {
-  display: inline-block;
-  visibility: visible;
 }
 .node > .body .title:not(:focus):empty:before {
   content: "write something";

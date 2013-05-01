@@ -244,7 +244,7 @@
       } else {
         root = new Node();
         root.id = 'simpleNoteRoot';
-        root.name('home');
+        root.title('home');
         this.root = root;
       }
       hash.valueHasMutated();
