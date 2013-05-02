@@ -13,6 +13,7 @@ class Node
     @bookmarked = obs false
     @selected = obs false
     @done = obs false
+    @archived = obs false
     @expanded = obs false
     @listStyleType = obs []
     @editingTitle = obs false
@@ -23,6 +24,8 @@ class Node
     @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
     @files = obs []
     # computed variables
+    @visible = obs true
+    @visibleChildren = obs => @children.filter 'visible'
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
@@ -68,8 +71,11 @@ class Node
   # remove node
   remove : =>
     if confirm 'really delete this node?'
+      @_delete()
+  _delete :=>
       @parent().children.remove @
       @smplnt.nodes.remove @
+      @smplnt.save()
   alarm : =>
     @deadline null
     @smplnt.save()

@@ -185,10 +185,11 @@
       this.addNodeHere = __bind(this.addNodeHere, this);
       this.addNodeTo = __bind(this.addNodeTo, this);
       this.selectionEditTags = __bind(this.selectionEditTags, this);
+      this.selectionRemove = __bind(this.selectionRemove, this);
+      this.selectionRemoveDeadlines = __bind(this.selectionRemoveDeadlines, this);
       this.selectionArchive = __bind(this.selectionArchive, this);
       this.selectionInvert = __bind(this.selectionInvert, this);
       this.selectionUnselect = __bind(this.selectionUnselect, this);
-      this.selectionRemove = __bind(this.selectionRemove, this);
       this.save = __bind(this.save, this);
       this.revive = __bind(this.revive, this);
       this.toJSON = __bind(this.toJSON, this);
@@ -201,6 +202,14 @@
       this.element = null;
       this.pop = null;
       this.current = obs(null);
+      this.alert = obs('');
+      this.alert.empty = function() {
+        return _this.alert('');
+      };
+      this.note = obs('');
+      this.note.empty = function() {
+        return _this.note('');
+      };
       this.nodes = obs([]);
       this.tags = obs([]);
       this.selectedNodes = obs(function() {
@@ -216,7 +225,8 @@
         return ((_ref = _this.current()) != null ? typeof _ref.parents === "function" ? _ref.parents().reverse().concat([_this.current()]) : void 0 : void 0) || [];
       });
       hash.subscribe(function(id) {
-        return _this.current((id && id.length && _this.nodes.find("id", id)) || _this.root);
+        _this.current((id && id.length && _this.nodes.find("id", id)) || _this.root);
+        return _this.current().editingNote(true);
       });
     }
 
@@ -288,56 +298,74 @@
       return this;
     };
 
-    SimpleNote.prototype.selectionRemove = function() {
-      if (confirm("really delete all selected outlines?")) {
-        this.nodes.removeAll(this.selected());
-        this.save();
-      }
-      return this;
-    };
-
     SimpleNote.prototype.selectionUnselect = function() {
-      var node, _i, _len, _ref;
+      var node, _i, _len, _ref, _results;
 
-      _ref = this.selected();
+      _ref = this.selectedNodes();
+      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        node.selected(false)();
+        _results.push(node.selected(false));
       }
-      return this;
+      return _results;
     };
 
     SimpleNote.prototype.selectionInvert = function() {
-      var node, _i, _len, _ref;
+      var node, _i, _len, _ref, _results;
 
-      _ref = this.selected();
+      _ref = this.nodes();
+      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        node.selected(!node.selected())();
+        _results.push(node.selected(!node.selected()));
       }
-      return this;
+      return _results;
     };
 
     SimpleNote.prototype.selectionArchive = function() {
-      var node, _i, _len, _ref;
+      var node, _i, _len, _ref, _results;
 
-      _ref = this.selected();
+      _ref = this.selectedNodes();
+      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        node.archived(true)();
+        _results.push(node.archived(true));
       }
-      return this;
+      return _results;
+    };
+
+    SimpleNote.prototype.selectionRemoveDeadlines = function() {
+      var node, _i, _len, _ref, _results;
+
+      _ref = this.selectedNodes();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        _results.push(node.deadline(null));
+      }
+      return _results;
+    };
+
+    SimpleNote.prototype.selectionRemove = function() {
+      var node, _i, _len, _ref, _results;
+
+      if (confirm("really delete " + (this.selectedNodes().length) + " selected outlines? ATTENTION! Children Nodes will be deleted with their parents!")) {
+        _ref = this.selectedNodes();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          _results.push(node._delete());
+        }
+        return _results;
+      }
     };
 
     SimpleNote.prototype.selectionEditTags = function() {};
 
     SimpleNote.prototype.addNodeTo = function(parent, options) {
-      if (!isObj(options)) {
-        options = {};
-      }
-      return new Node($.extend(options, {
+      return (new Node($.extend((isObj(options) ? options : {}), {
         parent: parent
-      }));
+      }))).editingTitle(true);
     };
 
     SimpleNote.prototype.addNodeHere = function(options) {
@@ -402,6 +430,7 @@
       this.toggleExpanded = __bind(this.toggleExpanded, this);
       this.toggleSelected = __bind(this.toggleSelected, this);
       this.alarm = __bind(this.alarm, this);
+      this._delete = __bind(this._delete, this);
       this.remove = __bind(this.remove, this);
       var _this = this;
 
@@ -419,6 +448,7 @@
       this.bookmarked = obs(false);
       this.selected = obs(false);
       this.done = obs(false);
+      this.archived = obs(false);
       this.expanded = obs(false);
       this.listStyleType = obs([]);
       this.editingTitle = obs(false);
@@ -432,6 +462,10 @@
         }
       });
       this.files = obs([]);
+      this.visible = obs(true);
+      this.visibleChildren = obs(function() {
+        return _this.children.filter('visible');
+      });
       this.hasNote = obs(function() {
         return _this.notes().length;
       });
@@ -508,9 +542,14 @@
 
     Node.prototype.remove = function() {
       if (confirm('really delete this node?')) {
-        this.parent().children.remove(this);
-        return this.smplnt.nodes.remove(this);
+        return this._delete();
       }
+    };
+
+    Node.prototype._delete = function() {
+      this.parent().children.remove(this);
+      this.smplnt.nodes.remove(this);
+      return this.smplnt.save();
     };
 
     Node.prototype.alarm = function() {

@@ -12,6 +12,10 @@ class SimpleNote
     @pop = null
     # observable variable
     @current = obs null
+    @alert = obs ''
+    @alert.empty = => @alert '' 
+    @note = obs ''
+    @note.empty = => @note ''
     # observable Arrays
     @nodes = obs []
     @tags = obs []
@@ -24,6 +28,7 @@ class SimpleNote
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or @root
+      @current().editingNote on
       
   attachElements : ( view ) =>
     @$view = $( view )
@@ -79,33 +84,17 @@ class SimpleNote
     @
     
   # functions on selected nodes  
-  selectionRemove : =>
-    if confirm "really delete all selected outlines?" 
-      @nodes.removeAll @selected()
-      @save()
-    @
-  selectionUnselect : => 
-    for node in @selected() 
-      do node.selected no
-    @
-  selectionInvert : =>
-    for node in @selected()
-      do node.selected not node.selected()
-    @
-  selectionArchive : =>
-    for node in @selected() 
-      do node.archived yes
-    @
+  selectionUnselect : => node.selected no for node in @selectedNodes()
+  selectionInvert : => node.selected not node.selected() for node in @nodes()
+  selectionArchive : => node.archived yes for node in @selectedNodes() 
+  selectionRemoveDeadlines : => node.deadline null for node in @selectedNodes()
+  selectionRemove : => node._delete() for node in @selectedNodes() if confirm "really delete #{@selectedNodes().length} selected outlines? ATTENTION! Children Nodes will be deleted with their parents!"
   selectionEditTags : =>
   
   # functions that create nodes
-  addNodeTo : ( parent, options ) =>
-    options = {} unless isObj options
-    new Node $.extend options, { parent: parent }
-  addNodeHere : ( options ) =>
-    @addNodeTo @current(), options
-  insertNodeAfter : ( node, options ) =>
-    @addNodeTo @current().parent(), options
+  addNodeTo : ( parent, options ) =>( new Node $.extend (if isObj options then options else {}), { parent: parent } ).editingTitle on
+  addNodeHere : ( options ) => @addNodeTo @current(), options
+  insertNodeAfter : ( node, options ) => @addNodeTo @current().parent(), options
   
   # functions that work with nodes
   openNode : ( el ) =>

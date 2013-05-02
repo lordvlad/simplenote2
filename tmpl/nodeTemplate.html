@@ -6,13 +6,13 @@
       </td><td class="listType-td">
         <span class="listType" title="change type"></span>
       </td><td class="title-td">							
-        <span class="title" data-bind="dblclick:open,editable:title"></span>
+        <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
       </td><td class="action-td" data-bind="template:'actionsTemplate'">
       </td></tr></table>
     </div>
-    <div class="notes" data-bind="editable:notes, visible:expanded()&&hasNote()"></div>
+    <div class="notes" data-bind="editable:notes, visible:expanded()&&hasNote(),hasfocus:editingNote"></div>
   </div>
   <div data-bind="visible:expanded()&&hasChildren()">
-    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
   </div>
 </div>

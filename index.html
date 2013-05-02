@@ -45,11 +45,29 @@
     <script src="pub/app.js" /></script>
   </head>
   <body>
-    
-    <div id="notebook" data-bind="with:current">
-      <div id="selectOptions" data-bind="visible: $root.selectedNodes().length">
-        &lt; ACTIONS ON SELECTED NODES &gt;
+    <div id="fixedTopCentered">
+      <div id="selectOptions" data-bind="visible: selectedNodes().length, style:{opacity: selectedNodes().length?1:0}">
+        <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
+        <span class="options">
+          <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
+          <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
+          <i class="icon-time" title="remove all deadlines" data-bind="click:selectionRemoveDeadlines"></i>
+          <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
+          <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
+          &nbsp;&nbsp;
+          <i class="icon-remove" title="unselect all" data-bind="click:selectionUnselect"></i>
+        <span>
       </div>
+      <div id="alert" data-bind="visible:alert().length,style:{opacity:alert().length?1:0}">
+        <span data-bind="html:alert"></span>
+        <i class="icon-remove" title="close" data-bind="click:alert.empty"></i>
+      </div>
+      <div id="note" data-bind="visible:note().length,style:{opacity:note().length?1:0}">
+        <span data-bind="html:note"></span>
+        <i class="icon-remove" title="close" data-bind="click:note.empty"></i>
+      </div>
+    </div>
+    <div id="notebook" data-bind="with:current">
       <div id="topActions" data-bind="visible: $data!==$root.root">
         <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
         <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
@@ -63,9 +81,9 @@
       </div>
       <div id="sheet" class="node">
         <div class="body" data-bind="visible: $data!==$root.root" >
-          <div id="topNotes" class="notes" data-bind="editable:notes"></div>
+          <div id="topNotes" class="notes" data-bind="editable:notes,hasfocus:editingNote"></div>
         </div>
-        <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+        <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
         <div id="addChild" data-bind="click: $root.addNodeHere">
           <i class="icon-plus"></i>&nbsp;add something
         </div>
