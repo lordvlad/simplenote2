@@ -206,9 +206,15 @@
       this.alert.empty = function() {
         return _this.alert('');
       };
+      this.alert.add = function(x) {
+        return _this.alert('<br><br>' + x);
+      };
       this.note = obs('');
       this.note.empty = function() {
         return _this.note('');
+      };
+      this.note.add = function(x) {
+        return _this.note(_this.note() + '<br><br>' + x);
       };
       this.nodes = obs([]);
       this.tags = obs([]);

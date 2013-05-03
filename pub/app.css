@@ -127,6 +127,12 @@ i[class^="icon-"]:hover {
   border: none;
   border-top: solid 1px;
 }
+#footer {
+  width: 400px;
+  margin: auto;
+  font-size: 80%;
+  text-align: center;
+}
 /* https://kuler.adobe.com/#themeID/2369524 */
 .node > .body {
   margin-bottom: .5em;

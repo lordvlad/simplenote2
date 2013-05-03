@@ -14,8 +14,10 @@ class SimpleNote
     @current = obs null
     @alert = obs ''
     @alert.empty = => @alert '' 
+    @alert.add =(x)=> @alert '<br><br>'+x
     @note = obs ''
     @note.empty = => @note ''
+    @note.add =(x)=> @note @note()+'<br><br>'+x
     # observable Arrays
     @nodes = obs []
     @tags = obs []
