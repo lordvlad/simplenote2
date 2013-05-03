@@ -11,13 +11,9 @@ class SimpleNote
     @element = null
     @pop = null
     # observable variable
-    @current = obs null
-    @alert = obs ''
-    @alert.empty = => @alert '' 
-    @alert.add =(x)=> @alert '<br><br>'+x
-    @note = obs ''
-    @note.empty = => @note ''
-    @note.add =(x)=> @note @note()+'<br><br>'+x
+    @current = obs null    
+    @alerts = obs []
+    @notifications = obs []
     # observable Arrays
     @nodes = obs []
     @tags = obs []
@@ -36,13 +32,12 @@ class SimpleNote
     @$view = $( view )
     @view = @$view[ 0 ]
     @pop = $( 'audio', view )[0]
-    @$tagsMenu = $( '#tagsMenu', view )
+    @$tagsMenu = $( '#tagsMenu', view )    
 
   # only return nodes and tags on serialization
   toJSON : =>
     {
-      root   : @root
-      tags  : @tags()
+      root : @root
     }
     
   # revive from JSON data
@@ -51,7 +46,6 @@ class SimpleNote
     data = store.get 'simpleNote'
     if data
       @root = data.root
-      @tags data.tags
     else 
       root = new Node()
       root.id = 'simpleNoteRoot'
@@ -102,6 +96,20 @@ class SimpleNote
   openNode : ( el ) =>
     hash (el and el.id) or ( el and el[0] and ko.dataFor(el[0]) )?.id or el or @root.id
   
+  # functions that work with tags
+  addTag :=> new Tag { smplnt : @, name : prompt 'set a name','' }
+  removeTag :(item)=> 
+    return if not confirm "really delete the tag named #{item.name()}?"
+    @tags.remove item
+    node.tags.remove item for node in @nodes()
+  
+  # effect Functions
+  fadeIn : (el) -> $(el).hide().fadeIn('slow')
+  fadeOut : (el) -> $(el).fadeOut -> $(el).remove()
+  
+  # notificationsystem
+  removeNotification : (item) => @notifications.remove item
+  removeAlert : ( item ) => @alerts.remove item
   
 # static values
 SimpleNote.liststyletypes = [

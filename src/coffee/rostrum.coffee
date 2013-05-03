@@ -13,7 +13,7 @@ timeout =
 interval =
   set : ( ms, fn ) -> setInterval fn, ms
   clear : ( i ) -> clearInterval i
-postpone = ( fn ) -> timeout.set 1, fn
+delay = ( fn ) -> timeout.set 1, fn
   
 # create storage
 store = 

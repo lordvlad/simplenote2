@@ -45,6 +45,7 @@
     <script src="pub/app.js" /></script>
   </head>
   <body>
+    <div id="curtain"><div><i class="icon-cog icon-spin"></i></div></div>
     <div id="fixedTopCentered">
       <div id="selectOptions" data-bind="visible: selectedNodes().length, style:{opacity: selectedNodes().length?1:0}">
         <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
@@ -58,20 +59,20 @@
           <i class="icon-remove" title="unselect all" data-bind="click:selectionUnselect"></i>
         <span>
       </div>
-      <div id="alert" data-bind="visible:alert().length,style:{opacity:alert().length?1:0}">
-        <span data-bind="html:alert"></span>
-        <i class="icon-remove" title="close" data-bind="click:alert.empty"></i>
-      </div>
-      <div id="note" data-bind="visible:note().length,style:{opacity:note().length?1:0}">
-        <span data-bind="html:note"></span>
-        <i class="icon-remove" title="close" data-bind="click:note.empty"></i>
-      </div>
+      <div data-bind="foreach: { data: alerts, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="alert">
+          <span data-bind="html:$data"></span>
+          <i class="icon-remove" title="close" data-bind="click:$root.removeAlert"></i>
+      </div></div>
+      <div data-bind="foreach: { data: notifications, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="note">
+          <span data-bind="html:$data"></span>
+          <i class="icon-remove" title="close" data-bind="click:$root.removeNotification"></i>
+      </div></div>
     </div>
     <div id="notebook" data-bind="with:current">
       <div id="topActions" data-bind="visible: $data!==$root.root">
         <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
         <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
-        <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
+        <!--<i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>-->
         <i class="icon-trash" title="delete" data-bind="click: remove"></i>
         &nbsp;&nbsp;
         <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
@@ -90,10 +91,29 @@
       </div>
       <audio src="snd/pop.mp3"></audio>
     </div>
-    
+    <div id="tags">
+      <span data-bind="text:tags().length"></span>&nbsp;tags<i class="icon-tags"></i>
+      <div data-bind="sortable:{data:tags,options:{handle:'.icon-tag'}}">
+        <div class="tag">
+          <i class="icon-trash" title="delete" data-bind="click:$root.removeTag"></i>
+          <i class="icon-cog" title="edit" data-bind="click:edit"></i>
+          <span data-bind="style:{background:color}">
+            <i class="icon-tag"></i>
+            <span data-bind="text:name"></span>
+          </span>
+        </div>
+      </div>
+        
+    </div>
+    <div id="tagsMenu">
+      <ul data-bind="foreach:tags">
+        <li class="tag"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
+      </ul>
+      <ul>
+        <li class="tag"><i class="icon-plus" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
+    </div>
     <div id="footer">
       <a href="http://waldemarreusch.coding.com" target="_new">me@koding</a>
     </div>
-
   </body>
 </html>

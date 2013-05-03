@@ -10,6 +10,7 @@ class Node
     @title = obs( "" ).extend parse : Node.parseHeadline
     @notes = obs( "" ).extend parse : Node.parseNote
     @deadline = obs( null ).extend parse : Node.parseDate
+    active = obs false
     @bookmarked = obs false
     @selected = obs false
     @done = obs false
@@ -25,6 +26,13 @@ class Node
     @files = obs []
     # computed variables
     @visible = obs true
+    @active = obs {
+      read: active,
+      write : (v) => 
+        if v is active() or v is off then return active v
+        node.active off for node in @smplnt.nodes()
+        active on
+      }
     @visibleChildren = obs => @children.filter 'visible'
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
@@ -83,6 +91,8 @@ class Node
     alert @title()
     
   # toggle some switches
+  makeActive : =>
+    @active on
   toggleSelected : =>
     @selected !@selected()
   toggleExpanded : =>
@@ -90,11 +100,8 @@ class Node
   toggleBookmarked : =>
     @bookmarked !@bookmarked()
   editTags : ( n, e ) =>
-    @smplnt.$tagsMenu
-      .trigger "position", e.target
-      .on "menuselect", (e, ui) ->
-        return unless ui and ui.item
-        if not @tags.remove ui.item then @tags.push ui.item
+    @active on
+    @smplnt.$tagsMenu.trigger 'call', [ n, e ]
   editDeadline : =>
     @deadline (prompt 'set a deadline', new Date()) or null
   editListType : =>
@@ -105,21 +112,22 @@ class Node
     {
       __constructor : 'Node'
       id : @id
-      title : @title()
-      notes : @notes()
+      title : escape @title()
+      notes : escape @notes()
       deadline : @deadline()
       bookmarked : @bookmarked()
       done : @done()
       expanded : @expanded()
       listStyleType : @listStyleType()
       children : @children()
+      tags : @tags()
     }
   
   # STATIC revive from JSON data
   # @param {Object} data json object containting all needed data
   @fromJSON : ( data ) =>
     delete data.__constructor
-    instance = new Node
+    instance = new Node()
     koMap instance, data
   # STATIC parser functions
   @parseNote : (v) => v.replace /(<br>|\n|\r)$/i, ""

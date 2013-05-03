@@ -5,7 +5,8 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     # extend window with simplenote classes
     $.extend true, window, {
       SimpleNote  : SimpleNote
-      Node    : Node
+      Node        : Node
+      Tag         : Tag
     }
     # attach view to model
     model.attachElements view
@@ -17,30 +18,24 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     model.applyEvents()
     # start periodical saving
     model.startPeriodicalSave()
-    
+    # lift the curtains
+    delay -> $("#curtain").fadeOut("slow");    
     # create right click context menu-1
-    $( view ).contextMenu 'text-context-menu', {
-      '<i class="icon-bold"></i>&nbsp;bold' : {
-        click :-> document.execCommand 'bold', false
-      },
-      '<i class="icon-italic"></i>&nbsp;italics' : {
-        click :-> document.execCommand 'italic', false
-      },
-      '<i class="icon-underline"></i>&nbsp;underline' : {
-        click :-> document.execCommand 'underline', false
-      },
-      '<i class="icon-strikethrough"></i>&nbsp;strike-through' : {
-        click :-> document.execCommand 'strikeThrough', false
-      },
-      '<i class="icon-font"></i>&nbsp;drop formatting' : {
-        click :-> document.execCommand 'removeFormat', false
-      },
-      '<i class="icon-link"></i>&nbsp;create link' : {
-        click :-> document.execCommand 'createLink', false, prompt 'insert url href', ''
-      },
+    $( '#tagsMenu', view ).data( 'smplnt-reference', 
+      null
+    ).on( 'call', (e,node,o) ->
+      $( document ).off 'click.tagsmenu'
+      $this = $(this).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast').data('node',node)
+      o.stopPropagation(); o.preventDefault(); e.stopPropagation(); e.preventDefault();
+      $( document ).on 'click.tagsmenu', (e)->
+        return if e.timeStamp is o.timeStamp or $( e.target ).parents( '#tagsMenu' ).length isnt 0
+        $( document ).off 'click.tagsmenu'
+        $this.fadeOut 'fast',->$this.css { top: '', left: '' }
+        on
+      on
+    ).on( 'click', 'li', -> 
+      tag = ko.dataFor this; node = $( this ).parents( '#tagsMenu' ).data( 'node' );
+      if node.tags.remove(tag).length is 0 then node.tags.push tag
+    )
       
       
-      
-    },{
-      delegateEventTo: '.title, .notes'
-    }
