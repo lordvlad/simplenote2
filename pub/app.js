@@ -657,7 +657,8 @@
       this.$view = $(view);
       this.view = this.$view[0];
       this.pop = $('audio', view)[0];
-      return this.$tagsMenu = $('#tagsMenu', view);
+      this.$tagsMenu = $('#tagsMenu', view);
+      return SimpleNote.connectionStatus.valueHasMutated();
     };
 
     SimpleNote.prototype.toJSON = function() {

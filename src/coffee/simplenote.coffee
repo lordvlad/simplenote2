@@ -44,6 +44,7 @@ class SimpleNote
     @view = @$view[ 0 ]
     @pop = $( 'audio', view )[0]
     @$tagsMenu = $( '#tagsMenu', view )    
+    SimpleNote.connectionStatus.valueHasMutated()
 
   # only return nodes and tags on serialization
   toJSON : =>
