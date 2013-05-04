@@ -43,6 +43,7 @@ a {
   width: @width;
   min-width: @min;
   max-width: @max;
+  margin: 0 auto;
 }
 #fixedTopCentered {
   position: fixed;
@@ -51,7 +52,6 @@ a {
   left: 0;
   z-index: 100;
   .alert, .note, {
-    margin: 0 auto;
     .rounded-corners;
     .drop-shadow;    
     .fit-width( 600px, 200px, 80% )
@@ -209,3 +209,21 @@ a {
   }
 }
 
+@media only screen and (max-width: 640px) {
+  .actions {
+    .rounded-corners;
+    .drop-shadow;
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: @highlight;
+    padding: .5em 1em;
+  }
+  .headline .actionsBar .tag {
+    padding: 0 0 0 .4em;
+    span {
+      display: none;
+    }
+  }
+}

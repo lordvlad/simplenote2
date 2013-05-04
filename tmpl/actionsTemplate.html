@@ -1,7 +1,7 @@
 <span class="actionsBar">
   <span class="info">
     <span class="tags" data-bind="foreach:tags">
-      <span class="tag" data-bind="style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
+      <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
     </span>
     <span class="files" data-bind="visible:files().length">
       <i class="icon-file"></i>
