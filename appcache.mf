@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 14
+# rev 18
 
 # Explicitly cached 'master entries'.
 CACHE:
@@ -12,6 +12,7 @@ lib/contextMenu/jquery.contextMenu.css
 lib/jquery/jquery-1.9.1.js
 lib/jqueryui/jquery-ui-1.10.2.custom.min.js
 lib/fancybox/jquery.fancybox.fix.js
+lib/doubletap/jquery.doubletap.js
 lib/contextMenu/jquery.contextMenu.js
 lib/fancybox/jquery.fancybox.min.js
 lib/knockout/knockout.js
