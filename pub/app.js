@@ -918,7 +918,10 @@
       return console.log('obsolete');
     };
     applicationCache.onprogress = function() {
-      return console.log('progress');
+      console.log('progress');
+      return delay(function() {
+        return $('#curtain').find('i').after('.');
+      });
     };
     applicationCache.onupdateready = function() {
       console.log('ready');

@@ -6,7 +6,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
   applicationCache.onerror =-> console.log('offline'); $.holdReady(off); SimpleNote.connectionStatus(off)
   applicationCache.onnoupdate =-> console.log('online'); $.holdReady(off); SimpleNote.connectionStatus(on)
   applicationCache.onobsolete =-> console.log('obsolete')
-  applicationCache.onprogress =-> console.log('progress')
+  applicationCache.onprogress =-> console.log('progress'); delay -> $( '#curtain' ).find('i').after('.');
   applicationCache.onupdateready = ->
     console.log('ready')
     delay -> location.href='index.html'
