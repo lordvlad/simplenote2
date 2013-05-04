@@ -78,6 +78,24 @@ hash = window.hash = do ->
   h.subscribe (v) -> location.hash = v
   s(); h
     
-    
-    
+# get intersecting elements of two arrays    
 intersect = window.intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
+
+# supply shortcuts for popular keys
+$.extend true, window, {
+  ESC       : 27
+  ENTER     : 13
+  TAB       : 9
+  BACKSPACE : 8
+  SPACE     : 32
+  UP        : 38
+  DOWN      : 40
+  LEFT      : 37
+  RIGHT     : 39
+  DEL       : 46
+  HOME      : 36
+  PGUP      : 33
+  PGDOWN    : 34
+  END       : 35
+}
+

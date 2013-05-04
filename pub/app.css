@@ -126,8 +126,12 @@ i[class^="icon-"]:hover {
   padding: 0 1em;
   margin: .5em 0 0 0;
 }
+#search > ul:empty:after {
+  content: 'nothing to see here ...';
+  opacity: 0.5;
+}
 #search > ul li {
-  cursor: hover;
+  cursor: pointer;
 }
 #search > ul li:hover {
   color: #00d0ff;
@@ -330,7 +334,12 @@ i[class^="icon-"]:hover {
 #tagsMenu input {
   padding: 0;
   outline: none;
-  border: solid 1px #b3b3b3;
+  border: none;
+  border-bottom: solid 1px #b3b3b3;
+}
+#tags .icon-pencil,
+#tags .icon-trash {
+  float: right;
 }
 @media only screen and (max-width: 640px) {
   i[class^="icon-"] {

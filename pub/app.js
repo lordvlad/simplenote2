@@ -179,6 +179,391 @@
     });
   };
 
+  $.extend(true, window, {
+    ESC: 27,
+    ENTER: 13,
+    TAB: 9,
+    BACKSPACE: 8,
+    SPACE: 32,
+    UP: 38,
+    DOWN: 40,
+    LEFT: 37,
+    RIGHT: 39,
+    DEL: 46,
+    HOME: 36,
+    PGUP: 33,
+    PGDOWN: 34,
+    END: 35
+  });
+
+  /*
+  @class Tag
+  */
+
+
+  Tag = (function() {
+    Tag.fromJSON = function(data) {
+      var instance, tag;
+
+      if (tag = SimpleNote.activeInstance.tags.find('id', data.id)) {
+        return tag;
+      }
+      delete data.__constructor;
+      instance = new Tag();
+      return koMap(instance, data);
+    };
+
+    function Tag(options) {
+      this.toggleInFilter = __bind(this.toggleInFilter, this);
+      this._delete = __bind(this._delete, this);
+      this.remove = __bind(this.remove, this);
+      this.edit = __bind(this.edit, this);
+      this.toJSON = __bind(this.toJSON, this);
+      var _this = this;
+
+      this.id = uuid();
+      this.model = SimpleNote.activeInstance;
+      this.name = obs((options != null ? options.name : void 0) || "");
+      this.color = obs((options != null ? options.color : void 0) || "white");
+      this.fgColor = obs(function() {
+        var c, x;
+
+        x = [];
+        c = (x[0] = new RGBColor(_this.color())).foreground();
+        delete x[0];
+        return c;
+      });
+      this.count = obs(function() {
+        return Node.nodes.filter(function(n) {
+          return n.tags.has(_this);
+        }).length;
+      });
+      this.model.tags.push(this);
+      this.model.save();
+    }
+
+    Tag.prototype.toJSON = function() {
+      return {
+        __constructor: 'Tag',
+        id: this.id,
+        name: this.name(),
+        color: this.color()
+      };
+    };
+
+    Tag.prototype.edit = function() {
+      this.name(prompt("change name from " + (this.name()) + " to ...", this.name()));
+      this.color(prompt("change color from " + (this.color()) + " to ...", this.color()));
+      return this.model.save();
+    };
+
+    Tag.prototype.remove = function() {
+      if (confirm("really delete tag '" + (this.name()) + "'?")) {
+        return this._delete;
+      }
+    };
+
+    Tag.prototype._delete = function() {
+      var node, _i, _len, _ref, _results;
+
+      this.model.tags.remove(this);
+      _ref = this.model.nodes();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        _results.push(node.tags.remove(this));
+      }
+      return _results;
+    };
+
+    Tag.prototype.toggleInFilter = function(i, e) {
+      console.log(arguments);
+      if ($(e.target).is('.icon-trash, .icon-pencil')) {
+        return;
+      }
+      if (this.model.searchFilter().match('#' + this.name())) {
+        this.model.searchFilter(this.model.searchFilter().replace('#' + this.name(), '').replace(/\s{2,}/g, " ").replace(/^\s*|\s*$/g, "") + " ");
+      } else {
+        this.model.searchFilter((this.model.searchFilter() + " #" + this.name()).replace(/\s{2,}/g, " ").replace(/^\s*|\s*$/g, "") + " ");
+      }
+      return this.model.editingFilter(true);
+    };
+
+    return Tag;
+
+  }).call(this);
+
+  /*
+  * @class Node
+  */
+
+
+  Node = (function() {
+    function Node(options) {
+      this.toJSON = __bind(this.toJSON, this);
+      this.editFiles = __bind(this.editFiles, this);
+      this.editListType = __bind(this.editListType, this);
+      this.editDeadline = __bind(this.editDeadline, this);
+      this.editTags = __bind(this.editTags, this);
+      this.toggleBookmarked = __bind(this.toggleBookmarked, this);
+      this.toggleExpanded = __bind(this.toggleExpanded, this);
+      this.toggleSelected = __bind(this.toggleSelected, this);
+      this.makeActive = __bind(this.makeActive, this);
+      this.alarm = __bind(this.alarm, this);
+      this._delete = __bind(this._delete, this);
+      this.remove = __bind(this.remove, this);
+      var active,
+        _this = this;
+
+      this.model = SimpleNote.activeInstance;
+      this.id = uuid();
+      this.title = obs("").extend({
+        parse: Node.parseHeadline
+      });
+      this.notes = obs("").extend({
+        parse: Node.parseNote
+      });
+      this.deadline = obs(null).extend({
+        parse: Node.parseDate
+      });
+      active = obs(false);
+      this.bookmarked = obs(false);
+      this.selected = obs(false);
+      this.done = obs(false);
+      this.archived = obs(false);
+      this.expanded = obs(false);
+      this.listStyleType = obs([]);
+      this.editingTitle = obs(false);
+      this.editingNote = obs(false);
+      this.children = obs([]);
+      this.tags = obs([]);
+      this.tags.extend({
+        pickFrom: {
+          array: this.model.tags,
+          key: "name"
+        }
+      });
+      this.files = obs([]);
+      this.visibleChildren = obs(function() {
+        return _this.children.filter('visible');
+      });
+      this.visible = obs(function() {
+        var f;
+
+        f = _this.model.realFilter();
+        return _this.model.current === _this || _this.visibleChildren().length || Node.checkFilter(_this, f);
+      });
+      this.active = obs({
+        read: active,
+        write: function(v) {
+          var node, _i, _len, _ref;
+
+          if (v === active() || v === false) {
+            return active(v);
+          }
+          _ref = _this.model.nodes();
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            node.active(false);
+          }
+          return active(true);
+        }
+      });
+      this.hasNote = obs(function() {
+        return _this.notes().length;
+      });
+      this.hasChildren = obs(function() {
+        return _this.children().length;
+      });
+      this.cssClass = obs(function() {
+        return _this.listStyleType().concat("node").filter(Boolean).join(" ");
+      });
+      this.bullet = obs(function() {
+        return ((_this.hasNote() || _this.hasChildren()) && ((!_this.expanded() && Node.bullets.right) || (_this.expanded() && Node.bullets.down))) || Node.bullets.round;
+      });
+      this.parent = obs(function() {
+        return _this.model.nodes.find(function(n) {
+          return n.children.has(_this);
+        });
+      });
+      this.parents = obs(function() {
+        var p, x;
+
+        if (_this.parent() === null) {
+          return [];
+        }
+        p = [_this.parent()];
+        while ((x = p[p.length - 1].parent()) !== null) {
+          p.push(x);
+        }
+        return p;
+      });
+      this.deadlineDisplay = (function() {
+        var personalTimer, subscribed, subscription;
+
+        personalTimer = obs(null);
+        subscribed = obs(false);
+        subscription = null;
+        subscribed.subscribe(function(v) {
+          if (v === true) {
+            return subscription = time.subscribe(function(w) {
+              return personalTimer(w);
+            });
+          } else {
+            return typeof subscription.dispose === "function" ? subscription.dispose() : void 0;
+          }
+        });
+        return obs(function() {
+          var d;
+
+          personalTimer();
+          d = _this.deadline();
+          if (d === null) {
+            return "";
+          }
+          if (d > now()) {
+            subscribed(true);
+            return moment(d).fromNow();
+          }
+          subscribed(false);
+          _this.alarm();
+          return "";
+        }).extend({
+          throttle: 1
+        });
+      })();
+      this.model.nodes.push(this);
+      Node.nodes.push(this);
+      if (options != null ? options.parent : void 0) {
+        options.parent.children.push(this);
+      }
+      this;
+    }
+
+    Node.prototype.open = function() {
+      return hash(this.id);
+    };
+
+    Node.prototype.remove = function() {
+      if (confirm('really delete this node?')) {
+        return this._delete();
+      }
+    };
+
+    Node.prototype._delete = function() {
+      if (this === this.model.current()) {
+        this.model.current(this.parent());
+      }
+      this.parent().children.remove(this);
+      this.model.nodes.remove(this);
+      return this.model.save();
+    };
+
+    Node.prototype.alarm = function() {
+      var _base;
+
+      this.deadline(null);
+      this.model.save();
+      if (typeof (_base = this.model.pop).play === "function") {
+        _base.play();
+      }
+      return alert(this.title());
+    };
+
+    Node.prototype.makeActive = function() {
+      return this.active(true);
+    };
+
+    Node.prototype.toggleSelected = function() {
+      return this.selected(!this.selected());
+    };
+
+    Node.prototype.toggleExpanded = function() {
+      return this.expanded(!this.expanded());
+    };
+
+    Node.prototype.toggleBookmarked = function() {
+      return this.bookmarked(!this.bookmarked());
+    };
+
+    Node.prototype.editTags = function(n, e) {
+      this.active(true);
+      return this.model.$tagsMenu.trigger('call', [n, e]);
+    };
+
+    Node.prototype.editDeadline = function() {
+      return this.deadline((prompt('set a deadline', new Date())) || null);
+    };
+
+    Node.prototype.editListType = function() {};
+
+    Node.prototype.editFiles = function() {};
+
+    Node.prototype.toJSON = function() {
+      return {
+        __constructor: 'Node',
+        id: this.id,
+        title: escape(this.title()),
+        notes: escape(this.notes()),
+        deadline: this.deadline(),
+        bookmarked: this.bookmarked(),
+        done: this.done(),
+        expanded: this.expanded(),
+        listStyleType: this.listStyleType(),
+        children: this.children(),
+        tags: this.tags()
+      };
+    };
+
+    Node.fromJSON = function(data) {
+      var instance;
+
+      delete data.__constructor;
+      instance = new Node();
+      return koMap(instance, data);
+    };
+
+    Node.parseNote = function(v) {
+      return v.replace(/(<br>|\n|\r)$/i, "");
+    };
+
+    Node.parseHeadline = function(v) {
+      return v.replace(/<br>|\n|\r/ig, "");
+    };
+
+    Node.parseDate = function(v) {
+      var x;
+
+      if (v === null) {
+        return null;
+      }
+      if (isDate(x = new Date(v)) || isDate(x = new Date(parseInt(v))) || isDate(x = Date.intelliParse(v))) {
+        return x;
+      }
+      return null;
+    };
+
+    Node.checkFilter = function(node, filter) {
+      var r;
+
+      r = false;
+      r = (!filter.tags.length) || intersect(node.tags.map('name'), filter.tags).length;
+      r = r && ((!filter.words.length) || (node.title() + " " + node.notes()).match(new RegExp(filter.words.join('|'), 'i')));
+      return r;
+    };
+
+    Node.bullets = {
+      right: "&#9658;",
+      down: "&#9660",
+      round: "&#9679;"
+    };
+
+    Node.nodes = obs([]);
+
+    return Node;
+
+  })();
+
   /*
   @class simpleNote
   */
@@ -261,8 +646,10 @@
         return ((_ref = _this.current()) != null ? typeof _ref.parents === "function" ? _ref.parents().reverse().concat([_this.current()]) : void 0 : void 0) || [];
       });
       hash.subscribe(function(id) {
+        var _ref;
+
         _this.current((id && id.length && _this.nodes.find("id", id)) || _this.root);
-        return _this.current().editingNote(true);
+        return (_ref = _this.current()) != null ? _ref.editingNote(true) : void 0;
       });
     }
 
@@ -275,7 +662,8 @@
 
     SimpleNote.prototype.toJSON = function() {
       return {
-        root: this.root
+        root: this.root,
+        tags: this.tags()
       };
     };
 
@@ -283,8 +671,9 @@
       var data, root;
 
       data = store.get('simpleNote');
-      if (data) {
+      if (data && data.root) {
         this.root = data.root;
+        this.tags(data.tags || []);
       } else {
         root = new Node();
         root.id = 'simpleNoteRoot';
@@ -421,7 +810,6 @@
 
     SimpleNote.prototype.addTag = function() {
       return new Tag({
-        smplnt: this,
         name: prompt('set a name', '')
       });
     };
@@ -468,6 +856,13 @@
 
   })();
 
+  SimpleNote.connectionStatus = obs(null);
+
+  SimpleNote.connectionStatus.subscribe(function(v) {
+    $('#indicate_' + (v ? 'online' : 'offline')).show();
+    return $('#indicate_' + (v ? 'offline' : 'online')).hide();
+  });
+
   SimpleNote.liststyletypes = [
     {
       name: "none",
@@ -496,363 +891,63 @@
     }
   ];
 
-  /*
-  * @class Node
-  */
-
-
-  Node = (function() {
-    function Node(options) {
-      this.toJSON = __bind(this.toJSON, this);
-      this.editFiles = __bind(this.editFiles, this);
-      this.editListType = __bind(this.editListType, this);
-      this.editDeadline = __bind(this.editDeadline, this);
-      this.editTags = __bind(this.editTags, this);
-      this.toggleBookmarked = __bind(this.toggleBookmarked, this);
-      this.toggleExpanded = __bind(this.toggleExpanded, this);
-      this.toggleSelected = __bind(this.toggleSelected, this);
-      this.makeActive = __bind(this.makeActive, this);
-      this.alarm = __bind(this.alarm, this);
-      this._delete = __bind(this._delete, this);
-      this.remove = __bind(this.remove, this);
-      var active,
-        _this = this;
-
-      this.smplnt = (options != null ? options.smplnt : void 0) || window.note;
-      this.id = uuid();
-      this.title = obs("").extend({
-        parse: Node.parseHeadline
-      });
-      this.notes = obs("").extend({
-        parse: Node.parseNote
-      });
-      this.deadline = obs(null).extend({
-        parse: Node.parseDate
-      });
-      active = obs(false);
-      this.bookmarked = obs(false);
-      this.selected = obs(false);
-      this.done = obs(false);
-      this.archived = obs(false);
-      this.expanded = obs(false);
-      this.listStyleType = obs([]);
-      this.editingTitle = obs(false);
-      this.editingNote = obs(false);
-      this.children = obs([]);
-      this.tags = obs([]);
-      this.tags.extend({
-        pickFrom: {
-          array: this.smplnt.tags,
-          key: "name"
-        }
-      });
-      this.files = obs([]);
-      this.visibleChildren = obs(function() {
-        return _this.children.filter('visible');
-      });
-      this.visible = obs(function() {
-        var f;
-
-        f = _this.smplnt.realFilter();
-        return _this.smplnt.current === _this || _this.visibleChildren().length || Node.checkFilter(_this, f);
-      });
-      this.active = obs({
-        read: active,
-        write: function(v) {
-          var node, _i, _len, _ref;
-
-          if (v === active() || v === false) {
-            return active(v);
-          }
-          _ref = _this.smplnt.nodes();
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            node = _ref[_i];
-            node.active(false);
-          }
-          return active(true);
-        }
-      });
-      this.hasNote = obs(function() {
-        return _this.notes().length;
-      });
-      this.hasChildren = obs(function() {
-        return _this.children().length;
-      });
-      this.cssClass = obs(function() {
-        return _this.listStyleType().concat("node").filter(Boolean).join(" ");
-      });
-      this.bullet = obs(function() {
-        return ((_this.hasNote() || _this.hasChildren()) && ((!_this.expanded() && Node.bullets.right) || (_this.expanded() && Node.bullets.down))) || Node.bullets.round;
-      });
-      this.parent = obs(function() {
-        return _this.smplnt.nodes.find(function(n) {
-          return n.children.has(_this);
-        });
-      });
-      this.parents = obs(function() {
-        var p, x;
-
-        if (_this.parent() === null) {
-          return [];
-        }
-        p = [_this.parent()];
-        while ((x = p[p.length - 1].parent()) !== null) {
-          p.push(x);
-        }
-        return p;
-      });
-      this.deadlineDisplay = (function() {
-        var personalTimer, subscribed, subscription;
-
-        personalTimer = obs(null);
-        subscribed = obs(false);
-        subscription = null;
-        subscribed.subscribe(function(v) {
-          if (v === true) {
-            return subscription = time.subscribe(function(w) {
-              return personalTimer(w);
-            });
-          } else {
-            return typeof subscription.dispose === "function" ? subscription.dispose() : void 0;
-          }
-        });
-        return obs(function() {
-          var d;
-
-          personalTimer();
-          d = _this.deadline();
-          if (d === null) {
-            return "";
-          }
-          if (d > now()) {
-            subscribed(true);
-            return moment(d).fromNow();
-          }
-          subscribed(false);
-          _this.alarm();
-          return "";
-        }).extend({
-          throttle: 1
-        });
-      })();
-      this.smplnt.nodes.push(this);
-      if (options != null ? options.parent : void 0) {
-        options.parent.children.push(this);
-      }
-      this;
-    }
-
-    Node.prototype.open = function() {
-      return hash(this.id);
-    };
-
-    Node.prototype.remove = function() {
-      if (confirm('really delete this node?')) {
-        return this._delete();
-      }
-    };
-
-    Node.prototype._delete = function() {
-      if (this === this.smplnt.current()) {
-        this.smplnt.current(this.parent());
-      }
-      this.parent().children.remove(this);
-      this.smplnt.nodes.remove(this);
-      return this.smplnt.save();
-    };
-
-    Node.prototype.alarm = function() {
-      this.deadline(null);
-      this.smplnt.save();
-      this.smplnt.pop.play();
-      return alert(this.title());
-    };
-
-    Node.prototype.makeActive = function() {
-      return this.active(true);
-    };
-
-    Node.prototype.toggleSelected = function() {
-      return this.selected(!this.selected());
-    };
-
-    Node.prototype.toggleExpanded = function() {
-      return this.expanded(!this.expanded());
-    };
-
-    Node.prototype.toggleBookmarked = function() {
-      return this.bookmarked(!this.bookmarked());
-    };
-
-    Node.prototype.editTags = function(n, e) {
-      this.active(true);
-      return this.smplnt.$tagsMenu.trigger('call', [n, e]);
-    };
-
-    Node.prototype.editDeadline = function() {
-      return this.deadline((prompt('set a deadline', new Date())) || null);
-    };
-
-    Node.prototype.editListType = function() {};
-
-    Node.prototype.editFiles = function() {};
-
-    Node.prototype.toJSON = function() {
-      return {
-        __constructor: 'Node',
-        id: this.id,
-        title: escape(this.title()),
-        notes: escape(this.notes()),
-        deadline: this.deadline(),
-        bookmarked: this.bookmarked(),
-        done: this.done(),
-        expanded: this.expanded(),
-        listStyleType: this.listStyleType(),
-        children: this.children(),
-        tags: this.tags()
-      };
-    };
-
-    Node.fromJSON = function(data) {
-      var instance;
-
-      delete data.__constructor;
-      instance = new Node();
-      return koMap(instance, data);
-    };
-
-    Node.parseNote = function(v) {
-      return v.replace(/(<br>|\n|\r)$/i, "");
-    };
-
-    Node.parseHeadline = function(v) {
-      return v.replace(/<br>|\n|\r/ig, "");
-    };
-
-    Node.parseDate = function(v) {
-      var x;
-
-      if (v === null) {
-        return null;
-      }
-      if (isDate(x = new Date(v)) || isDate(x = new Date(parseInt(v))) || isDate(x = Date.intelliParse(v))) {
-        return x;
-      }
-      return null;
-    };
-
-    Node.checkFilter = function(node, filter) {
-      var r;
-
-      r = false;
-      r = (!filter.tags.length) || intersect(node.tags.map('name'), filter.tags).length;
-      r = r && ((!filter.words.length) || (node.title() + " " + node.notes()).match(new RegExp(filter.words.join('|'), 'i')));
-      return r;
-    };
-
-    Node.bullets = {
-      right: "&#9658;",
-      down: "&#9660",
-      round: "&#9679;"
-    };
-
-    return Node;
-
-  })();
-
-  /*
-  @class Tag
-  */
-
-
-  Tag = (function() {
-    function Tag(options) {
-      this.toggleInFilter = __bind(this.toggleInFilter, this);
-      this.edit = __bind(this.edit, this);
-      this.toJSON = __bind(this.toJSON, this);
-      var _this = this;
-
-      this.id = uuid();
-      this.smplnt = (options != null ? options.smplnt : void 0) || window.note;
-      this.name = obs((options != null ? options.name : void 0) || "");
-      this.color = obs((options != null ? options.color : void 0) || "white");
-      this.count = obs(function() {
-        return _this.smplnt.nodes.filter(function(n) {
-          return n.tags.has(_this);
-        }).length;
-      });
-      this.smplnt.tags.push(this);
-      this.smplnt.save();
-    }
-
-    Tag.prototype.toJSON = function() {
-      return {
-        __constructor: 'Tag',
-        id: this.id,
-        name: this.name(),
-        color: this.color()
-      };
-    };
-
-    Tag.fromJSON = function(data) {
-      var instance;
-
-      delete data.__constructor;
-      instance = new Tag();
-      return koMap(instance, data);
-    };
-
-    Tag.prototype.edit = function() {
-      this.name(prompt("change name from " + (this.name()) + " to ...", this.name()));
-      this.color(prompt("change color from " + (this.color()) + " to ...", this.color()));
-      return this.smplnt.save();
-    };
-
-    Tag.prototype.toggleInFilter = function() {
-      if (this.smplnt.searchFilter().match('#' + this.name())) {
-        this.smplnt.searchFilter(this.smplnt.searchFilter().replace('#' + this.name(), '').replace(/\s{2,}/g, " ").replace(/^\s*|\s*$/g, "") + " ");
-      } else {
-        this.smplnt.searchFilter((this.smplnt.searchFilter() + " #" + this.name()).replace(/\s{2,}/g, " ").replace(/^\s*|\s*$/g, "") + " ");
-      }
-      return this.smplnt.editingFilter(true);
-    };
-
-    return Tag;
-
-  }).call(this);
-
   (function($, view, model) {
-    applicationCache.onerror = function() {
-      return $(function() {
-        return $("#indicate_online").hide();
-      });
+    applicationCache.oncached = function() {
+      return console.log('cached');
     };
-    applicationCache.onnoupdate = function() {
-      return $(function() {
-        return $("#indicate_offline").hide();
-      });
-    };
-    applicationCache.ondownloading = function() {
+    applicationCache.onchecking = function() {
+      console.log('checking');
       return $.holdReady(true);
     };
+    applicationCache.ondownloading = function() {
+      console.log('downloading');
+      return $.holdReady(true);
+    };
+    applicationCache.onerror = function() {
+      console.log('offline');
+      $.holdReady(false);
+      return SimpleNote.connectionStatus(false);
+    };
+    applicationCache.onnoupdate = function() {
+      console.log('online');
+      $.holdReady(false);
+      return SimpleNote.connectionStatus(true);
+    };
+    applicationCache.onobsolete = function() {
+      return console.log('obsolete');
+    };
+    applicationCache.onprogress = function() {
+      return console.log('progress');
+    };
     applicationCache.onupdateready = function() {
-      $('#curtain').find('i').after("<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>").find('a').focus();
-      return timeout.set(1000, function() {
+      console.log('ready');
+      delay(function() {
         return location.href = 'index.html';
+      });
+      return delay(function() {
+        return $('#curtain').find('i').after("<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>").find('a').focus();
       });
     };
     return $(function() {
       $.extend(true, window, {
         SimpleNote: SimpleNote,
+        note: SimpleNote.activeInstance,
         Node: Node,
         Tag: Tag
       });
-      model.attachElements(view);
       ko.applyBindings(model, model.view);
+      model.attachElements(view);
       model.revive();
       model.applyEvents();
       model.startPeriodicalSave();
-      $('#tagsMenu', view).data('smplnt-reference', null).on('call', function(e, node, o) {
+      $('#tagsMenu', view).data('node', null).on('dismiss', function() {
+        return $(this).fadeOut('fast', function() {
+          return $(this).css({
+            top: '',
+            left: ''
+          });
+        });
+      }).on('call', function(e, node, o) {
         var $this;
 
         $(document).off('click.tagsmenu');
@@ -861,21 +956,15 @@
           at: 'right bottom',
           of: o.target
         }).fadeIn('fast').data('node', node);
-        $(document).on('click.tagsmenu', function(e) {
+        $this.find('input').focus();
+        return $(document).on('click.tagsmenu', function(e) {
           if (e.timeStamp === o.timeStamp || $(e.target).parents('#tagsMenu').length !== 0) {
             return;
           }
           $(document).off('click.tagsmenu');
-          $this.fadeOut('fast', function() {
-            return $this.css({
-              top: '',
-              left: ''
-            });
-          });
-          return true;
+          return $this.trigger('dismiss');
         });
-        return true;
-      }).on('click', 'li', function() {
+      }).on('click', 'li.list', function() {
         var node, tag;
 
         tag = ko.dataFor(this);
@@ -883,6 +972,24 @@
         if (node.tags.remove(tag).length === 0) {
           return node.tags.push(tag);
         }
+      }).on('click', 'i.icon-plus', function() {
+        var name;
+
+        if (!(name = $(this).next().val())) {
+          return;
+        }
+        $(this).parents('#tagsMenu').data('node').tags.push(new Tag({
+          name: name
+        }));
+        return $(this).next().val('').focus();
+      }).on('keydown', 'input', function(e) {
+        if (e.which === ESC) {
+          $(this).parents('#tagsMenu').trigger('dismiss');
+        }
+        if (e.which !== ENTER) {
+          return;
+        }
+        return $(this).prev().trigger('click');
       });
       $('#search > div >.icon-tags', view).click(function(e) {
         model.editingFilter(true);
@@ -891,7 +998,7 @@
         }
         $('#tags').slideDown('fast');
         return $(document).on('click.tagsfilter', function(f) {
-          if (e.timeStamp === f.timeStamp || $(f.target).parents('#tags').length !== 0) {
+          if (e.timeStamp === f.timeStamp) {
             return;
           }
           $(document).off('click.tagsfilter');
@@ -917,7 +1024,7 @@
       });
       return null;
     });
-  })(jQuery, "body", window.note = new SimpleNote());
+  })(jQuery, "body", SimpleNote.activeInstance = new SimpleNote());
 
   (function($, view, model) {
     var a, b, node, _i, _len, _ref, _results,

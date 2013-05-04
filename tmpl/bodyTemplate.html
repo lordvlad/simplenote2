@@ -8,7 +8,12 @@
       <i class="icon-cog" title="options"></i>
     </div>
     <ul id="tags" data-bind="foreach:tags">
-      <li data-bind="click:toggleInFilter,style:{background:color}"><i class="icon-tag"></i><span data-bind="html:name"></span></li>
+      <li data-bind="click:toggleInFilter,style:{background:color}">
+        <i class="icon-tag"></i>
+        <span data-bind="html:name,style:{color:fgColor}"></span>
+        <i class="icon-trash" title="delete tag" data-bind="click:remove"></i>
+        <i class="icon-pencil" title="edit tag" data-bind="click:edit"></i>
+      </li>
     </ul>
     <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
       <li data-bind="click:open"><i class="icon-star"></i><span data-bind="html:title"></span></li>
@@ -64,11 +69,12 @@
   <audio src="snd/pop.mp3"></audio>
 </div>
 <div id="tagsMenu">
-  <ul data-bind="foreach:tags">
-    <li class="tag"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
-  </ul>
   <ul>
     <li class="tag"><i class="icon-plus" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
+  </ul>
+  <ul data-bind="foreach:tags">
+    <li class="tag list"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
+  </ul>
 </div>
 <div id="footer">
   <a href="http://waldemarreusch.koding.com" target="_new">me@koding</a>

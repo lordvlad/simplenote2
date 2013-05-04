@@ -126,8 +126,12 @@ a {
     list-style-type: none;
     padding: 0 1em;
     margin: .5em 0 0 0;
+    &:empty:after {
+      content: 'nothing to see here ...';
+      opacity: 0.5;
+    }
     li {
-      cursor: hover;
+      cursor: pointer;
     }
     li:hover {
       color: @highlight;

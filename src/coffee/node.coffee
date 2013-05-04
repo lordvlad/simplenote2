@@ -4,7 +4,7 @@
 class Node
   constructor : ( options ) ->
     # simple variables
-    @smplnt = options?.smplnt || window.note
+    @model = SimpleNote.activeInstance
     @id = uuid()
     # observable variables      
     @title = obs( "" ).extend parse : Node.parseHeadline
@@ -22,26 +22,26 @@ class Node
     # observable arrays  
     @children = obs []
     @tags = obs []
-    @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
+    @tags.extend pickFrom : { array: @model.tags, key : "name" }
     @files = obs []
     # computed variables
     @visibleChildren = obs => @children.filter 'visible'
     @visible = obs =>
-      f = @smplnt.realFilter()
-      @smplnt.current is @ or @visibleChildren().length or Node.checkFilter( @, f )
+      f = @model.realFilter()
+      @model.current is @ or @visibleChildren().length or Node.checkFilter( @, f )
       
     @active = obs {
       read: active,
       write : (v) => 
         if v is active() or v is off then return active v
-        node.active off for node in @smplnt.nodes()
+        node.active off for node in @model.nodes()
         active on
       }
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
     @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and Node.bullets.right ) or( @expanded() and Node.bullets.down ) ) ) or Node.bullets.round
-    @parent = obs => @smplnt.nodes.find (n) => n.children.has @
+    @parent = obs => @model.nodes.find (n) => n.children.has @
     @parents = obs =>
       if @parent() is null then return []
       p = [@parent()]
@@ -70,7 +70,8 @@ class Node
       ).extend({throttle:1})
     
     # push self to simplenote nodes
-    @smplnt.nodes.push @
+    @model.nodes.push @
+    Node.nodes.push @
     # push self to parent
     if options?.parent
       options.parent.children.push @
@@ -84,14 +85,14 @@ class Node
     if confirm 'really delete this node?'
       @_delete()
   _delete :=>
-    if ( @ is @smplnt.current() ) then @smplnt.current( @parent() )
+    if ( @ is @model.current() ) then @model.current( @parent() )
     @parent().children.remove @
-    @smplnt.nodes.remove @
-    @smplnt.save()
+    @model.nodes.remove @
+    @model.save()
   alarm : =>
     @deadline null
-    @smplnt.save()
-    @smplnt.pop.play()
+    @model.save()
+    @model.pop.play?()
     alert @title()
     
   # toggle some switches
@@ -105,12 +106,11 @@ class Node
     @bookmarked !@bookmarked()
   editTags : ( n, e ) =>
     @active on
-    @smplnt.$tagsMenu.trigger 'call', [ n, e ]
+    @model.$tagsMenu.trigger 'call', [ n, e ]
   editDeadline : =>
     @deadline (prompt 'set a deadline', new Date()) or null
   editListType : =>
   editFiles : =>
-  
   
   toJSON : =>
     {
@@ -150,6 +150,6 @@ class Node
     right : "&#9658;" # "<i class='icon-circle'></i>",
     down : "&#9660" # "<i class='icon-chevron-right'></i>",
     round  : "&#9679;" # "<i class='icon-chevron-down'></i>"
-  
   }
+  @nodes : obs []
   

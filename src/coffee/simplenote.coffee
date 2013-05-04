@@ -37,7 +37,7 @@ class SimpleNote
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or @root
-      @current().editingNote on
+      @current()?.editingNote on
       
   attachElements : ( view ) =>
     @$view = $( view )
@@ -49,14 +49,16 @@ class SimpleNote
   toJSON : =>
     {
       root : @root
+      tags : @tags()
     }
     
   # revive from JSON data
   # @param {Object} data json object containting all needed data
   revive : =>
     data = store.get 'simpleNote'
-    if data
+    if data and data.root
       @root = data.root
+      @tags data.tags or []
     else 
       root = new Node()
       root.id = 'simpleNoteRoot'
@@ -109,7 +111,7 @@ class SimpleNote
     hash (el and el.id) or ( el and el[0] and ko.dataFor(el[0]) )?.id or el or @root.id
   
   # functions that work with tags
-  addTag :=> new Tag { smplnt : @, name : prompt 'set a name','' }
+  addTag :=> new Tag { name : prompt 'set a name','' }
   removeTag :(item)=> 
     return if not confirm "really delete the tag named #{item.name()}?"
     @tags.remove item
@@ -125,6 +127,13 @@ class SimpleNote
   
   # filter functions
   clearSearchFilter :=> @searchFilter ''
+  
+
+SimpleNote.connectionStatus = obs null
+SimpleNote.connectionStatus.subscribe((v) -> 
+  $( '#indicate_' + (if v then 'online' else 'offline' )).show()
+  $( '#indicate_' + ( if v then 'offline' else 'online' )).hide()
+)
   
 # static values
 SimpleNote.liststyletypes = [
