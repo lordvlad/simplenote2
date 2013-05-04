@@ -43,7 +43,7 @@ i[class^="icon-"]:hover {
   border-radius: 5px;
   box-shadow: 0px 0px 10px #888888;
   width: 600px;
-  min-width: 400px;
+  min-width: 200px;
   max-width: 80%;
 }
 #fixedTopCentered .alert {
@@ -66,11 +66,11 @@ i[class^="icon-"]:hover {
   -o-border-radius: 5px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px #888888;
+  width: 800px;
+  min-width: 200px;
+  max-width: 90%;
   background: #ffffff;
   margin: .5em auto;
-  width: 800px;
-  min-width: 400px;
-  max-width: 90%;
   overflow: hidden;
   position: relative;
   padding-bottom: .5em;
@@ -91,7 +91,7 @@ i[class^="icon-"]:hover {
   background: #00d0ff;
 }
 #selectOptions > div {
-  padding: .5em 1em 0 .5em;
+  padding: .5em 1em 0 1em;
 }
 #selectOptions > div .options {
   float: right;
@@ -138,12 +138,12 @@ i[class^="icon-"]:hover {
   -o-border-radius: 5px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px #888888;
+  width: 800px;
+  min-width: 200px;
+  max-width: 90%;
   background-color: #ffffff;
   color: #333333;
   margin: 3.3em auto 2em auto;
-  width: 800px;
-  min-width: 400px;
-  max-width: 90%;
   min-height: 400px;
 }
 #notebook #topActions {
@@ -188,9 +188,9 @@ i[class^="icon-"]:hover {
   opacity: 1;
 }
 #footer {
-  width: 400px;
-  margin: auto;
-  font-size: 80%;
+  width: 800px;
+  min-width: 200px;
+  max-width: 90%;
   text-align: center;
 }
 #curtain {

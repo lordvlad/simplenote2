@@ -39,7 +39,11 @@ a {
 .drop-shadow ( @color: #888 ){
   box-shadow: 0px 0px 10px @color;
 }
-
+.fit-width ( @width: 800px, @min: 200px, @max: 90% ){
+  width: @width;
+  min-width: @min;
+  max-width: @max;
+}
 #fixedTopCentered {
   position: fixed;
   top: 0;
@@ -50,9 +54,7 @@ a {
     margin: 0 auto;
     .rounded-corners;
     .drop-shadow;    
-    width: 600px;
-    min-width: 400px;
-    max-width: 80%;    
+    .fit-width( 600px, 200px, 80% )
   }
   .alert {
     background: @alert;
@@ -70,11 +72,9 @@ a {
 #search, #selectOptions {
   .rounded-corners;
   .drop-shadow;
+  .fit-width;
   background: @bright;
   margin: .5em auto;
-  width: 800px;
-  min-width: 400px;
-  max-width: 90%;
   overflow: hidden;
   position: relative;
   padding-bottom: .5em;
@@ -92,7 +92,7 @@ a {
 #selectOptions {
   background: @highlight;
   > div {
-    padding: .5em 1em 0 .5em;
+    padding: .5em 1em 0 1em;
     .options {
       float: right;
     }
@@ -138,12 +138,10 @@ a {
 #notebook {
   .rounded-corners;
   .drop-shadow;
+  .fit-width;
   background-color: @bright;
   color: @dark;
   margin: 3.3em auto 2em auto;
-  width: 800px;
-  min-width: 400px;
-  max-width: 90%;
   min-height: 400px;
   
   #topActions {
@@ -190,9 +188,7 @@ a {
 }
   
 #footer {
-  width: 400px;
-  margin: auto;
-  font-size: 80%;
+  .fit-width;
   text-align: center;
 }
 
