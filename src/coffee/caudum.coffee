@@ -26,7 +26,7 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     ).on( 'call', (e,node,o) ->
       $( document ).off 'click.tagsmenu'
       $this = $(this).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast').data('node',node)
-      o.stopPropagation(); o.preventDefault(); e.stopPropagation(); e.preventDefault();
+      # o.stopPropagation(); o.preventDefault(); e.stopPropagation(); e.preventDefault();
       $( document ).on 'click.tagsmenu', (e)->
         return if e.timeStamp is o.timeStamp or $( e.target ).parents( '#tagsMenu' ).length isnt 0
         $( document ).off 'click.tagsmenu'
@@ -36,6 +36,25 @@ do ( $ = jQuery, view = "body", model = window.note = new SimpleNote ) ->
     ).on( 'click', 'li', -> 
       tag = ko.dataFor this; node = $( this ).parents( '#tagsMenu' ).data( 'node' );
       if node.tags.remove(tag).length is 0 then node.tags.push tag
-    )
-      
-      
+    );
+    
+    $( '#search > div >.icon-tags', view ).click (e)->
+      model.editingFilter on
+      return $( '#tags' ).slideUp() if $( '#tags' ).is 'visible'
+      $( '#tags' ).slideDown 'fast'
+      $( document ).on 'click.tagsfilter', (f)->
+        return if e.timeStamp is f.timeStamp or $( f.target ).parents( '#tags' ).length isnt 0
+        $( document ).off 'click.tagsfilter'
+        $( '#tags' ).slideUp 'fast'
+        
+    $( '#search > div >.icon-star', view ).click (e)->
+      model.editingFilter on
+      if $( '#bookmarks' ).is 'visible' then return $( '#bookmarks' ).slideUp()
+      $( '#bookmarks' ).slideDown 'fast'
+      $( document ).on 'click.bookmarks', (f)->
+        return if e.timeStamp is f.timeStamp
+        $( document ).off 'click.bookmarks'
+        $( '#bookmarks' ).slideUp 'fast'   
+        
+        
+    null  

@@ -25,7 +25,11 @@ class Node
     @tags.extend pickFrom : { array: @smplnt.tags, key : "name" }
     @files = obs []
     # computed variables
-    @visible = obs true
+    @visibleChildren = obs => @children.filter 'visible'
+    @visible = obs =>
+      f = @smplnt.realFilter()
+      @smplnt.current is @ or @visibleChildren().length or Node.checkFilter( @, f )
+      
     @active = obs {
       read: active,
       write : (v) => 
@@ -33,7 +37,6 @@ class Node
         node.active off for node in @smplnt.nodes()
         active on
       }
-    @visibleChildren = obs => @children.filter 'visible'
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
@@ -125,14 +128,23 @@ class Node
   
   # STATIC revive from JSON data
   # @param {Object} data json object containting all needed data
-  @fromJSON : ( data ) =>
+  @fromJSON : ( data ) ->
     delete data.__constructor
     instance = new Node()
     koMap instance, data
   # STATIC parser functions
-  @parseNote : (v) => v.replace /(<br>|\n|\r)$/i, ""
-  @parseHeadline : (v) => v.replace /<br>|\n|\r/ig, ""  
-  @parseDate : (v) =>
+  @parseNote : (v) -> v.replace /(<br>|\n|\r)$/i, ""
+  @parseHeadline : (v) -> v.replace /<br>|\n|\r/ig, ""  
+  @parseDate : (v) ->
     if v is null then return null
     if isDate( x = new Date v ) or isDate( x = new Date parseInt v ) or isDate( x = Date.intelliParse v ) then return x
     null
+  @checkFilter : ( node, filter ) ->
+    r = false
+    r = ( not filter.tags.length ) or intersect( node.tags.map('name'), filter.tags ).length
+    r = r and( ( not filter.words.length ) or (node.title()+" "+node.notes()).match( new RegExp( filter.words.join('|'), 'i' ) ) )
+    r
+  
+  
+  
+  

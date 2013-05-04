@@ -79,3 +79,5 @@ hash = window.hash = do ->
   s(); h
     
     
+    
+intersect = window.intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )

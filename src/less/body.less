@@ -46,38 +46,101 @@ a {
   right: 0;
   left: 0;
   z-index: 100;
-  .alert, .note, #selectOptions {
+  .alert, .note, {
     margin: 0 auto;
     .rounded-corners;
-    .drop-shadow;
-    padding: .5em 1em .5em 1em;
+    .drop-shadow;    
     width: 600px;
-    min-width: 300px;
-    max-width: 80%;
-  }
-  #selectOptions {
-    opacity: 0;
-    transition: opacity .5s;
+    min-width: 400px;
+    max-width: 80%;    
   }
   .alert {
     background: @alert;
     color: @dark;
   }
-  #selectOptions, .note {
+  .note {
     background: @highlight;
     color: @dark;
   }
-  .options, .alert .icon-remove, .note .icon-remove {
+  .alert .icon-remove, .note .icon-remove {
     float: right;
   }
 }
 
+#search, #selectOptions {
+  .rounded-corners;
+  .drop-shadow;
+  background: @bright;
+  margin: .5em auto;
+  width: 800px;
+  min-width: 400px;
+  max-width: 90%;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: .5em;
+  > div {
+    padding: 0 1em;
+    input {
+      display: inline-block;
+      padding: .5em 1em 0 1.5em;    
+      width: 100%;
+      outline: none!important;
+      border: none;
+    }
+  }
+}
+#selectOptions {
+  background: @highlight;
+  > div {
+    padding: .5em 1em 0 .5em;
+    .options {
+      float: right;
+    }
+  }
+}
+#search {
+  > div{
+    i {
+      position: absolute;
+      top: .5em;
+    }
+    .icon-search {
+      left: 1em;
+    }
+    .icon-cog {
+      right: 1em;
+    }
+    .icon-star {
+      right: 2.5em;  
+    }
+    .icon-tags {
+      right: 4em;
+    }
+    /* switch the magnifying glass for a cross */
+    &:hover .icon-search:before {
+      content: "\f00d";
+    }
+  }
+  > ul {
+    display: none;
+    list-style-type: none;
+    padding: 0 1em;
+    margin: .5em 0 0 0;
+    li {
+      cursor: hover;
+    }
+    li:hover {
+      background-color: @highlight;
+    }
+  }
+}
+  
 #notebook {
   .rounded-corners;
   .drop-shadow;
   background-color: @bright;
   color: @dark;
-  margin: 20px auto;
+  margin: 3.3em auto 2em auto;
   width: 800px;
   min-width: 400px;
   max-width: 90%;
@@ -86,7 +149,7 @@ a {
   #topActions {
     float: right;
     margin-top: .5em;
-    margin-right: .5em;
+    margin-right: 1em;
   }
   
   #breadcrumbs {
@@ -125,17 +188,6 @@ a {
   }
 
 }
-
-.context-menu {
-  font-size: 80%;
-  hr {
-    margin: 0;
-    height: 0;
-    border: none;
-    border-top: solid 1px;
-    
-  }
-}
   
 #footer {
   width: 400px;
@@ -160,3 +212,4 @@ a {
     font-size: 4em;
   }
 }
+

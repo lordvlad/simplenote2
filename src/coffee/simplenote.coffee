@@ -11,6 +11,8 @@ class SimpleNote
     @element = null
     @pop = null
     # observable variable
+    @searchFilter = obs ""
+    @editingFilter = obs false
     @current = obs null    
     @alerts = obs []
     @notifications = obs []
@@ -18,6 +20,15 @@ class SimpleNote
     @nodes = obs []
     @tags = obs []
     # computed variables
+    @realFilter = obs( =>
+      f = @searchFilter().split(/\s+/)
+      return {tags:[],times:[],words:[]} if  not f[0] or f[0]?[0] is '!'
+      {
+        tags : f.filter((n)-> n.match /^#/).map((n)->n.replace(/#/,''))
+        times : f.filter((n)-> n.match /^@/).map((n)->n.replace(/@/,''))
+        words : f.filter((n)-> n.match /^[^#@]/)
+      }
+    ).extend({ debounce: 500 })
     @selectedNodes = obs => @nodes.filter 'selected'
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
     @breadcrumbs = obs => 
@@ -50,6 +61,7 @@ class SimpleNote
       root = new Node()
       root.id = 'simpleNoteRoot'
       root.title 'home'
+      root.visible = -> true
       @root = root
     # update current viewed node from location.hash
     hash.valueHasMutated()
@@ -110,6 +122,9 @@ class SimpleNote
   # notificationsystem
   removeNotification : (item) => @notifications.remove item
   removeAlert : ( item ) => @alerts.remove item
+  
+  # filter functions
+  clearSearchFilter :=> @searchFilter ''
   
 # static values
 SimpleNote.liststyletypes = [

@@ -5,6 +5,8 @@
     <title>simpleNote</title>
     <!-- meta data -->
     <meta charset="UTF-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="EXPIRES" CONTENT="0">
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="viewport" content="width=device-width" />
     <!-- favicon -->
@@ -47,17 +49,34 @@
   <body>
     <div id="curtain"><div><i class="icon-cog icon-spin"></i></div></div>
     <div id="fixedTopCentered">
-      <div id="selectOptions" data-bind="visible: selectedNodes().length, style:{opacity: selectedNodes().length?1:0}">
-        <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
-        <span class="options">
-          <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
-          <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
-          <i class="icon-time" title="remove all deadlines" data-bind="click:selectionRemoveDeadlines"></i>
-          <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
-          <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
-          &nbsp;&nbsp;
-          <i class="icon-remove" title="unselect all" data-bind="click:selectionUnselect"></i>
-        <span>
+      <div id="search" data-bind="visible: !$root.selectedNodes().length">
+        <div>
+          <i class="icon-search" title="clear" data-bind="click:clearSearchFilter"></i>
+          <input type="text" placeholder="search..." data-bind="value:searchFilter,valueUpdate:'afterkeydown',hasfocus:editingFilter"/>
+          <i class="icon-tags" title="tags"></i>
+          <i class="icon-star" title="bookmarks"></i>
+          <i class="icon-cog" title="options"></i>
+        </div>
+        <ul id="tags" data-bind="foreach:tags">
+          <li data-bind="click:toggleInFilter"><i class="icon-tag"></i><span data-bind="html:name"></span></li>
+        </ul>
+        <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
+          <li data-bind="click:open"><i class="icon-star"></i><span data-bind="html:title"></span></li>
+        </ul>
+      </div>
+      <div id="selectOptions" data-bind="visible: selectedNodes().length">
+        <div>
+          <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
+          <span class="options">
+            <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
+            <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
+            <i class="icon-time" title="remove all deadlines" data-bind="click:selectionRemoveDeadlines"></i>
+            <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
+            <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
+            &nbsp;&nbsp;
+            <i class="icon-remove" title="unselect all" data-bind="click:selectionUnselect"></i>
+          <span>
+        </div>
       </div>
       <div data-bind="foreach: { data: alerts, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="alert">
           <span data-bind="html:$data"></span>
@@ -91,7 +110,7 @@
       </div>
       <audio src="snd/pop.mp3"></audio>
     </div>
-    <div id="tags">
+    <!-- <div id="tags">
       <span data-bind="text:tags().length"></span>&nbsp;tags<i class="icon-tags"></i>
       <div data-bind="sortable:{data:tags,options:{handle:'.icon-tag'}}">
         <div class="tag">
@@ -102,9 +121,9 @@
             <span data-bind="text:name"></span>
           </span>
         </div>
-      </div>
-        
+      </div>        
     </div>
+    -->
     <div id="tagsMenu">
       <ul data-bind="foreach:tags">
         <li class="tag"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
@@ -113,7 +132,7 @@
         <li class="tag"><i class="icon-plus" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
     </div>
     <div id="footer">
-      <a href="http://waldemarreusch.coding.com" target="_new">me@koding</a>
+      <a href="http://waldemarreusch.koding.com" target="_new">me@koding</a>
     </div>
   </body>
 </html>

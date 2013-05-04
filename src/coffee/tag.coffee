@@ -23,12 +23,20 @@ class Tag
       color : @color()
     }
     
+  @fromJSON : ( data ) =>
+    delete data.__constructor
+    instance = new Tag()
+    koMap instance, data
+    
   edit : =>
     @name prompt "change name from #{@name()} to ...", @name()
     @color prompt "change color from #{@color()} to ...", @color()
     @smplnt.save()
     
-  @fromJSON : ( data ) =>
-    delete data.__constructor
-    instance = new Tag()
-    koMap instance, data
+  toggleInFilter :=> 
+    if @smplnt.searchFilter().match( '#' + @name() )
+      @smplnt.searchFilter( @smplnt.searchFilter().replace( '#' + @name(), '' ).replace(/\s{2,}/g," ").replace(/^\s*|\s*$/g,"") + " " )
+    else
+      @smplnt.searchFilter( ( @smplnt.searchFilter() + " #" + @name() ).replace(/\s{2,}/g," ").replace(/^\s*|\s*$/g,"") + " " )
+    @smplnt.editingFilter on
+      
