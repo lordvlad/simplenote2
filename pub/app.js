@@ -928,7 +928,7 @@
       delay(function() {
         return location.href = 'index.html';
       });
-      return delay(function() {
+      return timeout.set(1000, function() {
         return $('#curtain').find('i').after("<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>").find('a').focus();
       });
     };
@@ -1024,7 +1024,9 @@
         });
       });
       delay(function() {
-        return $("#curtain").fadeOut("slow");
+        return $("#curtain").fadeOut("slow", function() {
+          return $('body').css('overflow', 'auto');
+        });
       });
       return null;
     });

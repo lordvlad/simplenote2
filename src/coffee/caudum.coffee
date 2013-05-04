@@ -10,7 +10,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
   applicationCache.onupdateready = ->
     console.log('ready')
     delay -> location.href='index.html'
-    delay -> $( '#curtain' ).find( 'i' ).after( "<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>" ).find( 'a' ).focus()
+    timeout.set 1000, -> $( '#curtain' ).find( 'i' ).after( "<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>" ).find( 'a' ).focus()
 
     # jquery onload event
   $ ->
@@ -77,5 +77,5 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
         
         
     # lift the curtains
-    delay -> $("#curtain").fadeOut("slow");    
+    delay -> $("#curtain").fadeOut("slow", -> $('body').css('overflow','auto') )    
     null  
