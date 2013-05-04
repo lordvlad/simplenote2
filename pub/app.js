@@ -582,7 +582,7 @@
         return _this.listStyleType().concat("node").filter(Boolean).join(" ");
       });
       this.bullet = obs(function() {
-        return ((_this.hasNote() || _this.hasChildren()) && ((!_this.expanded() && "&#9658;") || (_this.expanded() && "&#9660"))) || "&#9679;";
+        return ((_this.hasNote() || _this.hasChildren()) && ((!_this.expanded() && Node.bullets.right) || (_this.expanded() && Node.bullets.down))) || Node.bullets.round;
       });
       this.parent = obs(function() {
         return _this.smplnt.nodes.find(function(n) {
@@ -653,6 +653,9 @@
     };
 
     Node.prototype._delete = function() {
+      if (this === this.smplnt.current()) {
+        this.smplnt.current(this.parent());
+      }
       this.parent().children.remove(this);
       this.smplnt.nodes.remove(this);
       return this.smplnt.save();
@@ -748,9 +751,9 @@
     };
 
     Node.bullets = {
-      round: "<i class='icon-circle'></i>",
-      right: "<i class='icon-chevron-right'></i>",
-      down: "<i class='icon-chevron-down'></i>"
+      right: "&#9658;",
+      down: "&#9660",
+      round: "&#9679;"
     };
 
     return Node;
@@ -818,17 +821,27 @@
 
   }).call(this);
 
-  applicationCache.onupdateready = function() {
-    $.holdReady(true);
-    return $('#curtain').css('font-size', '.25em').find('i').after("<br><span>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page</a></a>");
-  };
-
-  (function($) {
+  (function($, view, model) {
+    applicationCache.onerror = function() {
+      return $(function() {
+        return $("#indicate_online").hide();
+      });
+    };
+    applicationCache.onnoupdate = function() {
+      return $(function() {
+        return $("#indicate_offline").hide();
+      });
+    };
+    applicationCache.ondownloading = function() {
+      return $.holdReady(true);
+    };
+    applicationCache.onupdateready = function() {
+      $('#curtain').find('i').after("<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>").find('a').focus();
+      return timeout.set(1000, function() {
+        return location.href = 'index.html';
+      });
+    };
     return $(function() {
-      var model, view;
-
-      view = "body";
-      model = window.note = new SimpleNote;
       $.extend(true, window, {
         SimpleNote: SimpleNote,
         Node: Node,
@@ -904,6 +917,41 @@
       });
       return null;
     });
-  })(jQuery);
+  })(jQuery, "body", window.note = new SimpleNote());
+
+  (function($, view, model) {
+    var a, b, node, _i, _len, _ref, _results,
+      _this = this;
+
+    a = new Node();
+    a.id = 'help';
+    a.title('help');
+    a.notes("welcome to simplenote help.<br>\n\nhere, i will try to help you getting startet with this awesome little outliner.<br>\n\ndouble click on one of the items below to read more,<br>\nor click on the triangle ( " + Node.bullets.right + " ) to unfold an outline item.");
+    a.parents = function() {
+      return [model.root];
+    };
+    b = new Node();
+    b.id = 'offline';
+    b.title('working offline');
+    b.notes("simplenote is capable of working offline, too, because all data is saved only in your browser anyway!  ");
+    b.parents = function() {
+      return [model.root, a];
+    };
+    a.children([b]);
+    _ref = [a, b];
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      node = _ref[_i];
+      _results.push((function() {
+        node.remove = function() {
+          return alert('cannot delete this node');
+        };
+        return node._delete = function() {
+          return null;
+        };
+      })());
+    }
+    return _results;
+  })(jQuery, "body", window.note);
 
 }).call(this);

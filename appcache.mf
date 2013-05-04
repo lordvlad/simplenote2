@@ -1,9 +1,12 @@
 CACHE MANIFEST
-# rev 36
+# rev 81
 
 # Explicitly cached 'master entries'.
 CACHE:
 favicon.ico
+index.html
+pub/app.js
+pub/app.css
 lib/normalize/normalize.min.css
 lib/jqueryui/jquery-ui-1.10.2.custom.min.css
 lib/fancybox/jquery.fancybox.min.css
@@ -27,7 +30,11 @@ lib/wre/wre.knockout.bindingHandlers.js
 lib/wre/wre.jquery.inject.js
 lib/fontawesome/fontawesome-webfont.woff?v=3.0.1
 lib/fontawesome/fontawesome-webfont.ttf?v=3.0.1
+tmpl/actionsTemplate.html
+tmpl/nodeTemplate.html
+tmpl/bodyTemplate.html
 snd/pop.mp3
+appcache.mf
 
 # Resources that require the user to be online.
 NETWORK:

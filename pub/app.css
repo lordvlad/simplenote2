@@ -177,6 +177,7 @@ i[class^="icon-"]:hover {
 }
 #notebook #sheet #topNotes {
   margin-bottom: 1em;
+  font-size: 100%;
 }
 #notebook #sheet #topChildren {
   margin-left: 0;
@@ -195,6 +196,8 @@ i[class^="icon-"]:hover {
   max-width: 90%;
   margin: 0 auto;
   text-align: center;
+  font-size: 80%;
+  margin-bottom: 1em;
 }
 #curtain {
   z-index: 999;
@@ -212,8 +215,6 @@ i[class^="icon-"]:hover {
   margin-left: -0.5em;
   margin-top: -0.5em;
   left: 50%;
-  font-size: 4em;
-  transition: font-size 0.5s;
 }
 .node > .body {
   margin-bottom: .5em;

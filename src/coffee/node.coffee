@@ -40,7 +40,7 @@ class Node
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
-    @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and "&#9658;" ) or( @expanded() and "&#9660" ) ) ) or "&#9679;"
+    @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and Node.bullets.right ) or( @expanded() and Node.bullets.down ) ) ) or Node.bullets.round
     @parent = obs => @smplnt.nodes.find (n) => n.children.has @
     @parents = obs =>
       if @parent() is null then return []
@@ -84,9 +84,10 @@ class Node
     if confirm 'really delete this node?'
       @_delete()
   _delete :=>
-      @parent().children.remove @
-      @smplnt.nodes.remove @
-      @smplnt.save()
+    if ( @ is @smplnt.current() ) then @smplnt.current( @parent() )
+    @parent().children.remove @
+    @smplnt.nodes.remove @
+    @smplnt.save()
   alarm : =>
     @deadline null
     @smplnt.save()
@@ -146,11 +147,9 @@ class Node
     r
   
   @bullets : {
-    round : "<i class='icon-circle'></i>",
-    right : "<i class='icon-chevron-right'></i>",
-    down  : "<i class='icon-chevron-down'></i>"
+    right : "&#9658;" # "<i class='icon-circle'></i>",
+    down : "&#9660" # "<i class='icon-chevron-right'></i>",
+    round  : "&#9679;" # "<i class='icon-chevron-down'></i>"
   
   }
-  
-  
   

@@ -1,13 +1,13 @@
-applicationCache.onupdateready = ->
-  $.holdReady on
-  $( '#curtain' ).css('font-size','.25em').find( 'i' ).after( "<br><span>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page</a></a>" )
-
 # jquery closure
-do ( $ = jQuery ) ->
+do ( $ = jQuery, view = "body", model = window.note = new SimpleNote()  ) ->
+  applicationCache.onerror =-> $ -> $( "#indicate_online" ).hide()
+  applicationCache.onnoupdate =-> $ -> $( "#indicate_offline" ).hide()
+  applicationCache.ondownloading =-> $.holdReady on
+  applicationCache.onupdateready = ->
+    $( '#curtain' ).find( 'i' ).after( "<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>" ).find( 'a' ).focus()
+    timeout.set 1000, -> location.href='index.html'
   # jquery onload event
   $ ->
-    view = "body"
-    model = window.note = new SimpleNote 
     # extend window with simplenote classes
     $.extend true, window, {
       SimpleNote  : SimpleNote
