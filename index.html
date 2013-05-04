@@ -58,7 +58,7 @@
           <i class="icon-cog" title="options"></i>
         </div>
         <ul id="tags" data-bind="foreach:tags">
-          <li data-bind="click:toggleInFilter"><i class="icon-tag"></i><span data-bind="html:name"></span></li>
+          <li data-bind="click:toggleInFilter,style:{background:color}"><i class="icon-tag"></i><span data-bind="html:name"></span></li>
         </ul>
         <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
           <li data-bind="click:open"><i class="icon-star"></i><span data-bind="html:title"></span></li>

@@ -79,10 +79,10 @@ a {
   position: relative;
   padding-bottom: .5em;
   > div {
-    padding: 0 1em;
+    padding: .5em 1em 0 1em;
     input {
       display: inline-block;
-      padding: .5em 1em 0 1.5em;    
+      padding: 0em 1em 0 1.5em;    
       width: 100%;
       outline: none!important;
       border: none;
@@ -130,7 +130,7 @@ a {
       cursor: hover;
     }
     li:hover {
-      background-color: @highlight;
+      color: @highlight;
     }
   }
 }
@@ -206,24 +206,5 @@ a {
     top: 50%;
     left: 50%;
     font-size: 4em;
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  .actions {
-    .rounded-corners;
-    .drop-shadow;
-    z-index: 999;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background: @highlight;
-    padding: .5em 1em;
-  }
-  .headline .actionsBar .tag {
-    padding: 0 0 0 .4em;
-    span {
-      display: none;
-    }
   }
 }
