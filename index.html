@@ -16,6 +16,12 @@
     <link rel="stylesheet" href="lib/contextMenu/jquery.contextMenu.css" />
     <link rel="stylesheet" href="lib/fancybox/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="lib/fontawesome/font-awesome.min.css" />
+    <!-- own stylesheets -->
+    <link rel="stylesheet" href="pub/app.css" />
+  </head>
+  <body>
+    <div data-bind="template:'bodyTemplate'"></div>
+    
     <!-- libraries' scripts -->
     <script src="lib/jquery/jquery-1.9.1.js"></script>
     <script src="lib/jqueryui/jquery-ui-1.10.2.custom.min.js"></script>
@@ -38,101 +44,11 @@
     <script>
       $.injectScript(
         {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"},
-        {src: "tmpl/actionsTemplate.html", type:"text/html", id:"actionsTemplate"}
+        {src: "tmpl/actionsTemplate.html", type:"text/html", id:"actionsTemplate"},
+        {src: "tmpl/bodyTemplate.html", type:"text/html", id:"bodyTemplate"}
       );
     </script>
-	<!-- own stylesheets -->
-    <link rel="stylesheet" href="pub/app.css" />
     <!-- own scripts -->
     <script src="pub/app.js" /></script>
-  </head>
-  <body>
-    <div id="curtain"><div><i class="icon-cog icon-spin"></i></div></div>
-    <div id="fixedTopCentered">
-      <div id="search" data-bind="visible: !$root.selectedNodes().length">
-        <div>
-          <i class="icon-search" title="clear" data-bind="click:clearSearchFilter"></i>
-          <input type="text" placeholder="search..." data-bind="value:searchFilter,valueUpdate:'afterkeydown',hasfocus:editingFilter"/>
-          <i class="icon-tags" title="tags"></i>
-          <i class="icon-star" title="bookmarks"></i>
-          <i class="icon-cog" title="options"></i>
-        </div>
-        <ul id="tags" data-bind="foreach:tags">
-          <li data-bind="click:toggleInFilter,style:{background:color}"><i class="icon-tag"></i><span data-bind="html:name"></span></li>
-        </ul>
-        <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
-          <li data-bind="click:open"><i class="icon-star"></i><span data-bind="html:title"></span></li>
-        </ul>
-      </div>
-      <div id="selectOptions" data-bind="visible: selectedNodes().length">
-        <div>
-          <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
-          <span class="options">
-            <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
-            <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
-            <i class="icon-time" title="remove all deadlines" data-bind="click:selectionRemoveDeadlines"></i>
-            <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
-            <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
-            &nbsp;&nbsp;
-            <i class="icon-remove" title="unselect all" data-bind="click:selectionUnselect"></i>
-          <span>
-        </div>
-      </div>
-      <div data-bind="foreach: { data: alerts, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="alert">
-          <span data-bind="html:$data"></span>
-          <i class="icon-remove" title="close" data-bind="click:$root.removeAlert"></i>
-      </div></div>
-      <div data-bind="foreach: { data: notifications, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="note">
-          <span data-bind="html:$data"></span>
-          <i class="icon-remove" title="close" data-bind="click:$root.removeNotification"></i>
-      </div></div>
-    </div>
-    <div id="notebook" data-bind="with:current">
-      <div id="topActions" data-bind="visible: $data!==$root.root">
-        <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
-        <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
-        <!--<i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>-->
-        <i class="icon-trash" title="delete" data-bind="click: remove"></i>
-        &nbsp;&nbsp;
-        <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
-      </div>
-      <div id="breadcrumbs" data-bind="foreach: $root.breadcrumbs, visible: $data!==$root.root" >
-        <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
-      </div>
-      <div id="sheet" class="node">
-        <div class="body" data-bind="visible: $data!==$root.root" >
-          <div id="topNotes" class="notes" data-bind="editable:notes,hasfocus:editingNote"></div>
-        </div>
-        <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
-        <div id="addChild" data-bind="click: $root.addNodeHere">
-          <i class="icon-plus"></i>&nbsp;add something
-        </div>
-      </div>
-      <audio src="snd/pop.mp3"></audio>
-    </div>
-    <!-- <div id="tags">
-      <span data-bind="text:tags().length"></span>&nbsp;tags<i class="icon-tags"></i>
-      <div data-bind="sortable:{data:tags,options:{handle:'.icon-tag'}}">
-        <div class="tag">
-          <i class="icon-trash" title="delete" data-bind="click:$root.removeTag"></i>
-          <i class="icon-cog" title="edit" data-bind="click:edit"></i>
-          <span data-bind="style:{background:color}">
-            <i class="icon-tag"></i>
-            <span data-bind="text:name"></span>
-          </span>
-        </div>
-      </div>        
-    </div>
-    -->
-    <div id="tagsMenu">
-      <ul data-bind="foreach:tags">
-        <li class="tag"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
-      </ul>
-      <ul>
-        <li class="tag"><i class="icon-plus" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
-    </div>
-    <div id="footer">
-      <a href="http://waldemarreusch.koding.com" target="_new">me@koding</a>
-    </div>
   </body>
 </html>

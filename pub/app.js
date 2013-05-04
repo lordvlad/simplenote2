@@ -747,6 +747,12 @@
       return r;
     };
 
+    Node.bullets = {
+      round: "<i class='icon-circle'></i>",
+      right: "<i class='icon-chevron-right'></i>",
+      down: "<i class='icon-chevron-down'></i>"
+    };
+
     return Node;
 
   })();
@@ -812,8 +818,17 @@
 
   }).call(this);
 
-  (function($, view, model) {
+  applicationCache.onupdateready = function() {
+    $.holdReady(true);
+    return $('#curtain').css('font-size', '.25em').find('i').after("<br><span>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page</a></a>");
+  };
+
+  (function($) {
     return $(function() {
+      var model, view;
+
+      view = "body";
+      model = window.note = new SimpleNote;
       $.extend(true, window, {
         SimpleNote: SimpleNote,
         Node: Node,
@@ -824,9 +839,6 @@
       model.revive();
       model.applyEvents();
       model.startPeriodicalSave();
-      delay(function() {
-        return $("#curtain").fadeOut("slow");
-      });
       $('#tagsMenu', view).data('smplnt-reference', null).on('call', function(e, node, o) {
         var $this;
 
@@ -887,8 +899,11 @@
           return $('#bookmarks').slideUp('fast');
         });
       });
+      delay(function() {
+        return $("#curtain").fadeOut("slow");
+      });
       return null;
     });
-  })(jQuery, "body", window.note = new SimpleNote);
+  })(jQuery);
 
 }).call(this);

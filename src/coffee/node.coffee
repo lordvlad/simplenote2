@@ -145,6 +145,12 @@ class Node
     r = r and( ( not filter.words.length ) or (node.title()+" "+node.notes()).match( new RegExp( filter.words.join('|'), 'i' ) ) )
     r
   
+  @bullets : {
+    round : "<i class='icon-circle'></i>",
+    right : "<i class='icon-chevron-right'></i>",
+    down  : "<i class='icon-chevron-down'></i>"
+  
+  }
   
   
   
