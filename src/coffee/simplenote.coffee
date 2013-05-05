@@ -147,3 +147,23 @@ SimpleNote.liststyletypes = [
   { name : "A, B, C", value: ["upperAlpha"] }
   { name : "(A), (B), (C)", value : ["upperAlpha","dot"] }
 ]
+
+$ -> 
+  do () ->
+    offlineCount = 0
+    numShortChecks = 5 # how often to check with a short interval before switching to long interval
+    short = 2 # seconds
+    long = 60 # seconds
+    checkConnection = ->
+      $.get( 
+        '/online/online.json' 
+      ).error( ->
+        SimpleNote.connectionStatus off        
+        timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
+      ).done( ->
+        SimpleNote.connectionStatus on
+        offlineCount = 0
+        timeout.set long*1e3, checkConnection
+      )
+    checkConnection()
+    

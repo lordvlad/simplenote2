@@ -1,7 +1,11 @@
 <span class="actionsBar">
   <span class="info">
-    <span class="tags" data-bind="foreach:tags">
+    <span class="tags" data-bind="foreach:tags,click:editTags">
       <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name,style:{color:fgColor}"></span></span>
+    </span>
+    <span class="tag" data-bind="visible:!tags().length,click:editTags" title="add tags">
+      <i class="icon-plus"></i>
+      <i class="icon-tag"></i>
     </span>
     <span class="files" data-bind="visible:files().length">
       <i class="icon-file"></i>
@@ -12,14 +16,14 @@
       <span data-bind="text:deadlineDisplay"></span>
     </span>
   </span>
-  <span class="actions">
+  <!-- <span class="actions">
     <i class="icon-edit" title="details" data-bind="click:open"></i>
-    <!-- <i class="icon-list-ol" title="list" data-bind="click:editListType"></i> -->
+    <i class="icon-list-ol" title="list" data-bind="click:editListType"></i>
     <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
     <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
-    <!-- <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i> -->
+    <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
     <i class="icon-trash" title="delete" data-bind="click:remove"></i>
-  </span>
+  </span> -->
   <span>
     <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
     <i title="select" data-bind="css:{ 'icon-check': selected, 'icon-check-empty': !selected() },click:toggleSelected"></i>

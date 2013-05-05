@@ -892,39 +892,49 @@
     }
   ];
 
+  $(function() {
+    return (function() {
+      var checkConnection, long, numShortChecks, offlineCount, short;
+
+      offlineCount = 0;
+      numShortChecks = 5;
+      short = 2;
+      long = 60;
+      checkConnection = function() {
+        return $.get('/online/online.json').error(function() {
+          SimpleNote.connectionStatus(false);
+          return timeout.set((offlineCount++ < numShortChecks ? short : long) * 1e3, checkConnection);
+        }).done(function() {
+          SimpleNote.connectionStatus(true);
+          offlineCount = 0;
+          return timeout.set(long * 1e3, checkConnection);
+        });
+      };
+      return checkConnection();
+    })();
+  });
+
   (function($, view, model) {
-    applicationCache.oncached = function() {
-      return console.log('cached');
-    };
     applicationCache.onchecking = function() {
-      console.log('checking');
       return $.holdReady(true);
     };
     applicationCache.ondownloading = function() {
-      console.log('downloading');
       return $.holdReady(true);
     };
     applicationCache.onerror = function() {
-      console.log('offline');
       $.holdReady(false);
       return SimpleNote.connectionStatus(false);
     };
     applicationCache.onnoupdate = function() {
-      console.log('online');
       $.holdReady(false);
       return SimpleNote.connectionStatus(true);
     };
-    applicationCache.onobsolete = function() {
-      return console.log('obsolete');
-    };
     applicationCache.onprogress = function() {
-      console.log('progress');
       return delay(function() {
         return $('#curtain').find('i').after('.');
       });
     };
     applicationCache.onupdateready = function() {
-      console.log('ready');
       delay(function() {
         return location.href = 'index.html';
       });

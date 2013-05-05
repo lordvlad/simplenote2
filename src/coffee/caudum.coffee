@@ -1,14 +1,11 @@
 # jquery closure
 do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNote()  ) ->
-  applicationCache.oncached =-> console.log('cached')
-  applicationCache.onchecking =-> console.log('checking'); $.holdReady(on)
-  applicationCache.ondownloading =-> console.log('downloading'); $.holdReady(on)
-  applicationCache.onerror =-> console.log('offline'); $.holdReady(off); SimpleNote.connectionStatus(off)
-  applicationCache.onnoupdate =-> console.log('online'); $.holdReady(off); SimpleNote.connectionStatus(on)
-  applicationCache.onobsolete =-> console.log('obsolete')
-  applicationCache.onprogress =-> console.log('progress'); delay -> $( '#curtain' ).find('i').after('.');
+  applicationCache.onchecking =-> $.holdReady(on)
+  applicationCache.ondownloading =-> $.holdReady(on)
+  applicationCache.onerror =-> $.holdReady(off); SimpleNote.connectionStatus(off)
+  applicationCache.onnoupdate =-> $.holdReady(off); SimpleNote.connectionStatus(on)
+  applicationCache.onprogress =-> delay -> $( '#curtain' ).find('i').after('.');
   applicationCache.onupdateready = ->
-    console.log('ready')
     delay -> location.href='index.html'
     timeout.set 1000, -> $( '#curtain' ).find( 'i' ).after( "<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>" ).find( 'a' ).focus()
 
