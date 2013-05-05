@@ -14,6 +14,7 @@
           visibility: visible;
         }
         .info > .tag {
+          visibility: visible;
           opacity: .5;
           &:hover {
             opacity: 1;            
@@ -25,6 +26,9 @@
       }
     }
     > .headline {
+      .info > .tag {
+          visibility: hidden;
+      } 
       > table {
         width: 100%;
         td {
@@ -34,6 +38,7 @@
       }
       .bullet-td{
         width: 1em;
+        text-align: center;
       }
       .listType-td{
         width: 1px;
@@ -43,9 +48,7 @@
         white-space: nowrap;
         padding-left: 1em;
         width: 1px;
-        .actions {
-          display: none;
-        }
+        
         .icon-check-empty, .icon-star-empty {
           visibility: hidden;
         }

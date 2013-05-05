@@ -3,7 +3,9 @@
 ###
 
 class SimpleNote
+  @instances : []
   constructor : ( element ) ->
+    SimpleNote.instances.push @
     # simple variables
     @timeout = null
     @interval = null
@@ -33,7 +35,7 @@ class SimpleNote
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
     @breadcrumbs = obs => 
       @current()
-      ( @current()?.parents?().reverse().concat [@current()] ) or []
+      ( @current()?.parents?().concat [@current()] ) or []
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or @root

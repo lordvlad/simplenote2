@@ -45,8 +45,8 @@ class Node
     @parents = obs =>
       if @parent() is null then return []
       p = [@parent()]
-      while ( x = p[p.length-1].parent() ) isnt null
-        p.push x
+      while ( x = p[0].parent() ) isnt null
+        p.unshift x
       p
     # create a dummy timer which will work only if there is a deadline set
     # use this timer then in the ko.observable to display a deadline
@@ -101,6 +101,7 @@ class Node
   toggleSelected : =>
     @selected !@selected()
   toggleExpanded : =>
+    return @open() if ( window.innerWidth < maxScreenWidthForMobile )
     @expanded !@expanded()
   toggleBookmarked : =>
     @bookmarked !@bookmarked()
@@ -133,6 +134,8 @@ class Node
     delete data.__constructor
     instance = new Node()
     koMap instance, data
+    instance.expanded off if window.innerWidth < maxScreenWidthForMobile
+    instance
   # STATIC parser functions
   @parseNote : (v) -> v.replace /(<br>|\n|\r)$/i, ""
   @parseHeadline : (v) -> v.replace /<br>|\n|\r/ig, ""  

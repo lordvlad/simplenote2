@@ -1,19 +1,24 @@
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 480px) {
   i[class^="icon-"]{
     font-size: 110%;
   }
   .actions {
     display: none!important;
   }
-  .headline .actionsBar .tag {
-    padding: 0 0 0 .4em;
-    span {
+  .headline {
+    .open {
       display: none;
     }
-  }
-  .headline .actionsBar {
-    .icon-star-empty, .icon-check-empty {
-      visibility: visible!important;
-    }  
+    .actionsBar {
+      .tag {
+        padding: 0 0 0 .4em;
+        span {
+          display: none;
+        }
+      }
+      .icon-star-empty, .icon-check-empty, .info > .tag {
+        visibility: visible!important;
+      }
+    }
   }
 }

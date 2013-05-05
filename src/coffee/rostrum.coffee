@@ -1,3 +1,9 @@
+
+# set screensize under which the device will be regarded as mobile
+# should be the same number which is found in src/less/mobile.less
+maxScreenWidthForMobile = 480;
+
+
 # borrow from jQuery
 isFn = jQuery.isFunction
 isArr = jQuery.isArray

@@ -243,6 +243,7 @@ i[class^="icon-"]:hover {
 }
 .node > .body:hover .action-td .actionsBar .info > .tag,
 .node > .body.active .action-td .actionsBar .info > .tag {
+  visibility: visible;
   opacity: .5;
 }
 .node > .body:hover .action-td .actionsBar .info > .tag:hover,
@@ -253,6 +254,9 @@ i[class^="icon-"]:hover {
 .node > .body.active .action-td .actionsBar .info > .tag i {
   opacity: 1;
 }
+.node > .body > .headline .info > .tag {
+  visibility: hidden;
+}
 .node > .body > .headline > table {
   width: 100%;
 }
@@ -262,6 +266,7 @@ i[class^="icon-"]:hover {
 }
 .node > .body > .headline .bullet-td {
   width: 1em;
+  text-align: center;
 }
 .node > .body > .headline .listType-td {
   width: 1px;
@@ -271,9 +276,6 @@ i[class^="icon-"]:hover {
   white-space: nowrap;
   padding-left: 1em;
   width: 1px;
-}
-.node > .body > .headline .action-td .actions {
-  display: none;
 }
 .node > .body > .headline .action-td .icon-check-empty,
 .node > .body > .headline .action-td .icon-star-empty {
@@ -365,12 +367,15 @@ i[class^="icon-"]:hover {
 #tags .icon-trash {
   float: right;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 480px) {
   i[class^="icon-"] {
     font-size: 110%;
   }
   .actions {
     display: none!important;
+  }
+  .headline .open {
+    display: none;
   }
   .headline .actionsBar .tag {
     padding: 0 0 0 .4em;
@@ -379,7 +384,8 @@ i[class^="icon-"]:hover {
     display: none;
   }
   .headline .actionsBar .icon-star-empty,
-  .headline .actionsBar .icon-check-empty {
+  .headline .actionsBar .icon-check-empty,
+  .headline .actionsBar .info > .tag {
     visibility: visible!important;
   }
 }

@@ -48,22 +48,22 @@
 <div id="notebook" data-bind="with:current">
 
   <!-- HEADER -->
-  <div id="topActions" data-bind="visible: $data!==$root.root">      
-  <span class="tags" data-bind="foreach:tags">
-    <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
-  </span>
-    <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
-    <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
-    <!--<i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>-->
-    <i class="icon-trash" title="delete" data-bind="click: remove"></i>
-    &nbsp;&nbsp;
-    <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
-  </div>
   
   <div id="breadcrumbs" data-bind="foreach: $root.breadcrumbs, visible: $data!==$root.root" >
     <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
   </div>
   
+  <div id="topActions" data-bind="visible: ($data!==$root.root)&&(!$data.readonly)">      
+  <span class="tags" data-bind="foreach:tags">
+    <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
+  </span>
+    <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
+    <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
+    <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
+    <i class="icon-trash" title="delete" data-bind="click: remove"></i>
+    &nbsp;&nbsp;
+    <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
+  </div>
   <!-- SHEET -->
   
   <div id="sheet" class="node">
@@ -71,7 +71,7 @@
       <div id="topNotes" class="notes" data-bind="editable:notes,hasfocus:editingNote"></div>
     </div>
     <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
-    <div id="addChild" data-bind="click: $root.addNodeHere">
+    <div id="addChild" data-bind="visible:!$data.readonly,click: $root.addNodeHere">
       <i class="icon-plus"></i>&nbsp;add something
     </div>
   </div>
