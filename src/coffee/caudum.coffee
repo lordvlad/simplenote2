@@ -59,7 +59,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
       return $( '#tags' ).slideUp() if $( '#tags' ).is 'visible'
       $( '#tags' ).slideDown 'fast'
       $( document ).on 'click.tagsfilter', (f)->
-        return if e.timeStamp is f.timeStamp
+        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-trash')
         $( document ).off 'click.tagsfilter'
         $( '#tags' ).slideUp 'fast'
         
@@ -68,7 +68,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
       if $( '#bookmarks' ).is 'visible' then return $( '#bookmarks' ).slideUp()
       $( '#bookmarks' ).slideDown 'fast'
       $( document ).on 'click.bookmarks', (f)->
-        return if e.timeStamp is f.timeStamp
+        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-star-half')
         $( document ).off 'click.bookmarks'
         $( '#bookmarks' ).slideUp 'fast'   
         

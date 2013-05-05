@@ -1,4 +1,7 @@
 <div id="fixedTopCentered">
+  
+  <!-- SEARCH BAR -->
+  
   <div id="search" data-bind="visible: !$root.selectedNodes().length">
     <div>
       <i class="icon-search" title="clear" data-bind="click:clearSearchFilter"></i>
@@ -7,6 +10,9 @@
       <i class="icon-star" title="bookmarks"></i>
       <i class="icon-cog" title="options"></i>
     </div>
+    
+    <!-- TAGS DROPDOWN -->
+    
     <ul id="tags" data-bind="foreach:tags">
       <li data-bind="click:toggleInFilter,style:{background:color}">
         <i class="icon-tag"></i>
@@ -15,10 +21,20 @@
         <i class="icon-pencil" title="edit tag" data-bind="click:edit"></i>
       </li>
     </ul>
+    
+    <!-- BOOKMARKS DROPDOWN -->
+    
     <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
-      <li data-bind="click:open"><i class="icon-star"></i><span data-bind="html:title"></span></li>
+      <li data-bind="click:open">
+        <i class="icon-star"></i>
+        <span data-bind="html:title"></span>
+        <i class="icon-star-half" title="remove bookmark" data-bind="click:toggleBookmarked"></i>
+      </li>
     </ul>
   </div>
+  
+  <!-- OPTIONS FOR SELECTED NODES -->
+  
   <div id="selectOptions" data-bind="visible: selectedNodes().length">
     <div>
       <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
@@ -33,10 +49,16 @@
       <span>
     </div>
   </div>
+  
+  <!-- ALERTS -->
+  
   <div data-bind="foreach: { data: alerts, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="alert">
       <span data-bind="html:$data"></span>
       <i class="icon-remove" title="close" data-bind="click:$root.removeAlert"></i>
   </div></div>
+  
+  <!-- NOTIFICATIONS -->
+  
   <div data-bind="foreach: { data: notifications, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="note">
       <span data-bind="html:$data"></span>
       <i class="icon-remove" title="close" data-bind="click:$root.removeNotification"></i>

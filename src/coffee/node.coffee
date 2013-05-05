@@ -15,7 +15,11 @@ class Node
     @selected = obs false
     @done = obs false
     @archived = obs false
-    @expanded = obs false
+    @realExpanded = obs false
+    @expanded = obs {
+      read : => if window.innerWidth < maxScreenWidthForMobile then false else @realExpanded()
+      write : @realExpanded
+    }
     @listStyleType = obs []
     @editingTitle = obs false
     @editingNote = obs false
@@ -122,7 +126,7 @@ class Node
       deadline : @deadline()
       bookmarked : @bookmarked()
       done : @done()
-      expanded : @expanded()
+      expanded : @realExpanded()
       listStyleType : @listStyleType()
       children : @children()
       tags : @tags()
@@ -134,8 +138,8 @@ class Node
     delete data.__constructor
     instance = new Node()
     koMap instance, data
-    instance.expanded off if window.innerWidth < maxScreenWidthForMobile
-    instance
+    # instance.expanded off if window.innerWidth < maxScreenWidthForMobile
+    # instance
   # STATIC parser functions
   @parseNote : (v) -> v.replace /(<br>|\n|\r)$/i, ""
   @parseHeadline : (v) -> v.replace /<br>|\n|\r/ig, ""  

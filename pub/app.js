@@ -333,7 +333,17 @@
       this.selected = obs(false);
       this.done = obs(false);
       this.archived = obs(false);
-      this.expanded = obs(false);
+      this.realExpanded = obs(false);
+      this.expanded = obs({
+        read: function() {
+          if (window.innerWidth < maxScreenWidthForMobile) {
+            return false;
+          } else {
+            return _this.realExpanded();
+          }
+        },
+        write: this.realExpanded
+      });
       this.listStyleType = obs([]);
       this.editingTitle = obs(false);
       this.editingNote = obs(false);
@@ -513,7 +523,7 @@
         deadline: this.deadline(),
         bookmarked: this.bookmarked(),
         done: this.done(),
-        expanded: this.expanded(),
+        expanded: this.realExpanded(),
         listStyleType: this.listStyleType(),
         children: this.children(),
         tags: this.tags()
@@ -525,11 +535,7 @@
 
       delete data.__constructor;
       instance = new Node();
-      koMap(instance, data);
-      if (window.innerWidth < maxScreenWidthForMobile) {
-        instance.expanded(false);
-      }
-      return instance;
+      return koMap(instance, data);
     };
 
     Node.parseNote = function(v) {
@@ -1024,7 +1030,7 @@
         }
         $('#tags').slideDown('fast');
         return $(document).on('click.tagsfilter', function(f) {
-          if (e.timeStamp === f.timeStamp) {
+          if (e.timeStamp === f.timeStamp || $(f.target).is('.icon-trash')) {
             return;
           }
           $(document).off('click.tagsfilter');
@@ -1038,7 +1044,7 @@
         }
         $('#bookmarks').slideDown('fast');
         return $(document).on('click.bookmarks', function(f) {
-          if (e.timeStamp === f.timeStamp) {
+          if (e.timeStamp === f.timeStamp || $(f.target).is('.icon-star-half')) {
             return;
           }
           $(document).off('click.bookmarks');

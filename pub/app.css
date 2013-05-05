@@ -364,7 +364,8 @@ i[class^="icon-"]:hover {
   border-bottom: solid 1px #b3b3b3;
 }
 #tags .icon-pencil,
-#tags .icon-trash {
+#tags .icon-trash,
+#bookmarks .icon-star-half {
   float: right;
 }
 @media only screen and (max-width: 480px) {
