@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 262
+# rev 0
 
 # Explicitly cached 'master entries'.
 CACHE:

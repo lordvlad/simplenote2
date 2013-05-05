@@ -919,7 +919,7 @@
       short = 2;
       long = 60;
       checkConnection = function() {
-        return $.get('/online/online.json').error(function() {
+        return $.get('online/online.json').error(function() {
           SimpleNote.connectionStatus(false);
           return timeout.set((offlineCount++ < numShortChecks ? short : long) * 1e3, checkConnection);
         }).done(function() {
