@@ -12,12 +12,34 @@ class SimpleNote
     @root = null
     @element = null
     @pop = null
-    # observable variable
+    # observable variables
     @searchFilter = obs ""
     @editingFilter = obs false
     @current = obs null    
     @alerts = obs []
-    @notifications = obs []
+    @notifications = obs []    
+    @connectionStatus = obs 0
+    @connectionStatusText = obs =>
+      switch @connectionStatus()
+        when 0 then 'offline'
+        when 1 then 'online'
+    @connectionStatusColor = obs =>
+      switch @connectionStatus()
+        when 0 then 'red'
+        when 1 then 'green'
+    @dropboxStatus = obs 0
+    @dropboxStatusText = obs =>
+      switch @dropboxStatus()
+        when 0 then 'not set up'
+        when 1 then 'connected'
+        when 2 then 'disconnected'
+        when 3 then 'synchronizing'
+    @dropboxStatusColor = obs =>
+      switch @dropboxStatus()
+        when 0 then ''
+        when 1 then 'green'
+        when 2 then 'red'
+        when 3 then 'yellow'
     # observable Arrays
     @nodes = obs []
     @tags = obs []
@@ -46,7 +68,6 @@ class SimpleNote
     @view = @$view[ 0 ]
     @pop = $( 'audio', view )[0]
     @$tagsMenu = $( '#tagsMenu', view )    
-    SimpleNote.connectionStatus.valueHasMutated()
 
   # only return nodes and tags on serialization
   toJSON : =>
@@ -120,9 +141,11 @@ class SimpleNote
     @tags.remove item
     node.tags.remove item for node in @nodes()
   
-  # effect Functions
+  # afterRender and such Functions
   fadeIn : (el) -> $(el).hide().fadeIn('slow')
   fadeOut : (el) -> $(el).fadeOut -> $(el).remove()
+  checkForOptions : (el) ->
+    console.log el
   
   # notificationsystem
   removeNotification : (item) => @notifications.remove item
@@ -132,12 +155,6 @@ class SimpleNote
   clearSearchFilter :=> @searchFilter ''
   
 
-SimpleNote.connectionStatus = obs null
-SimpleNote.connectionStatus.subscribe((v) -> 
-  $( '#indicate_' + (if v then 'online' else 'offline' )).show()
-  $( '#indicate_' + ( if v then 'offline' else 'online' )).hide()
-)
-  
 # static values
 SimpleNote.liststyletypes = [
   { name : "none", value : [] }
@@ -152,6 +169,7 @@ SimpleNote.liststyletypes = [
 
 $ -> 
   do () ->
+    model = SimpleNote.activeInstance
     offlineCount = 0
     numShortChecks = 5 # how often to check with a short interval before switching to long interval
     short = 2 # seconds
@@ -160,10 +178,10 @@ $ ->
       $.get( 
         'online/online.json' 
       ).error( ->
-        SimpleNote.connectionStatus off        
+        model.connectionStatus 0
         timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
       ).done( ->
-        SimpleNote.connectionStatus on
+        model.connectionStatus 1
         offlineCount = 0
         timeout.set long*1e3, checkConnection
       )

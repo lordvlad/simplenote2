@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 0
+# rev 36
 
 # Explicitly cached 'master entries'.
 CACHE:
@@ -33,6 +33,7 @@ lib/fontawesome/fontawesome-webfont.ttf?v=3.0.1
 tmpl/actionsTemplate.html
 tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
+tmpl/readonlyNodeTemplate.html
 snd/pop.mp3
 appcache.mf
 

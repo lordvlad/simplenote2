@@ -180,11 +180,11 @@ i[class^="icon-"]:hover {
 #notebook #sheet {
   padding: 1em;
 }
-#notebook #sheet #topNotes {
+#notebook #sheet .topNotes {
   margin-bottom: 1em;
   font-size: 100%;
 }
-#notebook #sheet #topChildren {
+#notebook #sheet .topChildren {
   margin-left: 0;
   margin-right: 0;
   border-left: none;
@@ -304,7 +304,7 @@ i[class^="icon-"]:hover {
   font-size: 80%;
   color: #666666;
 }
-.node > .body .notes:not(:focus):empty:before {
+.node > .body .notes > div:not(:focus):empty:before {
   content: "add some details";
   opacity: 0.5;
 }

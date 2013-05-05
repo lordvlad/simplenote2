@@ -2,8 +2,8 @@
 do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNote()  ) ->
   applicationCache.onchecking =-> $.holdReady(on)
   applicationCache.ondownloading =-> $.holdReady(on)
-  applicationCache.onerror =-> $.holdReady(off); SimpleNote.connectionStatus(off)
-  applicationCache.onnoupdate =-> $.holdReady(off); SimpleNote.connectionStatus(on)
+  applicationCache.onerror =-> $.holdReady(off); model.connectionStatus(0)
+  applicationCache.onnoupdate =-> $.holdReady(off); model.connectionStatus(1)
   applicationCache.onprogress =-> delay -> $( '#curtain' ).find('i').after('.');
   applicationCache.onupdateready = ->
     delay -> location.href='index.html'
@@ -14,7 +14,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
     # extend window with simplenote classes
     $.extend true, window, {
       SimpleNote        : SimpleNote
-      note              : SimpleNote.activeInstance
+      note              : model
       Node              : Node
       Tag               : Tag
     }

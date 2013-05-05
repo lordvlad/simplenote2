@@ -5,12 +5,9 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   a.parents = =>
     [ model.root ]
   a.notes( """
-    welcome to simplenote help.<br>
-    
-    here, i will try to help you getting startet with this awesome little outliner.<br><br>
-    
-    doubleclick the title or click ( details... ) to open the first node titled 'first steps'
-    
+    <h1>welcome to simplenote help.</h1>
+    here, i will try to help you getting startet with this awesome little outliner.<br><br>    
+    doubleclick the title or click ( details... ) to open the first node titled 'first steps'.    
   """ )
   
   c = new Node()
@@ -63,14 +60,26 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
     on the bottom of the page, there is a small identifier which will update if you loose or gain an internet connection
   """ )  
     
+  h = new Node()
+  h.id = 'dropbox'
+  h.title 'keep in sync with dropbox'
+  h.parents = =>
+    [ model.root, a ]
+  h.notes( """
+    <div class='options'>
+    you can use dropbox to keep your notes synced across all your devices.<br><br>
+    right now, your dropbox is <span data-bind='text:$root.dropboxStatusText,style:{color:$root.dropboxStatusColor}'></span><br><br>
+    you will see your dropbox status at the bottom of the page,too.
+    <button>connect to dropbox</button>
+    </div>
+  """ )
   
   
-  
-  a.children [ c, d, b ]
+  a.children [ c, d, b, h ]
   d.children [ e, f ]
   f.children [ g ]
   
-  for node in [ a, b, c, d, e, f, g ] 
+  for node in [ a, b, c, d, e, f, g, h ] 
     do ->
       node.remove = -> alert 'cannot delete this node'
       node._delete = -> return null

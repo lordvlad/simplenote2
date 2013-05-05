@@ -620,6 +620,48 @@
       this.current = obs(null);
       this.alerts = obs([]);
       this.notifications = obs([]);
+      this.connectionStatus = obs(0);
+      this.connectionStatusText = obs(function() {
+        switch (_this.connectionStatus()) {
+          case 0:
+            return 'offline';
+          case 1:
+            return 'online';
+        }
+      });
+      this.connectionStatusColor = obs(function() {
+        switch (_this.connectionStatus()) {
+          case 0:
+            return 'red';
+          case 1:
+            return 'green';
+        }
+      });
+      this.dropboxStatus = obs(0);
+      this.dropboxStatusText = obs(function() {
+        switch (_this.dropboxStatus()) {
+          case 0:
+            return 'not set up';
+          case 1:
+            return 'connected';
+          case 2:
+            return 'disconnected';
+          case 3:
+            return 'synchronizing';
+        }
+      });
+      this.dropboxStatusColor = obs(function() {
+        switch (_this.dropboxStatus()) {
+          case 0:
+            return '';
+          case 1:
+            return 'green';
+          case 2:
+            return 'red';
+          case 3:
+            return 'yellow';
+        }
+      });
       this.nodes = obs([]);
       this.tags = obs([]);
       this.realFilter = obs(function() {
@@ -675,8 +717,7 @@
       this.$view = $(view);
       this.view = this.$view[0];
       this.pop = $('audio', view)[0];
-      this.$tagsMenu = $('#tagsMenu', view);
-      return SimpleNote.connectionStatus.valueHasMutated();
+      return this.$tagsMenu = $('#tagsMenu', view);
     };
 
     SimpleNote.prototype.toJSON = function() {
@@ -859,6 +900,10 @@
       });
     };
 
+    SimpleNote.prototype.checkForOptions = function(el) {
+      return console.log(el);
+    };
+
     SimpleNote.prototype.removeNotification = function(item) {
       return this.notifications.remove(item);
     };
@@ -874,13 +919,6 @@
     return SimpleNote;
 
   })();
-
-  SimpleNote.connectionStatus = obs(null);
-
-  SimpleNote.connectionStatus.subscribe(function(v) {
-    $('#indicate_' + (v ? 'online' : 'offline')).show();
-    return $('#indicate_' + (v ? 'offline' : 'online')).hide();
-  });
 
   SimpleNote.liststyletypes = [
     {
@@ -912,18 +950,19 @@
 
   $(function() {
     return (function() {
-      var checkConnection, long, numShortChecks, offlineCount, short;
+      var checkConnection, long, model, numShortChecks, offlineCount, short;
 
+      model = SimpleNote.activeInstance;
       offlineCount = 0;
       numShortChecks = 5;
       short = 2;
       long = 60;
       checkConnection = function() {
         return $.get('online/online.json').error(function() {
-          SimpleNote.connectionStatus(false);
+          model.connectionStatus(0);
           return timeout.set((offlineCount++ < numShortChecks ? short : long) * 1e3, checkConnection);
         }).done(function() {
-          SimpleNote.connectionStatus(true);
+          model.connectionStatus(1);
           offlineCount = 0;
           return timeout.set(long * 1e3, checkConnection);
         });
@@ -941,11 +980,11 @@
     };
     applicationCache.onerror = function() {
       $.holdReady(false);
-      return SimpleNote.connectionStatus(false);
+      return model.connectionStatus(0);
     };
     applicationCache.onnoupdate = function() {
       $.holdReady(false);
-      return SimpleNote.connectionStatus(true);
+      return model.connectionStatus(1);
     };
     applicationCache.onprogress = function() {
       return delay(function() {
@@ -963,7 +1002,7 @@
     return $(function() {
       $.extend(true, window, {
         SimpleNote: SimpleNote,
-        note: SimpleNote.activeInstance,
+        note: model,
         Node: Node,
         Tag: Tag
       });
@@ -1061,7 +1100,7 @@
   })(jQuery, "body", SimpleNote.activeInstance = new SimpleNote());
 
   (function($, view, model) {
-    var a, b, c, d, e, f, g, node, _i, _len, _ref, _results,
+    var a, b, c, d, e, f, g, h, node, _i, _len, _ref, _results,
       _this = this;
 
     a = new Node();
@@ -1070,7 +1109,7 @@
     a.parents = function() {
       return [model.root];
     };
-    a.notes("welcome to simplenote help.<br>\n\nhere, i will try to help you getting startet with this awesome little outliner.<br><br>\n\ndoubleclick the title or click ( details... ) to open the first node titled 'first steps'\n");
+    a.notes("<h1>welcome to simplenote help.</h1>\nhere, i will try to help you getting startet with this awesome little outliner.<br><br>    \ndoubleclick the title or click ( details... ) to open the first node titled 'first steps'.    ");
     c = new Node();
     c.id = 'firstStep';
     c.title('first step');
@@ -1111,10 +1150,17 @@
       return [model.root, a];
     };
     b.notes("simplenote is capable of working offline, too, because all data is saved only in your browser anyway!<br><br>\non the bottom of the page, there is a small identifier which will update if you loose or gain an internet connection");
-    a.children([c, d, b]);
+    h = new Node();
+    h.id = 'dropbox';
+    h.title('keep in sync with dropbox');
+    h.parents = function() {
+      return [model.root, a];
+    };
+    h.notes("<div class='options'>\nyou can use dropbox to keep your notes synced across all your devices.<br><br>\nright now, your dropbox is <span data-bind='text:$root.dropboxStatusText,style:{color:$root.dropboxStatusColor}'></span><br><br>\nyou will see your dropbox status at the bottom of the page,too.\n<button>connect to dropbox</button>\n</div>");
+    a.children([c, d, b, h]);
     d.children([e, f]);
     f.children([g]);
-    _ref = [a, b, c, d, e, f, g];
+    _ref = [a, b, c, d, e, f, g, h];
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       node = _ref[_i];

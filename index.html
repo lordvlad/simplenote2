@@ -42,9 +42,11 @@
     <script src="lib/wre/wre.knockout.filter.js"></script>
     <script src="lib/wre/wre.jquery.inject.js"></script>
     <!-- inject knockout templates -->
+    <script type="text/html" id="optionsTemplate"><div data-bind="html:notes"></div></script>
     <script>
       $.injectScript(
         {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"},
+        {src: "tmpl/readonlyNodeTemplate.html", type:"text/html", id:"readonlyNodeTemplate"},
         {src: "tmpl/actionsTemplate.html", type:"text/html", id:"actionsTemplate"},
         {src: "tmpl/bodyTemplate.html", type:"text/html", id:"bodyTemplate"}
       );

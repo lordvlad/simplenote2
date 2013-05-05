@@ -86,15 +86,22 @@
     &nbsp;&nbsp;
     <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
   </div>
+  
   <!-- SHEET -->
   
   <div id="sheet" class="node">
     <div class="body" data-bind="visible: $data!==$root.root" >
-      <div id="topNotes" class="notes" data-bind="editable:notes,hasfocus:editingNote"></div>
+      <div class="notes topNotes" data-bind="ifnot:$data.readonly"><div data-bind="editable:notes,hasfocus:editingNote"></div></div>
+      <div class="topNotes notes" data-bind="template:{name:'optionsTemplate',if:$data.readonly,afterRender:$root.checkForOptions}"></div>
     </div>
-    <div id="topChildren" class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
-    <div id="addChild" data-bind="visible:!$data.readonly,click: $root.addNodeHere">
-      <i class="icon-plus"></i>&nbsp;add something
+    <div data-bind="ifnot:$data.readonly">
+      <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
+      <div id="addChild" data-bind="click: $root.addNodeHere">
+        <i class="icon-plus"></i>&nbsp;add something
+      </div>
+    </div>
+    <div data-bind="if:$data.readonly">
+      <div class="topChildren children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
     </div>
   </div>
   <audio src="snd/pop.mp3"></audio>
@@ -103,20 +110,20 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  <a href="http://waldemarreusch.koding.com" target="_new">me@koding</a>
+  you're <a href="#offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
   &nbsp;|&nbsp;
-  you are working
-  <a id="indicate_offline" style="color:red" href="#offline">offline</a></span>
-  <a id="indicate_online" style="color:green" href="#offline">online</a></span>
+  dropbox is <a href="#dropbox" data-bind="text:dropboxStatusText,style:{color:dropboxStatusColor}"></a>
   &nbsp;|&nbsp;
-  need <a href="#help">help?</a>
+  report a <a href="https://github.com/lordvlad/simplenote2/issues/new" target="_new">problem</a>?
+  &nbsp;|&nbsp;
+  need <a href="#help">help</a>?
 </div>
 
 <!-- MENUS -->
 
 <div id="tagsMenu">
   <ul>
-    <li class="tag"><i class="icon-plus" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
+    <li class="tag"><i class="icon-plus" title="add"></i><i class="icon-tag" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
   </ul>
   <ul data-bind="foreach:tags">
     <li class="tag list"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>
