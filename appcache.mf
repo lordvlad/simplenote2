@@ -1,11 +1,29 @@
 CACHE MANIFEST
-# rev 36
+# rev 144
+
+# BUILD pub/app.less FROM
+#  src/less/body.less
+#  src/less/node.less
+#  src/less/tag.less
+#  src/less/mobile.less
+# THEN less TO pub/app.css
+
+# BUILD pub/app.coffee
+#  src/coffee/rostrum.coffee
+#  src/coffee/tag.coffee
+#  src/coffee/node.coffee
+#  src/coffee/simplenote.coffee
+#  src/coffee/caudum.coffee
+#  src/coffee/help.coffee
+# THEN coffee TO pub/app.js
+
 
 # Explicitly cached 'master entries'.
 CACHE:
+appcache.mf
 favicon.ico
 index.html
-pub/app.js
+pub/app.min.js
 pub/app.css
 lib/normalize/normalize.min.css
 lib/jqueryui/jquery-ui-1.10.2.custom.min.css
@@ -35,12 +53,11 @@ tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
 tmpl/readonlyNodeTemplate.html
 snd/pop.mp3
-appcache.mf
 
 # Resources that require the user to be online.
 NETWORK:
 *
-/online/online.json
+online/online.json
 http://*
 https://*
 

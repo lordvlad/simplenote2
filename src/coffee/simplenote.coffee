@@ -39,7 +39,7 @@ class SimpleNote
         when 0 then ''
         when 1 then 'green'
         when 2 then 'red'
-        when 3 then 'yellow'
+        when 3 then 'orange'
     # observable Arrays
     @nodes = obs []
     @tags = obs []
@@ -144,8 +144,9 @@ class SimpleNote
   # afterRender and such Functions
   fadeIn : (el) -> $(el).hide().fadeIn('slow')
   fadeOut : (el) -> $(el).fadeOut -> $(el).remove()
-  checkForOptions : (el) ->
-    console.log el
+  checkForOptions : (el) =>
+    if ( domnode = $( '.options', el ) ).length > 0 and $( '[data-bind]', el ).length > 0
+      ko.applyBindings @, domnode[0]
   
   # notificationsystem
   removeNotification : (item) => @notifications.remove item

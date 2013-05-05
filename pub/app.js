@@ -591,6 +591,7 @@
       this.clearSearchFilter = __bind(this.clearSearchFilter, this);
       this.removeAlert = __bind(this.removeAlert, this);
       this.removeNotification = __bind(this.removeNotification, this);
+      this.checkForOptions = __bind(this.checkForOptions, this);
       this.removeTag = __bind(this.removeTag, this);
       this.addTag = __bind(this.addTag, this);
       this.openNode = __bind(this.openNode, this);
@@ -659,7 +660,7 @@
           case 2:
             return 'red';
           case 3:
-            return 'yellow';
+            return 'orange';
         }
       });
       this.nodes = obs([]);
@@ -901,7 +902,11 @@
     };
 
     SimpleNote.prototype.checkForOptions = function(el) {
-      return console.log(el);
+      var domnode;
+
+      if ((domnode = $('.options', el)).length > 0 && $('[data-bind]', el).length > 0) {
+        return ko.applyBindings(this, domnode[0]);
+      }
     };
 
     SimpleNote.prototype.removeNotification = function(item) {

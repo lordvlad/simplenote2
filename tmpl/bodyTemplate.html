@@ -92,7 +92,7 @@
   <div id="sheet" class="node">
     <div class="body" data-bind="visible: $data!==$root.root" >
       <div class="notes topNotes" data-bind="ifnot:$data.readonly"><div data-bind="editable:notes,hasfocus:editingNote"></div></div>
-      <div class="topNotes notes" data-bind="template:{name:'optionsTemplate',if:$data.readonly,afterRender:$root.checkForOptions}"></div>
+      <div class="topNotes notes" data-bind="if:$data.readonly,afterRender:$root.checkForOptions"><div data-bind="html:notes"></div></div>
     </div>
     <div data-bind="ifnot:$data.readonly">
       <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>

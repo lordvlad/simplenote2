@@ -7,7 +7,8 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   a.notes( """
     <h1>welcome to simplenote help.</h1>
     here, i will try to help you getting startet with this awesome little outliner.<br><br>    
-    doubleclick the title or click ( details... ) to open the first node titled 'first steps'.    
+    doubleclick the title or click ( details... ) to open the first node titled 'first steps'. 
+    if you are using a mobile device, there won't be a ( details... ) link. instead, use the triangle ( #{Node.bullets.right} ) to open the item.
   """ )
   
   c = new Node()
@@ -16,7 +17,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   c.parents = =>
     [ model.root, a ]
   c.notes( """
-    you opened your first node, YAY!<br><br>
+    <h1>you opened your first node, YAY!</h1>
     see how the breadcrumbs above got updated? they provide you a path back to the root.<br><br>
     try to get back to the 'help' page!
   """ )

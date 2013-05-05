@@ -1,0 +1,21 @@
+<div class="node" data-bind="attr:{'nodeId':id}">
+  <div class="body" data-bind="css:{active:active},click:makeActive">
+    <div class="headline">
+      <table><tr><td class="bullet-td">
+        <span class="bullet" title="fold|unfold|move" data-bind="html:bullet,click:toggleExpanded">&bull;</span>
+      </td><td class="listType-td">
+        <span class="listType" title="change type"></span>
+      </td><td class="title-td">							
+        <span class="title" data-bind="dblclick:open,html:title"></span>
+        <span class="open" data-bind="click:open" title="edit details">details...</span>
+      </td></tr></table>
+    </div>
+    <div class="notes" data-bind="html:notes, visible:expanded()&&hasNote()"></div>
+  </div>
+   <div data-bind="ifnot:$data.readonly,visible:expanded()&&hasChildren()">
+    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
+  </div>
+  <div data-bind="if:$data.readonly,visible:expanded()&&hasChildren()">
+    <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
+  </div>
+</div>
