@@ -158,7 +158,7 @@ $ ->
     long = 60 # seconds
     checkConnection = ->
       $.get( 
-        '/online/online.json' 
+        'online/online.json' 
       ).error( ->
         SimpleNote.connectionStatus off        
         timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
