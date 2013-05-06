@@ -520,7 +520,7 @@
         deadline: this.deadline(),
         bookmarked: this.bookmarked(),
         done: this.done(),
-        expanded: this.hasNote() && this.hasChildren() && this.realExpanded(),
+        expanded: (this.hasNote() || this.hasChildren()) && this.realExpanded(),
         listStyleType: this.listStyleType(),
         children: this.children(),
         tags: this.tags()
@@ -855,9 +855,7 @@
     };
 
     SimpleNote.prototype.addNodeHere = function(options) {
-      console.log(arguments);
-      return;
-      return this.addNodeTo(this.current(), options);
+      return this.addNodeTo((options.id != null) && options || this.current(), options);
     };
 
     SimpleNote.prototype.insertNodeAfter = function(node, options) {
