@@ -5,7 +5,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
   applicationCache.onerror =-> $.holdReady(off); model.connectionStatus(0)
   applicationCache.onnoupdate =-> $.holdReady(off); model.connectionStatus(1)
   applicationCache.onprogress =-> delay -> $( '#curtain' ).find('i').after('.');
-  applicationCache.onupdateready = ->
+  applicationCache.onupdateready = applicationCache.oncached = ->
     delay -> location.href='index.html'
     timeout.set 1000, -> $( '#curtain' ).find( 'i' ).after( "<br>there is a new version of this app.<br>please <a style='color:cyan' href='index.html'>reload the page manually</a>" ).find( 'a' ).focus()
 
@@ -28,7 +28,6 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
     model.applyEvents()
     # start periodical saving
     model.startPeriodicalSave()
-    # create right click context menu-1
     $( '#tagsMenu', view ).data( 'node', 
       null
     ).on( 'dismiss', ->

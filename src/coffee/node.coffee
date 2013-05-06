@@ -29,10 +29,9 @@ class Node
     @tags.extend pickFrom : { array: @model.tags, key : "name" }
     @files = obs []
     # computed variables
-    @visibleChildren = obs => @children.filter 'visible'
     @visible = obs =>
       f = @model.realFilter()
-      @model.current is @ or @visibleChildren().length or Node.checkFilter( @, f )
+      @model.current is @ or @children.filter( 'visible' ).length or Node.checkFilter( @, f )
       
     @active = obs {
       read: active,
@@ -126,7 +125,7 @@ class Node
       deadline : @deadline()
       bookmarked : @bookmarked()
       done : @done()
-      expanded : @realExpanded()
+      expanded : @hasNotes() && @hasChildren() && @realExpanded()
       listStyleType : @listStyleType()
       children : @children()
       tags : @tags()

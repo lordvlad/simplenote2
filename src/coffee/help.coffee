@@ -12,18 +12,18 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   """ )
   
   c = new Node()
-  c.id = 'firstStep'
+  c.id = 'help-firstStep'
   c.title 'first step'
   c.parents = =>
     [ model.root, a ]
   c.notes( """
-    <h1>you opened your first node, YAY!</h1>
+    <h3>you opened your first node, YAY!</h3>
     see how the breadcrumbs above got updated? they provide you a path back to the root.<br><br>
     try to get back to the 'help' page!
   """ )
     
   d = new Node()
-  d.id = 'secondStep'
+  d.id = 'help-secondStep'
   d.title 'second step'
   d.parents = =>
     [ model.root, a ]
@@ -33,26 +33,26 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   """ )
   
   e = new Node()
-  e.id = 'withoutcontent'
+  e.id = 'help-withoutcontent'
   e.title 'i\'m empty :('
   e.parents = =>
     [ model.root, a, d ]
   
   f = new Node()
-  f.id = 'withcontent'
+  f.id = 'help-withcontent'
   f.title 'i have more to show'
   f.parents = =>
     [ model.root, a, d ]
   f.notes( "see? i have some details " )
   
   g = new Node()
-  g.id = 'withcontentcontent'
+  g.id = 'help-withcontentcontent'
   g.title 'and another subnote'
   g.parents = =>
     [ model.root, a, d, f ]
   
   b = new Node()
-  b.id = 'offline'
+  b.id = 'help-offline'
   b.title 'working offline'
   b.parents = =>
     [ model.root, a ]
@@ -62,7 +62,7 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
   """ )  
     
   h = new Node()
-  h.id = 'dropbox'
+  h.id = 'help-dropbox'
   h.title 'keep in sync with dropbox'
   h.parents = =>
     [ model.root, a ]
@@ -70,8 +70,8 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance ) ->
     <div class='options'>
     you can use dropbox to keep your notes synced across all your devices.<br><br>
     right now, your dropbox is <span data-bind='text:$root.dropboxStatusText,style:{color:$root.dropboxStatusColor}'></span><br><br>
-    you will see your dropbox status at the bottom of the page,too.
-    <button>connect to dropbox</button>
+    you will see your dropbox status at the bottom of the page,too.<br><br>
+    check the <a href='#options-dropbox'>dropbox options</a> page.
     </div>
   """ )
   

@@ -356,14 +356,11 @@
         }
       });
       this.files = obs([]);
-      this.visibleChildren = obs(function() {
-        return _this.children.filter('visible');
-      });
       this.visible = obs(function() {
         var f;
 
         f = _this.model.realFilter();
-        return _this.model.current === _this || _this.visibleChildren().length || Node.checkFilter(_this, f);
+        return _this.model.current === _this || _this.children.filter('visible').length || Node.checkFilter(_this, f);
       });
       this.active = obs({
         read: active,
@@ -856,6 +853,8 @@
     };
 
     SimpleNote.prototype.addNodeHere = function(options) {
+      console.log(arguments);
+      return;
       return this.addNodeTo(this.current(), options);
     };
 
@@ -996,7 +995,7 @@
         return $('#curtain').find('i').after('.');
       });
     };
-    applicationCache.onupdateready = function() {
+    applicationCache.onupdateready = applicationCache.oncached = function() {
       delay(function() {
         return location.href = 'index.html';
       });
@@ -1114,54 +1113,54 @@
     a.parents = function() {
       return [model.root];
     };
-    a.notes("<h1>welcome to simplenote help.</h1>\nhere, i will try to help you getting startet with this awesome little outliner.<br><br>    \ndoubleclick the title or click ( details... ) to open the first node titled 'first steps'.    ");
+    a.notes("<h1>welcome to simplenote help.</h1>\nhere, i will try to help you getting startet with this awesome little outliner.<br><br>    \ndoubleclick the title or click ( details... ) to open the first node titled 'first steps'. \nif you are using a mobile device, there won't be a ( details... ) link. instead, use the triangle ( " + Node.bullets.right + " ) to open the item.");
     c = new Node();
-    c.id = 'firstStep';
+    c.id = 'help-firstStep';
     c.title('first step');
     c.parents = function() {
       return [model.root, a];
     };
-    c.notes("you opened your first node, YAY!<br><br>\nsee how the breadcrumbs above got updated? they provide you a path back to the root.<br><br>\ntry to get back to the 'help' page!");
+    c.notes("<h3>you opened your first node, YAY!</h3>\nsee how the breadcrumbs above got updated? they provide you a path back to the root.<br><br>\ntry to get back to the 'help' page!");
     d = new Node();
-    d.id = 'secondStep';
+    d.id = 'help-secondStep';
     d.title('second step');
     d.parents = function() {
       return [model.root, a];
     };
     d.notes("you can also use the little triangles ( " + Node.bullets.right + " ) on the side to unfold items <b>if</b> they have more content to them.\nnote that on mobile devices this will not unfold but open the item.");
     e = new Node();
-    e.id = 'withoutcontent';
+    e.id = 'help-withoutcontent';
     e.title('i\'m empty :(');
     e.parents = function() {
       return [model.root, a, d];
     };
     f = new Node();
-    f.id = 'withcontent';
+    f.id = 'help-withcontent';
     f.title('i have more to show');
     f.parents = function() {
       return [model.root, a, d];
     };
     f.notes("see? i have some details ");
     g = new Node();
-    g.id = 'withcontentcontent';
+    g.id = 'help-withcontentcontent';
     g.title('and another subnote');
     g.parents = function() {
       return [model.root, a, d, f];
     };
     b = new Node();
-    b.id = 'offline';
+    b.id = 'help-offline';
     b.title('working offline');
     b.parents = function() {
       return [model.root, a];
     };
     b.notes("simplenote is capable of working offline, too, because all data is saved only in your browser anyway!<br><br>\non the bottom of the page, there is a small identifier which will update if you loose or gain an internet connection");
     h = new Node();
-    h.id = 'dropbox';
+    h.id = 'help-dropbox';
     h.title('keep in sync with dropbox');
     h.parents = function() {
       return [model.root, a];
     };
-    h.notes("<div class='options'>\nyou can use dropbox to keep your notes synced across all your devices.<br><br>\nright now, your dropbox is <span data-bind='text:$root.dropboxStatusText,style:{color:$root.dropboxStatusColor}'></span><br><br>\nyou will see your dropbox status at the bottom of the page,too.\n<button>connect to dropbox</button>\n</div>");
+    h.notes("<div class='options'>\nyou can use dropbox to keep your notes synced across all your devices.<br><br>\nright now, your dropbox is <span data-bind='text:$root.dropboxStatusText,style:{color:$root.dropboxStatusColor}'></span><br><br>\nyou will see your dropbox status at the bottom of the page,too.<br><br>\ncheck the <a href='#options-dropbox'>dropbox options</a> page.\n</div>");
     a.children([c, d, b, h]);
     d.children([e, f]);
     f.children([g]);

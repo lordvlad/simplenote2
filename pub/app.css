@@ -16,7 +16,7 @@ a:hover {
 }
 .bullet,
 i[class^="icon-"],
-#addChild {
+.addChild {
   cursor: pointer;
 }
 .bullet,
@@ -189,10 +189,10 @@ i[class^="icon-"]:hover {
   margin-right: 0;
   border-left: none;
 }
-#notebook #addChild {
+#notebook .addChild {
   opacity: 0.5;
 }
-#notebook #addChild:hover {
+#notebook .addChild:hover {
   opacity: 1;
 }
 #footer {
@@ -221,7 +221,7 @@ i[class^="icon-"]:hover {
   margin-top: -0.5em;
   left: 50%;
 }
-.node > .body {
+.node {
   margin-bottom: .5em;
 }
 .node > .body:hover {
@@ -298,21 +298,34 @@ i[class^="icon-"]:hover {
   content: "write something";
   opacity: 0.5;
 }
-.node > .body .notes {
-  margin-left: .8em;
-  padding-left: .5em;
+.node > .body .notes > div {
   font-size: 80%;
+  padding-left: 1.3em;
   color: #666666;
 }
 .node > .body .notes > div:not(:focus):empty:before {
   content: "add some details";
   opacity: 0.5;
 }
-.node > div > div.children {
+.node > div.childrenOuter,
+.node .notes {
+  padding-top: .5em;
   margin-left: .5em;
-  margin-bottom: .5em;
   padding-left: .5em;
   border-left: solid 1px #b3b3b3;
+}
+.node > div.childrenOuter .addChild,
+.node .notes .addChild {
+  font-size: 90%;
+  margin-left: .3em;
+}
+.node .topNotes {
+  border: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.node .topNotes > div {
+  padding-left: 0;
 }
 .headline .tag {
   -webkit-border-radius: 5px;

@@ -76,9 +76,9 @@
   </div>
   
   <div id="topActions" data-bind="visible: ($data!==$root.root)&&(!$data.readonly)">      
-  <span class="tags" data-bind="foreach:tags">
-    <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
-  </span>
+    <span class="tags" data-bind="foreach:tags">
+      <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
+    </span>
     <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
     <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
     <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
@@ -91,14 +91,16 @@
   
   <div id="sheet" class="node">
     <div class="body" data-bind="visible: $data!==$root.root" >
-      <div class="notes topNotes" data-bind="ifnot:$data.readonly"><div data-bind="editable:notes,hasfocus:editingNote"></div></div>
-      <div class="topNotes notes" data-bind="if:$data.readonly,afterRender:$root.checkForOptions"><div data-bind="html:notes"></div></div>
+      <div class="notes topNotes" data-bind="ifnot:$data.readonly,visible:!$data.readonly">
+        <div data-bind="editable:notes,hasfocus:editingNote"></div>
+      </div>
+      <div class="topNotes notes" data-bind="if:$data.readonly,afterRender:$root.checkForOptions,visible:$data.readonly">
+        <div data-bind="html:notes"></div>
+      </div>
     </div>
     <div data-bind="ifnot:$data.readonly">
-      <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
-      <div id="addChild" data-bind="click: $root.addNodeHere">
-        <i class="icon-plus"></i>&nbsp;add something
-      </div>
+      <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+      <div data-bind="template:'addTemplate'"></div>
     </div>
     <div data-bind="if:$data.readonly">
       <div class="topChildren children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
@@ -110,9 +112,9 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  you're <a href="#offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
+  you're <a href="#help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
   &nbsp;|&nbsp;
-  dropbox is <a href="#dropbox" data-bind="text:dropboxStatusText,style:{color:dropboxStatusColor}"></a>
+  dropbox is <a href="#help-dropbox" data-bind="text:dropboxStatusText,style:{color:dropboxStatusColor}"></a>
   &nbsp;|&nbsp;
   report a <a href="https://github.com/lordvlad/simplenote2/issues/new" target="_new">problem</a>?
   &nbsp;|&nbsp;

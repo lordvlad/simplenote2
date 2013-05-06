@@ -127,7 +127,10 @@ class SimpleNote
   
   # functions that create nodes
   addNodeTo : ( parent, options ) =>( new Node $.extend (if isObj options then options else {}), { parent: parent } ).editingTitle on
-  addNodeHere : ( options ) => @addNodeTo @current(), options
+  addNodeHere : ( options ) => 
+    console.log arguments
+    return
+    @addNodeTo @current(), options
   insertNodeAfter : ( node, options ) => @addNodeTo @current().parent(), options
   
   # functions that work with nodes

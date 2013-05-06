@@ -1,4 +1,4 @@
-<div class="node" data-bind="attr:{'nodeId':id}">
+<div class="node" data-bind="attr:{'nodeId':id}, if: $data.visible">
   <div class="body" data-bind="css:{active:active},click:makeActive">
     <div class="headline">
       <table><tr><td class="bullet-td">
@@ -11,12 +11,15 @@
       </td><td class="action-td" data-bind="visible:!$data.readonly,template:'actionsTemplate'">
       </td></tr></table>
     </div>
-    <div class="notes" data-bind="editable:notes, visible:expanded()&&hasNote(),hasfocus:editingNote"></div>
+    <div class="notes" data-bind=" visible:expanded()">
+      <div data-bind="editable:notes,hasfocus:editingNote"></div>
+    </div>
   </div>
-  <div data-bind="ifnot:$data.readonly,visible:expanded()&&hasChildren()">
-    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
+  <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()" class="childrenOuter">
+      <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+      <div data-bind="template: 'addTemplate'"></div>
   </div>
-  <div data-bind="if:$data.readonly,visible:expanded()&&hasChildren()">
+  <div data-bind="if:$data.readonly,visible:$data.readonly&&expanded()" class="childrenOuter">
     <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
   </div>
 </div>

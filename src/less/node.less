@@ -1,6 +1,6 @@
 .node {
+  margin-bottom: .5em;
   > .body {
-    margin-bottom: .5em;
     &:hover {
       background: darken( @bright, 5% );
     }
@@ -71,10 +71,9 @@
       content: "write something";
       opacity: 0.5;
     }
-    .notes {
-      margin-left: .8em;
-      padding-left: .5em;
+    .notes > div {
       font-size: 80%;
+      padding-left: 1.3em;
       color: lighten( @dark, 20% );
     }  
     .notes>div:not(:focus):empty:before {
@@ -82,11 +81,22 @@
       opacity: 0.5;
     }
   }
-  > div > div.children {
+  > div.childrenOuter, .notes {
+    padding-top: .5em;
     margin-left: .5em;
-    margin-bottom: .5em;
     padding-left: .5em;
     border-left: solid 1px lighten( @dark, 50% );
-  
+    .addChild {
+      font-size: 90%;
+      margin-left: .3em;
+    }
+  }
+  .topNotes {
+    border: none;
+    margin-left: 0;
+    padding-left: 0;
+    > div {
+      padding-left: 0;
+    }
   }
 }

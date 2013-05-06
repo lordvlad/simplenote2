@@ -12,10 +12,7 @@
     </div>
     <div class="notes" data-bind="html:notes, visible:expanded()&&hasNote()"></div>
   </div>
-   <div data-bind="ifnot:$data.readonly,visible:expanded()&&hasChildren()">
-    <div class="children" data-bind="sortable:{template:'nodeTemplate',data:visibleChildren,connectClass:'children',options:{handle:'.bullet'}}"></div>
-  </div>
-  <div data-bind="if:$data.readonly,visible:expanded()&&hasChildren()">
+  <div data-bind="visible:expanded()&&hasChildren()" class="childrenOuter">
     <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
   </div>
 </div>
