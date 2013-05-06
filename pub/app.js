@@ -520,7 +520,7 @@
         deadline: this.deadline(),
         bookmarked: this.bookmarked(),
         done: this.done(),
-        expanded: this.realExpanded(),
+        expanded: this.hasNote() && this.hasChildren() && this.realExpanded(),
         listStyleType: this.listStyleType(),
         children: this.children(),
         tags: this.tags()
@@ -588,6 +588,8 @@
       this.clearSearchFilter = __bind(this.clearSearchFilter, this);
       this.removeAlert = __bind(this.removeAlert, this);
       this.removeNotification = __bind(this.removeNotification, this);
+      this.stopSort = __bind(this.stopSort, this);
+      this.startSort = __bind(this.startSort, this);
       this.checkForOptions = __bind(this.checkForOptions, this);
       this.removeTag = __bind(this.removeTag, this);
       this.addTag = __bind(this.addTag, this);
@@ -906,6 +908,19 @@
       if ((domnode = $('.options', el)).length > 0 && $('[data-bind]', el).length > 0) {
         return ko.applyBindings(this, domnode[0]);
       }
+    };
+
+    SimpleNote.prototype.startSort = function() {
+      console.log('starting sort');
+      return $('.node', this.view).hover(function() {
+        return ko.dataFor($(this)[0]).expanded(true);
+      }, function() {
+        return ko.dataFor($(this)[0]).expanded(false);
+      });
+    };
+
+    SimpleNote.prototype.stopSort = function() {
+      return console.log('stopping sort');
     };
 
     SimpleNote.prototype.removeNotification = function(item) {

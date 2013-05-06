@@ -16,7 +16,7 @@
     </div>
   </div>
   <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()" class="childrenOuter">
-      <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
+      <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet',start:$root.startSort,stop:$root.stopSort}}"></div>
       <div data-bind="template: 'addTemplate'"></div>
   </div>
   <div data-bind="if:$data.readonly,visible:$data.readonly&&expanded()" class="childrenOuter">

@@ -125,7 +125,7 @@ class Node
       deadline : @deadline()
       bookmarked : @bookmarked()
       done : @done()
-      expanded : @hasNotes() && @hasChildren() && @realExpanded()
+      expanded : @hasNote() && @hasChildren() && @realExpanded()
       listStyleType : @listStyleType()
       children : @children()
       tags : @tags()

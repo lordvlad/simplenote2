@@ -150,6 +150,17 @@ class SimpleNote
   checkForOptions : (el) =>
     if ( domnode = $( '.options', el ) ).length > 0 and $( '[data-bind]', el ).length > 0
       ko.applyBindings @, domnode[0]
+      
+  # helping with sorting
+  startSort :=>
+    console.log 'starting sort'
+    $( '.node', @view ).hover( ->
+      ko.dataFor( $(this)[0] ).expanded( true )
+    , ->
+      ko.dataFor( $(this)[0] ).expanded( false )
+    )
+  stopSort :=>
+    console.log 'stopping sort'
   
   # notificationsystem
   removeNotification : (item) => @notifications.remove item
