@@ -254,6 +254,9 @@ i[class^="icon-"]:hover {
 .node > .body.active .action-td .actionsBar .info > .tag i {
   opacity: 1;
 }
+.node > .body:hover .headline .plus-td {
+  opacity: 1;
+}
 .node > .body > .headline .info > .tag {
   visibility: hidden;
 }
@@ -264,9 +267,14 @@ i[class^="icon-"]:hover {
   vertical-align: top;
   padding: 0;
 }
-.node > .body > .headline .bullet-td {
+.node > .body > .headline .bullet-td,
+.node > .body > .headline .plus-td {
   width: 1em;
   text-align: center;
+}
+.node > .body > .headline .plus-td {
+  opacity: 0;
+  cursor: pointer;
 }
 .node > .body > .headline .listType-td {
   width: 1px;
@@ -283,6 +291,7 @@ i[class^="icon-"]:hover {
 }
 .node > .body > .headline .title-td {
   word-break: break-word;
+  padding-left: .5em;
 }
 .node > .body > .headline .title-td .open {
   font-size: 80%;
@@ -310,9 +319,8 @@ i[class^="icon-"]:hover {
 .node > div.childrenOuter,
 .node .notes {
   padding-top: .5em;
-  margin-left: .5em;
-  padding-left: .5em;
-  border-left: solid 1px #b3b3b3;
+  margin-left: 1.5em;
+  border-left: solid 1px #e5e5e5;
 }
 .node > div.childrenOuter .addChild,
 .node .notes .addChild {
@@ -326,6 +334,21 @@ i[class^="icon-"]:hover {
 }
 .node .topNotes > div {
   padding-left: 0;
+}
+.bullet {
+  color: #333333;
+}
+.bullet.full {
+  border-radius: .5em;
+  background: #e5e5e5;
+  width: 1em;
+  text-align: center;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+}
+.bullet.full.open {
+  background: #b3b3b3;
 }
 .headline .tag {
   -webkit-border-radius: 5px;
@@ -401,5 +424,8 @@ i[class^="icon-"]:hover {
   .headline .actionsBar .icon-check-empty,
   .headline .actionsBar .info > .tag {
     visibility: visible!important;
+  }
+  .headline .plus-td {
+    display: none;
   }
 }

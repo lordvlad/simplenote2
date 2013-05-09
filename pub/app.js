@@ -565,9 +565,9 @@
     };
 
     Node.bullets = {
-      right: "&#9658;",
-      down: "&#9660",
-      round: "&#9679;"
+      right: "full",
+      down: "full open",
+      round: "empty"
     };
 
     Node.nodes = obs([]);

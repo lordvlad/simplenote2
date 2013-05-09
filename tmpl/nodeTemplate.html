@@ -1,13 +1,14 @@
 <div class="node" data-bind="attr:{'nodeId':id}, if: $data.visible">
   <div class="body" data-bind="css:{active:active},click:makeActive">
     <div class="headline">
-      <table><tr><td class="bullet-td">
-        <span class="bullet" title="fold|unfold|move" data-bind="html:bullet,click:toggleExpanded">&bull;</span>
+      <table><tr><td class="plus-td">
+        <span class="plus" title="fold|unfold" data-bind="click:toggleExpanded,text:$data.expanded()?'-':'+'"></span>
+      </td><td class="bullet-td">
+        <span class="bullet" title="open|move" data-bind="css:bullet,click:open">&bull;</span>
       </td><td class="listType-td">
         <span class="listType" title="change type"></span>
       </td><td class="title-td">							
         <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
-        <span class="open" data-bind="click:open" title="edit details">details...</span>
       </td><td class="action-td" data-bind="visible:!$data.readonly,template:'actionsTemplate'">
       </td></tr></table>
     </div>
@@ -17,7 +18,7 @@
   </div>
   <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()" class="childrenOuter">
       <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet',start:$root.startSort,stop:$root.stopSort}}"></div>
-      <div data-bind="template: 'addTemplate'"></div>
+      <div data-bind="template:{name: 'addTemplate', if: !children().length}"></div>
   </div>
   <div data-bind="if:$data.readonly,visible:$data.readonly&&expanded()" class="childrenOuter">
     <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>

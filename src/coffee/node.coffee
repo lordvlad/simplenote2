@@ -153,9 +153,9 @@ class Node
     r
   
   @bullets : {
-    right : "&#9658;" # "<i class='icon-circle'></i>",
-    down : "&#9660" # "<i class='icon-chevron-right'></i>",
-    round  : "&#9679;" # "<i class='icon-chevron-down'></i>"
+    right : "full" # "&#9658;" # "<i class='icon-circle'></i>",
+    down : "full open" # "&#9660" # "<i class='icon-chevron-right'></i>",
+    round  : "empty" # "&#9679;" # "<i class='icon-chevron-down'></i>"
   }
   @nodes : obs []
   
