@@ -37,7 +37,7 @@
   
   <div id="selectOptions" data-bind="visible: selectedNodes().length">
     <div>
-      <span data-bind="text:selectedNodes().length"></span>&nbsp;nodes selected
+      <span data-bind="text:selectedNodes().length"></span><span class="selectedDesktop">&nbsp;nodes selected</span><span class="selectedMobile">&times;</span>
       <span class="options">
         <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
         <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>

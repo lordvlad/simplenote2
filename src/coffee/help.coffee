@@ -45,7 +45,7 @@ about =
           title : 'simplenote offline'
           notes : """
             <h2> simplenote offline </h2>
-            <p>you won't have to do anything special to work offline with simplenote. everything is saved in your browser as you type. go online. go offline. simplenote does'nt care.</p>
+            <p>you won't have to do anything special to work offline with simplenote. everything is saved in your browser as you type. go online. go offline. simplenote doesn't care.</p>
             <p>on the bottom of the screen you will see a small notification which will tell you if it is connected to the server or not. but have no fear, the server DOES NOT get any data from simplenote, only the other way around.</p>
           """
         }, {
@@ -55,7 +55,6 @@ about =
             <h2> simplenote in sync </h2>
             <p>you want to use simplenote on all of your devices? simplenote will gladly help you.</p>
             <p>swing by the <a href='#about-options'>options</a> section and connect simplenote to your favorite online storage system.</p>
-            <p>your favorite isn't listed? <a href='mailto:#{email}'>give me a shout</a>, and i will see what i can do for you.</p>
           """
         }
       ]

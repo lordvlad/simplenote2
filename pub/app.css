@@ -226,6 +226,9 @@ i[class^="icon-"]:hover {
   margin-top: -0.5em;
   left: 50%;
 }
+.selectedMobile {
+  display: none;
+}
 .node {
   margin-bottom: .5em;
 }
@@ -445,6 +448,12 @@ i[class^="icon-"]:hover {
   }
   #selectOptions .options i {
     font-size: 150%;
+  }
+  #selectOptions .selectedDesktop {
+    display: none;
+  }
+  #selectOptions .selectedMobile {
+    display: inline-block;
   }
   #tagsMenu {
     top: 20%!important;
