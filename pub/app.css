@@ -89,6 +89,10 @@ i[class^="icon-"]:hover {
   outline: none!important;
   border: none;
 }
+#search a,
+#selectOptions a {
+  text-decoration: none;
+}
 #selectOptions {
   background: #00d0ff;
 }
@@ -182,6 +186,7 @@ i[class^="icon-"]:hover {
 }
 #notebook #sheet .topNotes {
   margin-bottom: 1em;
+  padding-bottom: 1em;
   font-size: 100%;
 }
 #notebook #sheet .topChildren {
@@ -337,15 +342,19 @@ i[class^="icon-"]:hover {
 }
 .bullet {
   color: #333333;
-}
-.bullet.full {
   border-radius: .5em;
-  background: #e5e5e5;
+  background: transparent;
   width: 1em;
   text-align: center;
   height: 1em;
   display: inline-block;
   line-height: 1em;
+}
+.bullet:before {
+  content: "•";
+}
+.bullet.full {
+  background: #e5e5e5;
 }
 .bullet.full.open {
   background: #b3b3b3;
@@ -374,6 +383,9 @@ i[class^="icon-"]:hover {
   position: absolute;
   background-color: #ffffff;
   overflow: hidden;
+}
+#tagsMenu i {
+  white-space: nowrap;
 }
 #tagsMenu ul {
   list-style-type: none;
@@ -414,6 +426,9 @@ i[class^="icon-"]:hover {
   .headline .open {
     display: none;
   }
+  .headline .actionsBar .addTag {
+    display: none;
+  }
   .headline .actionsBar .tag {
     padding: 0 0 0 .4em;
   }
@@ -427,5 +442,14 @@ i[class^="icon-"]:hover {
   }
   .headline .plus-td {
     display: none;
+  }
+  #selectOptions .options i {
+    font-size: 150%;
+  }
+  #tagsMenu {
+    top: 20%!important;
+    left: 50%!important;
+    margin-left: -100px !important;
+    box-shadow: 0 0 50px #888888;
   }
 }

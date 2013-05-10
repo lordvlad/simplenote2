@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 322
+# rev 548
 
 # BUILD pub/app.less FROM
 #  src/less/body.less
@@ -10,9 +10,9 @@ CACHE MANIFEST
 
 # BUILD pub/app.coffee
 #  src/coffee/rostrum.coffee
+#  src/coffee/simplenote.coffee
 #  src/coffee/tag.coffee
 #  src/coffee/node.coffee
-#  src/coffee/simplenote.coffee
 #  src/coffee/caudum.coffee
 #  src/coffee/help.coffee
 # THEN coffee TO pub/app.js

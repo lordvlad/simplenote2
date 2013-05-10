@@ -27,15 +27,15 @@ class SimpleNote
       switch @connectionStatus()
         when 0 then 'red'
         when 1 then 'green'
-    @dropboxStatus = obs 0
-    @dropboxStatusText = obs =>
-      switch @dropboxStatus()
+    @syncStatus = obs 0
+    @syncStatusText = obs =>
+      switch @syncStatus()
         when 0 then 'not set up'
         when 1 then 'connected'
         when 2 then 'disconnected'
         when 3 then 'synchronizing'
-    @dropboxStatusColor = obs =>
-      switch @dropboxStatus()
+    @syncStatusColor = obs =>
+      switch @syncStatus()
         when 0 then ''
         when 1 then 'green'
         when 2 then 'red'
@@ -100,13 +100,30 @@ class SimpleNote
     @
   
   # apply keyBindings
-  applyEvents : ->
+  applyEvents : =>
     @$view.on "click", ".headline", (e)->
       $t = $ e.target
       $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .ellipsis, .additional")
     # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
     @$view.on "keyup, click", => @save()
-    
+   
+    # set up online check
+    offlineCount = 0
+    numShortChecks = 5 # how often to check with a short interval before switching to long interval
+    short = 2 # seconds
+    long = 60 # seconds
+    checkConnection = =>
+      $.get( 
+        'online/online.json' 
+      ).error( =>
+        @connectionStatus 0
+        timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
+      ).done( =>
+        @connectionStatus 1
+        offlineCount = 0
+        timeout.set long*1e3, checkConnection
+      )
+    checkConnection()
     @
   
   # functions on self
@@ -151,14 +168,15 @@ class SimpleNote
       
   # helping with sorting
   startSort :=>
-    console.log 'starting sort'
-    $( '.node', @view ).hover( ->
+    # console.log 'starting sort'
+    $( '.node', @view ).on({ "mouseover.sort": ->
       ko.dataFor( $(this)[0] ).expanded( true )
-    , ->
+    , "mouseout.sort" : ->
       ko.dataFor( $(this)[0] ).expanded( false )
-    )
+    })
   stopSort :=>
-    console.log 'stopping sort'
+    $( '.node', @view ).off( '.sort' )
+    # console.log 'stopping sort'
   
   # notificationsystem
   removeNotification : (item) => @notifications.remove item
@@ -179,24 +197,5 @@ SimpleNote.liststyletypes = [
   { name : "A, B, C", value: ["upperAlpha"] }
   { name : "(A), (B), (C)", value : ["upperAlpha","dot"] }
 ]
-
-$ -> 
-  do () ->
-    model = SimpleNote.activeInstance
-    offlineCount = 0
-    numShortChecks = 5 # how often to check with a short interval before switching to long interval
-    short = 2 # seconds
-    long = 60 # seconds
-    checkConnection = ->
-      $.get( 
-        'online/online.json' 
-      ).error( ->
-        model.connectionStatus 0
-        timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
-      ).done( ->
-        model.connectionStatus 1
-        offlineCount = 0
-        timeout.set long*1e3, checkConnection
-      )
-    checkConnection()
     
+revive.constructors[ "SimpleNote" ] = SimpleNote;

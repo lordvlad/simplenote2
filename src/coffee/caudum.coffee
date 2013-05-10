@@ -13,10 +13,10 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
   $ ->
     # extend window with simplenote classes
     $.extend true, window, {
-      SimpleNote        : SimpleNote
+      # SimpleNote        : SimpleNote
       note              : model
-      Node              : Node
-      Tag               : Tag
+      # Node              : Node
+      # Tag               : Tag
     }
     # apply knockout bindings
     ko.applyBindings model, model.view
@@ -48,8 +48,8 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
       $( this ).parents( '#tagsMenu' ).data( 'node' ).tags.push new Tag( { name: name } )
       $(this).next().val( '' ).focus()
     ).on( 'keydown', 'input', (e)->
-      $( this ).parents( '#tagsMenu' ).trigger( 'dismiss' ) if e.which is ESC
-      return if e.which isnt ENTER
+      $( this ).parents( '#tagsMenu' ).trigger( 'dismiss' ) if e.which is k.ESC
+      return if e.which isnt k.ENTER
       $( this ).prev().trigger( 'click' )
     )
     

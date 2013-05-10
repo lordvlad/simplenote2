@@ -8,13 +8,13 @@
       <input type="text" placeholder="search..." data-bind="value:searchFilter,valueUpdate:'afterkeydown',hasfocus:editingFilter"/>
       <i class="icon-tags" title="tags"></i>
       <i class="icon-star" title="bookmarks"></i>
-      <i class="icon-cog" title="options"></i>
+      <a href="#about"><i class="icon-cog" title="help and options"></i></a>
     </div>
     
     <!-- TAGS DROPDOWN -->
     
     <ul id="tags" data-bind="foreach:tags">
-      <li data-bind="click:toggleInFilter,style:{background:color}">
+      <li data-bind="click:$data.toggleInFilter,style:{background:color}">
         <i class="icon-tag"></i>
         <span data-bind="html:name,style:{color:fgColor}"></span>
         <i class="icon-trash" title="delete tag" data-bind="click:remove"></i>
@@ -79,12 +79,12 @@
     <span class="tags" data-bind="foreach:tags">
       <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
     </span>
-    <i class="icon-tags" title="tags" data-bind="click:editTags"></i>
-    <i class="icon-time" title="deadline" data-bind="click:editDeadline"></i>
-    <i class="icon-paper-clip" title="files" data-bind="click:editFiles"></i>
-    <i class="icon-trash" title="delete" data-bind="click: remove"></i>
+    <i class="icon-tags" title="tags" data-bind="click:$data.editTags"></i>
+    <i class="icon-time" title="deadline" data-bind="click:$data.editDeadline"></i>
+    <i class="icon-paper-clip" title="files" data-bind="click:$data.editFiles"></i>
+    <i class="icon-trash" title="delete" data-bind="click: $data.remove"></i>
     &nbsp;&nbsp;
-    <i title="bookmark" data-bind="css:{'icon-star' : bookmarked, 'icon-star-empty' : !bookmarked() }, click:toggleBookmarked"></i>
+    <i title="bookmark" data-bind="css:{'icon-star' : $data.bookmarked, 'icon-star-empty' : !$data.bookmarked() }, click:$data.toggleBookmarked"></i>
   </div>
   
   <!-- SHEET -->
@@ -100,7 +100,7 @@
     </div>
     <div data-bind="ifnot:$data.readonly">
       <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
-      <div data-bind="template:'addTemplate'"></div>
+      <span class="addChild" data-bind="click:$root.addNodeHere">+&nbsp;add something</span>
     </div>
     <div data-bind="if:$data.readonly">
       <div class="topChildren children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
@@ -112,20 +112,20 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  you're <a href="#help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
+  you're <a href="#about-help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
   &nbsp;|&nbsp;
-  dropbox is <a href="#help-dropbox" data-bind="text:dropboxStatusText,style:{color:dropboxStatusColor}"></a>
+  sync is <a href="#about-help-sync" data-bind="text:syncStatusText,style:{color:syncStatusColor}"></a>
   &nbsp;|&nbsp;
   report a <a href="https://github.com/lordvlad/simplenote2/issues/new" target="_new">problem</a>?
   &nbsp;|&nbsp;
-  need <a href="#help">help</a>?
+  need <a href="#about">help</a>?
 </div>
 
 <!-- MENUS -->
 
 <div id="tagsMenu">
   <ul>
-    <li class="tag"><i class="icon-plus" title="add"></i><i class="icon-tag" title="add"></i>&nbsp;<input type="text" placeholder="new tag..."></span></li>
+    <li class="tag"><input type="text" placeholder="new tag..."></span><i class="icon-tag" title="add">+</i></li>
   </ul>
   <ul data-bind="foreach:tags">
     <li class="tag list"><i class="icon-tag" title=""></i>&nbsp;<span data-bind="text:name"></span></li>

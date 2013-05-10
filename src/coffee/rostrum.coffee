@@ -1,8 +1,10 @@
-
 # set screensize under which the device will be regarded as mobile
 # should be the same number which is found in src/less/mobile.less
-maxScreenWidthForMobile = 480;
-
+maxScreenWidthForMobile = 480
+version = "2.01"
+author = "Waldemar Reusch"
+email = "waldemar.reusch@googlemail.com"
+github = "http://github.com/lordvlad/simplenote2"
 
 # borrow from jQuery
 isFn = jQuery.isFunction
@@ -21,18 +23,18 @@ interval =
   clear : ( i ) -> clearInterval i
 delay = ( fn ) -> timeout.set 1, fn
   
+# revive objects
+revive = ( key, value ) ->
+  if value and ( c = value.__constructor ) and ( c = revive.constructors[ c ] ) and ( typeof c.fromJSON is "function" )
+    c.fromJSON( value )
+  else value
+revive.constructors = {}
+  
 # create storage
-store = 
+store =
   set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
   get : ( key ) -> JSON.parse localStorage.getItem(key), revive
   remove : ( key ) -> localStorage.removeItem key
-  
-# revive objects
-revive = ( key, value ) ->
-  if value and value.__constructor and ( c = window[ value.__constructor ] or revive.constructors[ value.class ] ) and typeof c.fromJSON is "function" 
-    c.fromJSON( value )
-  else value
-revive.constructors = []
   
 # create observables
 obs = ( value, owner ) ->
@@ -88,7 +90,7 @@ hash = window.hash = do ->
 intersect = window.intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
 
 # supply shortcuts for popular keys
-$.extend true, window, {
+k =
   ESC       : 27
   ENTER     : 13
   TAB       : 9
@@ -103,5 +105,4 @@ $.extend true, window, {
   PGUP      : 33
   PGDOWN    : 34
   END       : 35
-}
 

@@ -44,7 +44,11 @@ class Node
     @hasChildren = obs => @children().length
     @cssClass = obs => @listStyleType().concat("node").filter(Boolean).join(" ")
     @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and Node.bullets.right ) or( @expanded() and Node.bullets.down ) ) ) or Node.bullets.round
-    @parent = obs => @model.nodes.find (n) => n.children.has @
+    @forcedparent = obs null
+    @parent = obs {
+      read : => @forcedparent() || @model.nodes.find( (n) => n.children.has( @ ) )
+      write : (v) => @forcedparent v
+      }
     @parents = obs =>
       if @parent() is null then return []
       p = [@parent()]
@@ -137,8 +141,7 @@ class Node
     delete data.__constructor
     instance = new Node()
     koMap instance, data
-    # instance.expanded off if window.innerWidth < maxScreenWidthForMobile
-    # instance
+    
   # STATIC parser functions
   @parseNote : (v) -> v.replace /(<br>|\n|\r)$/i, ""
   @parseHeadline : (v) -> v.replace /<br>|\n|\r/ig, ""  
@@ -159,3 +162,4 @@ class Node
   }
   @nodes : obs []
   
+revive.constructors[ 'Node' ] = Node

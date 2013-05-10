@@ -2,17 +2,19 @@
   <div class="body" data-bind="css:{active:active},click:makeActive">
     <div class="headline">
       <table><tr><td class="bullet-td">
-        <span class="bullet" title="fold|unfold|move" data-bind="html:bullet,click:toggleExpanded">&bull;</span>
+        <span class="bullet" title="open|move" data-bind="css:bullet,click:open"></span>
       </td><td class="listType-td">
         <span class="listType" title="change type"></span>
       </td><td class="title-td">							
         <span class="title" data-bind="dblclick:open,html:title"></span>
-        <span class="open" data-bind="click:open" title="edit details">details...</span>
       </td></tr></table>
     </div>
-    <div class="notes" data-bind="html:notes, visible:expanded()&&hasNote()"></div>
+    <div class="notes" data-bind=" visible:expanded()">
+      <div data-bind="html:notes"></div>
+    </div>
   </div>
-  <div data-bind="visible:expanded()&&hasChildren()" class="childrenOuter">
+  </div>
+  <div data-bind="visible:expanded()" class="childrenOuter">
     <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
   </div>
 </div>

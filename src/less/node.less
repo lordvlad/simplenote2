@@ -41,7 +41,7 @@
       }
       .bullet-td, .plus-td{
         width: 1em;
-        text-align: center;
+        text-align: center;        
       }
       .plus-td {
         opacity: 0;
@@ -109,15 +109,19 @@
 }
 .bullet {
   color: @dark;
-}
-.bullet.full {
   border-radius: .5em;
-  background: lighten( @dark, 70% );
+  background: transparent;
   width: 1em;
   text-align: center;
   height: 1em;
   display: inline-block;
   line-height: 1em;
+}
+.bullet:before {
+  content: "•";
+}
+.bullet.full {
+  background: lighten( @dark, 70% );
 }
 .bullet.full.open {
   background: lighten( @dark, 50% );

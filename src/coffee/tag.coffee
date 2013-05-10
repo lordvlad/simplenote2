@@ -54,3 +54,5 @@ class Tag
       @model.searchFilter( ( @model.searchFilter() + " #" + @name() ).replace(/\s{2,}/g," ").replace(/^\s*|\s*$/g,"") + " " )
     @model.editingFilter on
       
+      
+revive.constructors[ 'Tag' ] = Tag
