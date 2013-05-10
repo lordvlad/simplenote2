@@ -16,6 +16,7 @@ version 2.01
 - tag your notes
 - bookmark your most important notes
 - search through your notes
+- set deadlines
 
 
 ## planned features
@@ -25,3 +26,8 @@ version 2.01
 - archive system
 - undo stack
 - keyboard shortcuts
+- org-style text-formatting ( /italics/, _underline_, *bold* etc )
+- file import/export ( org-mode, markdown, rtf )
+- saving web-snippets
+- clock-in/out, working time tracker
+- agenda view
