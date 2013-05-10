@@ -29,55 +29,38 @@
       opacity: 1;
     }
     > .headline {
-      .info > .tag {
-          visibility: hidden;
-      } 
       > table {
         width: 100%;
         td {
           vertical-align: top;
           padding: 0;
         }
-      }
-      .bullet-td, .plus-td{
-        width: 1em;
-        text-align: center;        
-      }
-      .plus-td {
-        opacity: 0;
-        cursor: pointer;
-      }
-      .listType-td{
-        width: 1px;
-      }
-      .action-td {
-        text-align:right;
-        white-space: nowrap;
-        padding-left: 1em;
-        width: 1px;
-        
-        .icon-check-empty, .icon-star-empty {
-          visibility: hidden;
+        .bullet-td, .plus-td{
+          width: 1em;
+          text-align: center;        
         }
-      }
-      .title-td {
-        word-break: break-word;
-        padding-left: .5em;
-        .open {          
-          font-size: 80%;
-          margin-left: 1em;
-          text-decoration: none;
-          opacity: .5;
+        .plus-td {
+          opacity: 0;
           cursor: pointer;
-          &:hover {
-            color: @highlight;
-          }
+        }
+        .listType-td{
+          width: 1px;
+        }
+        .action-td {
+          text-align:right;
+          white-space: nowrap;
+          padding-left: 1em;
+          width: 1px;
+        }
+        .title-td {
+          word-break: break-word;
+          padding-left: .5em;
+        }
+        .title:not(:focus):empty:before {
+          content: "write something";
+          opacity: 0.5;
         }
       }
-    }
-    .title:not(:focus):empty:before {
-      content: "write something";
-      opacity: 0.5;
     }
     .notes > div {
       font-size: 80%;

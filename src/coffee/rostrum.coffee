@@ -79,7 +79,7 @@ koMap = ( model, map ) ->
   model
 
 # wrap location.hash in a ko.computed
-hash = window.hash = do ->
+hash = do ->
   h = obs ""
   s =-> h location.hash.replace(/#/,"") or ""
   $( window ).on "hashchange", s
@@ -87,22 +87,22 @@ hash = window.hash = do ->
   s(); h
     
 # get intersecting elements of two arrays    
-intersect = window.intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
+intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
 
 # supply shortcuts for popular keys
 k =
-  ESC       : 27
-  ENTER     : 13
-  TAB       : 9
   BACKSPACE : 8
-  SPACE     : 32
-  UP        : 38
-  DOWN      : 40
-  LEFT      : 37
-  RIGHT     : 39
-  DEL       : 46
-  HOME      : 36
+  TAB       : 9
+  ENTER     : 13
+  ESC       : 27
   PGUP      : 33
   PGDOWN    : 34
   END       : 35
+  HOME      : 36
+  LEFT      : 37
+  UP        : 38
+  RIGHT     : 39
+  DOWN      : 40
+  SPACE     : 32
+  DEL       : 46
 

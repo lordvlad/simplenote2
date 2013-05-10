@@ -1,18 +1,12 @@
 <span class="actionsBar">
   <span class="info">
+    <i class="icon-file" data-bind="visible:files().length"></i>
+    <i class="icon-time" data-bind="visible:deadlineDisplay().length, text:deadlineDisplay"></i>
     <span class="tags" data-bind="foreach:tags,click:editTags">
       <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag" data-bind="text:name,style:{color:fgColor}"></i></span>
     </span>
     <span class="tag addTag" data-bind="visible:!tags().length,click:editTags" title="add tags">
-      <i class="icon-tag">+</i>
-    </span>
-    <span class="files" data-bind="visible:files().length">
-      <i class="icon-file"></i>
-      <span></span>
-    </span>
-    <span class="time" data-bind="visible:deadlineDisplay().length">
-      <i class="icon-time"></i>
-      <span data-bind="text:deadlineDisplay"></span>
+      <i class="icon-tag"></i>
     </span>
   </span>
   <span>

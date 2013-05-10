@@ -43,14 +43,14 @@ do ( $ = jQuery, view = "body", model = SimpleNote.activeInstance = new SimpleNo
     ).on( 'click', 'li.list', -> 
       tag = ko.dataFor this; node = $( this ).parents( '#tagsMenu' ).data( 'node' );
       if node.tags.remove(tag).length is 0 then node.tags.push tag
-    ).on( 'click', 'i.icon-plus', ->
-      return if not ( name = $(this).next().val() )      
+    ).on( 'click', 'i.icon-tag.addTag', ->
+      return if not ( name = $(this).prev().val() )
       $( this ).parents( '#tagsMenu' ).data( 'node' ).tags.push new Tag( { name: name } )
       $(this).next().val( '' ).focus()
     ).on( 'keydown', 'input', (e)->
       $( this ).parents( '#tagsMenu' ).trigger( 'dismiss' ) if e.which is k.ESC
       return if e.which isnt k.ENTER
-      $( this ).prev().trigger( 'click' )
+      $( this ).next().trigger( 'click' )
     )
     
     $( '#search > div >.icon-tags', view ).click (e)->

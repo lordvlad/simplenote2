@@ -41,6 +41,38 @@ about =
             <p>on the right side of each item you will see a checkbox (&nbsp;<i class='icon-check-empty'></i>&nbsp;). use it to select (&nbsp;<i class='icon-check'></i>&nbsp;) one or multpile items to perform operations on them.</p>
           """
         }, {
+          id : 'about-help-search'
+          title : 'search'
+          notes : """
+            <h2> find everything (&nbsp;in your notebook&nbsp;) </h2>
+            <p>narrow your current view down by using the search bar. you can also search for items with certain tags if you prepend a hash to the tag like (&nbsp;#work&nbsp;).</p>
+            <p>when you hover over the search bar, notice how the magnifying glass changes to a cross? use the cross to clear your search and get back to the mess that your notebook is</p>
+          """
+        }, {
+          id : 'about-help-tags'
+          title : 'tags'
+          notes : """
+            <h2> even more structure </h2>
+            <p><b>Desktop</b><br>
+            when you hover above a note, you will see a tag icon with a plus sign appearing on the right hand side (&nbsp;<i class='icon-tag'>+</i>&nbsp;). use this to add or remove tags to your notes. click on a tag which is already assigned to the note you are working on to toggle it off.</p>
+            <p><b>Mobile &amp; Desktop</b></br>
+            after selecting one ore more tags, use the appearing menu to toggle the tags on all selected items.</p>
+            <p>you can also edit the tags for the current top item with the tag icon located below the breadcrumbs.</p>
+            <p>you can search for items with certain tags by prepending a hash like (&nbsp;#work&nbsp;). or you can use the dropdown menu which will appear when you click on the tag icon in the search bar</p>
+            <p>in the same dropdown, you will notice a pencil (&nbsp;<i class='icon-pencil'></i>&nbsp;) and a trashcan (&nbsp;<i class='icon-trash'></i>&nbsp;). need a hint what to do with 'em? okay: the pencil renames and repaints the tag and the trashcan trashes it. pretty straightforward, isn't it?</p>
+            <p>when picking the color for your tags you can either choose a hex color like (&nbsp;#FF00FF&nbsp;) or a CSS-friendly color name like (&nbsp;CornflowerBlue&nbsp;). for a complete list and some inspiration, check <a href='http://www.w3schools.com/cssref/css_colornames.asp'>W3schools Color Names</a>.</p>
+          """
+        },{
+          id : 'about-help-bookmarks'
+          title : 'bookmarks'
+          notes : """
+            <h2> only the important stuff, at one glance </h2>
+            <p>selecte one or multiple items and bookmark them with a click on the star icon (&nbsp;<i class='icon-star'></i>&nbsp;) on the appearing menu.</p>
+            <p>or use the star icon below the breadcrumbs for the same task</p>
+            <p>when you click on the star icon in the search bar, you will get a list of all your bookmarked items.</p>
+            <p>in this dropdown, see the half-star on the right side (&nbsp;<i class='icon-star-half'></i>&nbsp;)? you can click it to remove a bookmark instantly</p>
+          """
+        }, {
           id : 'about-help-offline'
           title : 'simplenote offline'
           notes : """
@@ -95,7 +127,7 @@ about =
         <p>version : #{version} </p>
         <p>author : <a href='mailto:#{email}'>#{author}</a></p>
         <p>github : <a href='#{github}'>#{github}</a></p>
-        
+        <p>if you have trouble using simplenote or have found a bug or have an idea you would love to see come to live in simplenote. write me a mail or drop by my github page.</p>
       """
     }
   ]
