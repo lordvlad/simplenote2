@@ -345,10 +345,14 @@
     }
 
     SimpleNote.prototype.attachElements = function(view) {
+      var _this = this;
+
       this.$view = $(view);
       this.view = this.$view[0];
-      this.pop = $('audio', view)[0];
-      return this.$tagsMenu = $('#tagsMenu', view);
+      this.$tagsMenu = $('#tagsMenu', view);
+      return $(function() {
+        return _this.pop = $('audio')[0];
+      });
     };
 
     SimpleNote.prototype.toJSON = function() {
@@ -897,12 +901,12 @@
     Node.prototype.alarm = function() {
       var _base;
 
-      this.deadline(null);
       this.model.save();
       if (typeof (_base = this.model.pop).play === "function") {
         _base.play();
       }
-      return alert(this.title());
+      this.model.notifications.push(this.deadline() + '\n' + this.title());
+      return this.deadline(null);
     };
 
     Node.prototype.makeActive = function() {

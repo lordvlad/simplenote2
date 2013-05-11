@@ -97,10 +97,10 @@ class Node
     @model.nodes.remove @
     @model.save()
   alarm : =>
-    @deadline null
     @model.save()
     @model.pop.play?()
-    alert @title()
+    @model.notifications.push @deadline() + '\n' + @title()
+    @deadline null
     
   # toggle some switches
   makeActive : =>

@@ -2,23 +2,32 @@
   i[class^="icon-"]{
     font-size: 110%;
   }
-  .actions {
-    display: none!important;
-  }
-  .headline {
-    .open {
-      display: none;
-    }
-    .actionsBar {
-      .addTag {
-        display: none;
+  .node {
+    .body {
+      .headline {
+        .open {
+          display: none;
+        }
+        table td.action-td .info i.icon-time {
+          display: none;
+          &[title^=in]{
+            display: inline-block;
+            overflow: hidden;
+            max-width: 1em; 
+          }
+        }
+        .actionsBar {
+          .icon-tag.addTag {
+            display: none;
+          }
+          i.icon-check-empty {
+            visibility: visible;
+          }
+        }
+        .plus-td {
+          display: none;
+        }
       }
-      .icon-check-empty {
-        visibility: visible!important;
-      }
-    }
-    .plus-td {
-      display: none;
     }
   }
   #selectOptions {

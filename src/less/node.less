@@ -1,35 +1,29 @@
 .node {
   margin-bottom: .5em;
-  > .body {
+  .body {
     &:hover {
       background: darken( @bright, 5% );
     }
     &.active {
       background: darken( @bright, 10% );
     }
-    &:hover .action-td, &.active .action-td {
-      .actionsBar {
-        .info, .actions, .icon-check-empty, .icon-star-empty {
-          display: inline-block;
-          visibility: visible;
+    &:hover, &.active {
+      .headline {
+        .action-td {
+          .icon-check-empty, .icon-tag.addTag {
+            visibility: visible;
+          }
+          .icon-time {
+            display: inline;
+          }
         }
-        .info > .tag {
-          visibility: visible;
-          opacity: .5;
-          &:hover {
-            opacity: 1;            
-          }
-          i {
-            opacity: 1;
-          }
+        .plus-td {
+          opacity: 1;
         }
       }
     }
-    &:hover .headline .plus-td {
-      opacity: 1;
-    }
-    > .headline {
-      > table {
+    .headline {
+      table {
         width: 100%;
         td {
           vertical-align: top;
@@ -51,6 +45,34 @@
           white-space: nowrap;
           padding-left: 1em;
           width: 1px;
+          .icon-check-empty {
+            visibility: hidden;
+          }
+          i {
+            font-size: 80%;
+            cursor: pointer;
+            &:before {
+              margin-right: .2em;
+            }
+          
+          }
+          .icon-time {
+            display: none;
+            &[title^=in]{
+              display: inline;
+            }
+          }
+          .icon-tag {
+            .rounded-corners;
+            padding: 0 .4em;
+            &.addTag{
+              visibility: hidden;
+              padding: 0;
+              &:before {
+                margin-right: 0;
+              }
+            }
+          }
         }
         .title-td {
           word-break: break-word;

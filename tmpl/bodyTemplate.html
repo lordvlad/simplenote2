@@ -76,14 +76,16 @@
   </div>
   
   <div id="topActions" data-bind="visible: ($data!==$root.root)&&(!$data.readonly)">      
-    <span class="tags" data-bind="foreach:tags">
-      <span class="tag" data-bind="attr:{title:name},style:{background:color}"><i class="icon-tag"></i>&nbsp;<span data-bind="text:name"></span></span>
+    <span class="tags" data-bind="foreach:tags,click:$data.editTags">
+      <i class="icon-tag" data-bind="text:name,attr:{title:name},style:{background:color,color:fgColor}"></i>
     </span>
-    <i class="icon-tags" title="tags" data-bind="click:$data.editTags"></i>
-    <i class="icon-time" title="deadline" data-bind="click:$data.editDeadline"></i>
-    <i class="icon-paper-clip" title="files" data-bind="click:$data.editFiles"></i>
+    <i class="icon-tag" title="tags" data-bind="click:$data.editTags,visible:!$data.tags().length"></i>
+    <span class="files" data-bind="foreach:files,click:$data.editFiles">
+      <i class="icon-paper-clip,text:name,attr:{title:name}"></i>
+    </span>
+    <i class="icon-paper-clip" title="files" data-bind="click:$data.editFiles,visible:!$data.files().length"></i>
+    <i class="icon-time" title="deadline" data-bind="click:$data.editDeadline,text:$data.deadlineDisplay()"></i>
     <i class="icon-trash" title="delete" data-bind="click: $data.remove"></i>
-    &nbsp;&nbsp;
     <i title="bookmark" data-bind="css:{'icon-star' : $data.bookmarked, 'icon-star-empty' : !$data.bookmarked() }, click:$data.toggleBookmarked"></i>
   </div>
   

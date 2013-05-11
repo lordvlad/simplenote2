@@ -55,7 +55,8 @@ a {
   z-index: 100;
   .alert, .note, {
     .rounded-corners;
-    .drop-shadow;    
+    .drop-shadow;
+    padding: .5em;
     .fit-width( 600px, 200px, 80% )
   }
   .alert {
@@ -158,6 +159,9 @@ a {
     margin-right: 1em;
     margin-bottom: -.5em;
     text-align: right;
+    i:before {
+      margin-right: .2em;
+    }
   }
   
   #breadcrumbs {
@@ -225,4 +229,8 @@ a {
 }
 .selectedMobile {
   display: none;
+}
+
+#tags .icon-pencil, #tags .icon-trash, #bookmarks .icon-star-half {
+  float: right;
 }

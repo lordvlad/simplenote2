@@ -66,8 +66,9 @@ class SimpleNote
   attachElements : ( view ) =>
     @$view = $( view )
     @view = @$view[ 0 ]
-    @pop = $( 'audio', view )[0]
     @$tagsMenu = $( '#tagsMenu', view )    
+    $ =>
+      @pop = $( 'audio' )[0]
 
   # only return nodes and tags on serialization
   toJSON : =>
