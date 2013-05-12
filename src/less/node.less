@@ -10,11 +10,8 @@
     &:hover, &.active {
       .headline {
         .action-td {
-          .icon-check-empty, .icon-tag.addTag {
+          .icon-check-empty, .icon-tag.addTag, .icon-time {
             visibility: visible;
-          }
-          .icon-time {
-            display: inline;
           }
         }
         .plus-td {
@@ -48,30 +45,14 @@
           .icon-check-empty {
             visibility: hidden;
           }
-          i {
-            font-size: 80%;
-            cursor: pointer;
-            &:before {
-              margin-right: .2em;
-            }
-          
+          i:before {
+            margin-right: .2em;
           }
-          .icon-time {
-            display: none;
-            &[title^=in]{
+          .icon-time, .icon-tag.addTag {
+            visibility: hidden;
+          }
+          .icon-time[title^=in]{
               display: inline;
-            }
-          }
-          .icon-tag {
-            .rounded-corners;
-            padding: 0 .4em;
-            &.addTag{
-              visibility: hidden;
-              padding: 0;
-              &:before {
-                margin-right: 0;
-              }
-            }
           }
         }
         .title-td {
@@ -88,10 +69,10 @@
       font-size: 80%;
       padding-left: 1.3em;
       color: lighten( @dark, 20% );
-    }  
-    .notes>div:not(:focus):empty:before {
-      content: "add some details";
-      opacity: 0.5;
+      &:not(:focus):empty:before {
+        content: "add some details";
+        opacity: 0.5;
+      }
     }
   }
   > div.childrenOuter, .notes {
@@ -126,8 +107,8 @@
   content: "•";
 }
 .bullet.full {
-  background: lighten( @dark, 70% );
+  background: lighten( @dark, 60% );
 }
 .bullet.full.open {
-  background: lighten( @dark, 50% );
+  background: lighten( @dark, 40% );
 }

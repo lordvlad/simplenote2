@@ -1,10 +1,9 @@
 CACHE MANIFEST
-# rev 669
+# rev 923
 
 # BUILD pub/app.less FROM
 #  src/less/body.less
 #  src/less/node.less
-#  src/less/tag.less
 #  src/less/mobile.less
 # THEN less TO pub/app.css
 
@@ -14,7 +13,7 @@ CACHE MANIFEST
 #  src/coffee/tag.coffee
 #  src/coffee/node.coffee
 #  src/coffee/caudum.coffee
-#  src/coffee/help.coffee
+#  src/coffee/specialSheets.coffee
 # THEN coffee TO pub/app.js
 
 
@@ -48,10 +47,8 @@ lib/wre/wre.knockout.bindingHandlers.js
 lib/wre/wre.jquery.inject.js
 lib/fontawesome/fontawesome-webfont.woff?v=3.0.1
 lib/fontawesome/fontawesome-webfont.ttf?v=3.0.1
-tmpl/actionsTemplate.html
 tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
-tmpl/addTemplate.html
 tmpl/readonlyNodeTemplate.html
 snd/pop.mp3
 

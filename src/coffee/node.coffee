@@ -5,16 +5,15 @@ class Node
   constructor : ( options ) ->
     # simple variables
     @model = SimpleNote.activeInstance
-    @id = uuid()
+    @id = options?.id || uuid()
+    @originalParent = null
     # observable variables      
-    @title = obs( "" ).extend parse : Node.parseHeadline
+    @title = obs( options?.title || "" ).extend parse : Node.parseHeadline
     @notes = obs( "" ).extend parse : Node.parseNote
     @deadline = obs( null ).extend parse : Node.parseDate
     active = obs false
     @bookmarked = obs false
     @selected = obs false
-    @done = obs false
-    @archived = obs false
     @realExpanded = obs false
     @expanded = obs {
       read : => if window.innerWidth < maxScreenWidthForMobile then false else @realExpanded()
@@ -30,8 +29,9 @@ class Node
     @files = obs []
     # computed variables
     @visible = obs =>
-      f = @model.realFilter()
-      @model.current is @ or @children.filter( 'visible' ).length or Node.checkFilter( @, f )
+      {tags,words} = @model.realFilter()
+      @model.current is @ or ( !!@children.filter( 'visible' ).length ) or (( if tags.length then !!intersect( @tags.map('name'), tags ).length else yes ) and ( if words.length then !!(@title()+' '+@notes()).match( new RegExp( words.join('|'), 'i' ) ) else yes ))
+
       
     @active = obs {
       read: active,
@@ -112,6 +112,11 @@ class Node
     @expanded !@expanded()
   toggleBookmarked : =>
     @bookmarked !@bookmarked()
+  archive : =>
+    @selected off
+    @originalParent = @parent()
+    @parent().children.remove @
+    @model.archive.children.push @
   editTags : ( n, e ) =>
     @active on
     @model.$tagsMenu.trigger 'call', [ n, e ]
@@ -128,11 +133,11 @@ class Node
       notes : escape @notes()
       deadline : @deadline()
       bookmarked : @bookmarked()
-      done : @done()
       expanded : ( @hasNote() || @hasChildren() ) && @realExpanded()
       listStyleType : @listStyleType()
       children : @children()
       tags : @tags()
+      originalParent : @originalParent
     }
   
   # STATIC revive from JSON data
@@ -149,11 +154,6 @@ class Node
     if v is null then return null
     if isDate( x = new Date v ) or isDate( x = new Date parseInt v ) or isDate( x = Date.intelliParse v ) then return x
     null
-  @checkFilter : ( node, filter ) ->
-    r = false
-    r = ( not filter.tags.length ) or intersect( node.tags.map('name'), filter.tags ).length
-    r = r and( ( not filter.words.length ) or (node.title()+" "+node.notes()).match( new RegExp( filter.words.join('|'), 'i' ) ) )
-    r
   
   @bullets : {
     right : "full" # "&#9658;" # "<i class='icon-circle'></i>",

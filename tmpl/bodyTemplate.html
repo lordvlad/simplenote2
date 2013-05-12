@@ -8,15 +8,15 @@
       <input type="text" placeholder="search..." data-bind="value:searchFilter,valueUpdate:'afterkeydown',hasfocus:editingFilter"/>
       <i class="icon-tags" title="tags"></i>
       <i class="icon-star" title="bookmarks"></i>
-      <a href="#agenda"><i class="icon-time" title="agenda"></i></a>
+      <i class="icon-ellipsis-vertical" title="more"></i>
     </div>
     
     <!-- TAGS DROPDOWN -->
     
     <ul id="tags" data-bind="foreach:tags">
-      <li data-bind="click:$data.toggleInFilter,style:{background:color}">
+      <li data-bind="click:$data.toggleInFilter">
         <i class="icon-tag"></i>
-        <span data-bind="html:name,style:{color:fgColor}"></span>
+        <span data-bind="html:name,style:{color:fgColor,background:color}"></span>
         <i class="icon-trash" title="delete tag" data-bind="click:remove"></i>
         <i class="icon-pencil" title="edit tag" data-bind="click:edit"></i>
       </li>
@@ -28,9 +28,22 @@
       <li data-bind="click:open">
         <i class="icon-star"></i>
         <span data-bind="html:title"></span>
-        <i class="icon-star-half" title="remove bookmark" data-bind="click:toggleBookmarked"></i>
+        <i class="icon-star-half-full" title="remove bookmark" data-bind="click:toggleBookmarked"></i>
       </li>
     </ul>
+    
+    <!-- MORE DROPDOWN -->
+    <ul id="specialPages">
+      <li title="notebook"><a href="#"><i class="icon-book"></i>&nbsp;notebook</a></li>
+    <!--  <li title="agenda"><a href="#agenda"><i class="icon-time"></i>&nbsp;agenda</a></li>
+      <li title="calendar"><a href="#calendar"><i class="icon-calendar"></i>&nbsp;calendar</a></li>
+      <li title="timesheet"><a href="#timesheet"><i class="icon-ticket"></i>&nbsp;timesheet</a></li> -->
+      <li title="archive"><a href="#archive"><i class="icon-folder-open-alt"></i>&nbsp;archive</a></li>
+      <li title="options"><a href="#options"><i class="icon-cog"></i>&nbsp;options</a></li>
+      <li title="help"><a href="#help"><i class="icon-question"></i>&nbsp;help</a></li>
+      <li title="about"><a href="#about"><i class="icon-info"></i>&nbsp;about</a></li>
+    </ul>
+    
   </div>
   
   <!-- OPTIONS FOR SELECTED NODES -->
@@ -41,7 +54,7 @@
       <span class="options">
         <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
         <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
-        <i class="icon-time" title="remove all deadlines" data-bind="click:selectionRemoveDeadlines"></i>
+        <i class="icon-time" title="remove all deadlines" data-bind="click:selectionEditDeadlines"></i>
         <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
         <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
         &nbsp;&nbsp;
@@ -114,11 +127,11 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  you're <a href="#about-help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
+  you're <a href="#help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
   &nbsp;|&nbsp;
-  sync is <a href="#about-help-sync" data-bind="text:syncStatusText,style:{color:syncStatusColor}"></a>
+  sync is <a href="#help-sync" data-bind="text:syncStatusText,style:{color:syncStatusColor}"></a>
   &nbsp;|&nbsp;
-  <a href="#about">help & options</a>
+  need <a href="#help">help</a>?
 </div>
 
 <!-- MENUS -->

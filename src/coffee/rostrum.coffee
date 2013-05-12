@@ -1,7 +1,8 @@
 # set screensize under which the device will be regarded as mobile
 # should be the same number which is found in src/less/mobile.less
 maxScreenWidthForMobile = 480
-version = "2.01"
+version = "2.06"
+date = "2013-05-13"
 author = "Waldemar Reusch"
 email = "waldemar.reusch@googlemail.com"
 github = "http://github.com/lordvlad/simplenote2"
@@ -13,6 +14,11 @@ isObj = jQuery.isPlainObject
 isNum = jQuery.isNumeric
 isStr = ( v ) -> typeof v is "string"
 isDate = ( v ) -> if Object.prototype.toString.call(v) isnt '[object Date]' then return false else return not isNaN v.getTime()
+
+# some fixed jquery elements
+
+$doc = jQuery document
+$win = jQuery window
 
 # setTimeout and interval
 timeout =
@@ -33,7 +39,11 @@ revive.constructors = {}
 # create storage
 store =
   set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
-  get : ( key ) -> JSON.parse localStorage.getItem(key), revive
+  get : ( key ) -> 
+    try 
+      JSON.parse localStorage.getItem(key), revive
+    catch e
+      null
   remove : ( key ) -> localStorage.removeItem key
   
 # create observables
@@ -82,7 +92,7 @@ koMap = ( model, map ) ->
 hash = do ->
   h = obs ""
   s =-> h location.hash.replace(/#/,"") or ""
-  $( window ).on "hashchange", s
+  $win.on "hashchange", s
   h.subscribe (v) -> location.hash = v
   s(); h
     

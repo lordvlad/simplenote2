@@ -60,55 +60,37 @@ class SimpleNote
       ( @current()?.parents?().concat [@current()] ) or []
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
-      @current ( id and id.length and @nodes.find("id", id) ) or @root
+      @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
       @current()?.editingNote on
       
   attachElements : ( view ) =>
     @$view = $( view )
     @view = @$view[ 0 ]
-    @$tagsMenu = $( '#tagsMenu', view )    
     $ =>
       @pop = $( 'audio' )[0]
 
-  # only return nodes and tags on serialization
-  toJSON : =>
-    {
-      root : @root
-      tags : @tags()
-    }
-    
   # revive from JSON data
   # @param {Object} data json object containting all needed data
   revive : =>
-    data = store.get 'simpleNote'
-    if data and data.root
-      @root = data.root
-      @tags data.tags or []
-    else 
-      root = new Node()
-      root.id = 'simpleNoteRoot'
-      root.title 'home'
-      root.visible = -> true
-      @root = root
+    @root = store.get( 'root' ) ? new Node( { id : 'root', title : 'home' } )
     # update current viewed node from location.hash
     hash.valueHasMutated()
+    delay =>
+      store.get( 'tags' ) ? []
+      @archive = store.get( 'archive') ? new Node( { id : 'archive', title : 'archive' } )
     @
   
   # saves own data to localStorage
   save : =>
     timeout.clear @timeout
-    @timeout = timeout.set 100, => store.set "simpleNote", @toJSON()
+    @timeout = timeout.set 100, => 
+      store.set 'root', @root.toJSON()
+      store.set 'tags', @tags()
+      store.set 'archive', @archive?.toJSON()
     @
   
-  # apply keyBindings
-  applyEvents : =>
-    @$view.on "click", ".headline", (e)->
-      $t = $ e.target
-      $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .ellipsis, .additional")
-    # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
-    @$view.on "keyup, click", => @save()
-   
-    # set up online check
+  # set up online check
+  startOnlineCheck : ->
     offlineCount = 0
     numShortChecks = 5 # how often to check with a short interval before switching to long interval
     short = 2 # seconds
@@ -125,6 +107,77 @@ class SimpleNote
         timeout.set long*1e3, checkConnection
       )
     checkConnection()
+    
+  # apply keyBindings
+  applyEvents : =>
+    view = @$view
+    model = @
+    # set up event listeners
+    view.on "click", ".headline", (e)->
+      $t = $ e.target
+      $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .info")
+    # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
+    view.on "keyup, click", => @save()
+    
+    # tags menu 
+    $tagsMenu = $( '#tagsMenu', view )
+    $tagsMenu.data( 'node', 
+      null
+    ).on( 'dismiss', ->
+      $( this ).fadeOut 'fast',->$( this ).css { top: '', left: '' }
+    ).on( 'call', (e,node,o) ->
+      $doc.off 'click.tagsmenu'
+      $this = $(this).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast').data('node',node)
+      $this.find( 'input' ).focus()
+      $doc.on 'click.tagsmenu', (e)->
+        return if e.timeStamp is o.timeStamp or $( e.target ).parents( '#tagsMenu' ).length isnt 0
+        $doc.off 'click.tagsmenu'
+        $this.trigger( 'dismiss' )
+    ).on( 'click', 'li.list', -> 
+      tag = ko.dataFor this; node = $#tagsMenu.data( 'node' );
+      if node.tags.remove(tag).length is 0 then node.tags.push tag
+    ).on( 'click', 'i.icon-tag.addTag', ->
+      return if not ( name = $(this).prev().val() )
+      $tagsMenu.data( 'node' ).tags.push new Tag( { name: name } )
+      $(this).next().val( '' ).focus()
+    ).on( 'keydown', 'input', (e)->
+      $tagsMenu.trigger( 'dismiss' ) if e.which is k.ESC
+      return if e.which isnt k.ENTER
+      $( this ).next().trigger( 'click' )
+    )
+    
+    # searchbar tags
+    $( '#search > div >.icon-tags', view ).click (e)->
+      model.editingFilter on
+      t = $ '#tags'
+      return t.slideUp() if t.is 'visible'
+      t.slideDown 'fast'
+      $doc.on 'click.tagsfilter', (f)->
+        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-trash')
+        $doc.off 'click.tagsfilter'
+        t.slideUp 'fast'
+        
+    # searchbar bookmarks
+    $( '#search > div >.icon-star', view ).click (e)->
+      model.editingFilter on
+      b = $ '#bookmarks'
+      return b.slideUp() if b.is 'visible'
+      b.slideDown 'fast'
+      $doc.on 'click.bookmarks', (f)->
+        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-star-half')
+        $doc.off 'click.bookmarks'
+        b.slideUp 'fast'   
+        
+    # searchbar more
+    $( '#search > div > .icon-ellipsis-vertical' ).click (e) ->
+      s = $( '#specialPages' )
+      if s.is 'visible' then return s.slideUp()
+      s.slideDown 'fast'
+      $doc.on 'click.specialPages', (f)->
+        return if e.timeStamp is f.timeStamp
+        $doc.off 'click.specialPages'
+        s.slideUp 'fast'
+     
     @
   
   # functions on self
@@ -138,8 +191,8 @@ class SimpleNote
   # functions on selected nodes  
   selectionUnselect : => node.selected no for node in @selectedNodes()
   selectionInvert : => node.selected not node.selected() for node in @nodes()
-  selectionArchive : => node.archived yes for node in @selectedNodes() 
-  selectionRemoveDeadlines : => node.deadline null for node in @selectedNodes()
+  selectionArchive : => node.archive() for node in @selectedNodes() 
+  selectionEditDeadlines : => d=prompt 'set a deadline for the selected items', new Date(); node.deadline d for node in @selectedNodes()
   selectionRemove : => node._delete() for node in @selectedNodes() if confirm "really delete #{@selectedNodes().length} selected outlines? ATTENTION! Children Nodes will be deleted with their parents!"
   selectionEditTags : =>
   

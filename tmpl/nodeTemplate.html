@@ -1,6 +1,7 @@
 <div class="node" data-bind="attr:{'nodeId':id}, if: $data.visible">
   <div class="body" data-bind="css:{active:active},click:makeActive">
     <div class="headline">
+      <!-- headline -->
       <table><tr><td class="plus-td">
         <span class="plus" title="fold|unfold" data-bind="click:toggleExpanded,text:$data.expanded()?'-':'+'"></span>
       </td><td class="bullet-td">
@@ -9,16 +10,27 @@
         <span class="listType" title="change type"></span>
       </td><td class="title-td">							
         <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
-      </td><td class="action-td" data-bind="visible:!$data.readonly,template:'actionsTemplate'">
+      </td><td class="action-td">
+        <!-- actions -->
+        <span class="info">
+          <i class="icon-file" title="edit attachments" data-bind="visible:files().length"></i>
+          <i class="icon-time" title="edit deadline" data-bind="click:editDeadline,text:deadlineDisplay,attr:{title:deadlineDisplay}"></i>
+          <span class="tags" data-bind="foreach:tags,click:editTags">
+            <i class="icon-tag" data-bind="text:name,style:{color:fgColor,background:color},attr:{title:name}"></i>
+          </span>
+          <i class="icon-tag tag addTag" data-bind="visible:!tags().length,click:editTags" title="edit tags"></i>
+        </span>
+        <i title="select" data-bind="css:{ 'icon-check': selected, 'icon-check-empty': !selected() },click:toggleSelected"></i>
       </td></tr></table>
     </div>
+    <!-- notes -->
     <div class="notes" data-bind=" visible:expanded()">
       <div data-bind="editable:notes,hasfocus:editingNote"></div>
     </div>
   </div>
+  <!-- children -->
   <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()" class="childrenOuter">
       <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet',start:$root.startSort,stop:$root.stopSort}}"></div>
-      <div data-bind="template:{name: 'addTemplate', if: !children().length}"></div>
   </div>
   <div data-bind="if:$data.readonly,visible:$data.readonly&&expanded()" class="childrenOuter">
     <div class="children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
