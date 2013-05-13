@@ -1,5 +1,5 @@
-# jquery closure
 do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance = new SimpleNote()  ) ->
+
   applicationCache.onchecking =-> $.holdReady(on)
   applicationCache.ondownloading =-> $.holdReady(on)
   applicationCache.onerror =-> $.holdReady(off); model.connectionStatus(0)
@@ -13,10 +13,13 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
 
     # jquery onload event
   $ ->
+    # some fixed jquery elements
+    model.doc = $ document
+    model.win = $ window
+    model.view = $ view
+    delay -> model.pop = $('audio')[0] # this needs to be delayed. due to a bug maybe?
     # apply knockout bindings
-    ko.applyBindings model, model.view
-    # attach view to model
-    model.attachElements view
+    ko.applyBindings model, model.view[0]
     # revive model
     model.revive()
     # apply key bindings
@@ -28,4 +31,4 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
         
     # lift the curtains
     delay -> $("#curtain").fadeOut("slow", -> $('body').css('overflow','auto') )    
-    null  
+    null

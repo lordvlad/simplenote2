@@ -1,12 +1,7 @@
 # set screensize under which the device will be regarded as mobile
 # should be the same number which is found in src/less/mobile.less
 maxScreenWidthForMobile = 480
-version = "2.06"
-date = "2013-05-13"
-author = "Waldemar Reusch"
-email = "waldemar.reusch@googlemail.com"
-github = "http://github.com/lordvlad/simplenote2"
-
+{ author, email, github, version, revision, date } = JSON.parse jQuery.ajax({url:'build.json',async:false}).responseText
 # borrow from jQuery
 isFn = jQuery.isFunction
 isArr = jQuery.isArray
@@ -14,11 +9,6 @@ isObj = jQuery.isPlainObject
 isNum = jQuery.isNumeric
 isStr = ( v ) -> typeof v is "string"
 isDate = ( v ) -> if Object.prototype.toString.call(v) isnt '[object Date]' then return false else return not isNaN v.getTime()
-
-# some fixed jquery elements
-
-$doc = jQuery document
-$win = jQuery window
 
 # setTimeout and interval
 timeout =
@@ -92,7 +82,7 @@ koMap = ( model, map ) ->
 hash = do ->
   h = obs ""
   s =-> h location.hash.replace(/#/,"") or ""
-  $win.on "hashchange", s
+  $(window).on "hashchange", s
   h.subscribe (v) -> location.hash = v
   s(); h
     
@@ -115,4 +105,3 @@ k =
   DOWN      : 40
   SPACE     : 32
   DEL       : 46
-

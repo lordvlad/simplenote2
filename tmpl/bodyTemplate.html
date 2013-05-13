@@ -118,7 +118,7 @@
       <span class="addChild" data-bind="click:$root.addNodeHere">+&nbsp;add something</span>
     </div>
     <div data-bind="if:$data.readonly">
-      <div class="topChildren children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
+      <div class="topChildren readonly children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>
     </div>
   </div>
   <audio src="snd/pop.mp3"></audio>

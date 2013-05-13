@@ -1,13 +1,8 @@
 CACHE MANIFEST
-# rev 923
 
-# BUILD pub/app.less FROM
-#  src/less/body.less
-#  src/less/node.less
-#  src/less/mobile.less
-# THEN less TO pub/app.css
+# rev 1020
 
-# BUILD pub/app.coffee
+# BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee
 #  src/coffee/simplenote.coffee
 #  src/coffee/tag.coffee
@@ -16,12 +11,17 @@ CACHE MANIFEST
 #  src/coffee/specialSheets.coffee
 # THEN coffee TO pub/app.js
 
+# BUILD pub/app.less from
+#  src/less/body.less
+#  src/less/node.less
+#  src/less/mobile.less
+# THEN less TO pub/app.css
 
-# Explicitly cached 'master entries'.
 CACHE:
 appcache.mf
 favicon.ico
 index.html
+build.json
 pub/app.min.js
 pub/app.css
 lib/normalize/normalize.min.css
@@ -45,24 +45,15 @@ lib/wre/wre.knockout.extenders.js
 lib/wre/wre.knockout.filter.js
 lib/wre/wre.knockout.bindingHandlers.js
 lib/wre/wre.jquery.inject.js
-lib/fontawesome/fontawesome-webfont.woff?v=3.0.1
-lib/fontawesome/fontawesome-webfont.ttf?v=3.0.1
+lib/fontawesome/fontawesome-webfont.woff?v=3.1.01
+lib/fontawesome/fontawesome-webfont.ttf?v=3.1.01
 tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
 tmpl/readonlyNodeTemplate.html
 snd/pop.mp3
 
-# Resources that require the user to be online.
 NETWORK:
-*
 online/online.json
-http://*
 https://*
-
-# static.html will be served if main.py is inaccessible
-# offline.jpg will be served in place of all images in images/large/
-# offline.html will be served in place of all other .html files
-# FALLBACK:
-# /main.py /static.html
-# images/large/ images/offline.jpg
-# *.html /offline.html
+http://*
+*

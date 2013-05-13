@@ -208,3 +208,4 @@ do ->
     addconstructor page for page in specialPages
     $ ->
       JSON.parse( JSON.stringify( specialPages ), revive )
+ 

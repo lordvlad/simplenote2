@@ -86,7 +86,7 @@ class Node
   
   # triggers hash change to open the node
   open : ->
-    hash( @id )
+    hash @id 
   # remove node
   remove : =>
     if confirm 'really delete this node?'
@@ -98,9 +98,9 @@ class Node
     @model.save()
   alarm : =>
     @model.save()
-    @model.pop.play?()
     @model.notifications.push @deadline() + '\n' + @title()
     @deadline null
+    @model.pop.play?()
     
   # toggle some switches
   makeActive : =>

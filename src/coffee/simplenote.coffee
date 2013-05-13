@@ -10,8 +10,6 @@ class SimpleNote
     @timeout = null
     @interval = null
     @root = null
-    @element = null
-    @pop = null
     # observable variables
     @searchFilter = obs ""
     @editingFilter = obs false
@@ -62,12 +60,8 @@ class SimpleNote
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
       @current()?.editingNote on
-      
-  attachElements : ( view ) =>
-    @$view = $( view )
-    @view = @$view[ 0 ]
-    $ =>
-      @pop = $( 'audio' )[0]
+  
+
 
   # revive from JSON data
   # @param {Object} data json object containting all needed data
@@ -77,7 +71,7 @@ class SimpleNote
     hash.valueHasMutated()
     delay =>
       store.get( 'tags' ) ? []
-      @archive = store.get( 'archive') ? new Node( { id : 'archive', title : 'archive' } )
+      @archive = store.get( 'archive' ) ? new Node( { id : 'archive', title : 'archive' } )
     @
   
   # saves own data to localStorage
@@ -86,7 +80,7 @@ class SimpleNote
     @timeout = timeout.set 100, => 
       store.set 'root', @root.toJSON()
       store.set 'tags', @tags()
-      store.set 'archive', @archive?.toJSON()
+      store.set( 'archive', @archive.toJSON() ) if @archive
     @
   
   # set up online check
@@ -110,17 +104,16 @@ class SimpleNote
     
   # apply keyBindings
   applyEvents : =>
-    view = @$view
-    model = @
+    [ model, $doc, $view ] = [ @, @doc, @view ]
     # set up event listeners
-    view.on "click", ".headline", (e)->
+    $view.on "click", ".headline", (e)->
       $t = $ e.target
       $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .info")
-    # @$view.on  "keydown", wre.HotKeyHandler( @hotkeys, @ )
-    view.on "keyup, click", => @save()
+    # $view.on  "keydown", wre.HotKeyHandler( model.hotkeys, model )
+    $view.on "keyup, click", => model.save()
     
     # tags menu 
-    $tagsMenu = $( '#tagsMenu', view )
+    $tagsMenu = $( '#tagsMenu', $view )
     $tagsMenu.data( 'node', 
       null
     ).on( 'dismiss', ->
@@ -147,7 +140,7 @@ class SimpleNote
     )
     
     # searchbar tags
-    $( '#search > div >.icon-tags', view ).click (e)->
+    $( '#search > div >.icon-tags', $view ).click (e)->
       model.editingFilter on
       t = $ '#tags'
       return t.slideUp() if t.is 'visible'
@@ -158,7 +151,7 @@ class SimpleNote
         t.slideUp 'fast'
         
     # searchbar bookmarks
-    $( '#search > div >.icon-star', view ).click (e)->
+    $( '#search > div >.icon-star', $view ).click (e)->
       model.editingFilter on
       b = $ '#bookmarks'
       return b.slideUp() if b.is 'visible'
@@ -252,4 +245,4 @@ SimpleNote.liststyletypes = [
   { name : "(A), (B), (C)", value : ["upperAlpha","dot"] }
 ]
     
-revive.constructors[ "SimpleNote" ] = SimpleNote;
+revive.constructors[ "SimpleNote" ] = SimpleNote
