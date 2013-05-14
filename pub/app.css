@@ -1,5 +1,9 @@
 /* https://kuler.adobe.com/#themeID/2369524 */
 /* function declarations */
+/* fontawesome fix for checkboxes */
+i.icon-check:before {
+  padding-left: 1px;
+}
 /* body and general declarations */
 body {
   background-color: #e6e6e6;
@@ -15,6 +19,7 @@ a:hover {
 }
 [contenteditable]:focus {
   outline: none;
+  background: #e6e6e6;
 }
 .bullet,
 i[class^="icon-"],
@@ -240,6 +245,10 @@ li i[class^="icon-"] {
 #notebook #sheet {
   padding: 1em 2em;
 }
+#notebook #sheet h1 {
+  font-size: 1.5em;
+  margin: 0;
+}
 #notebook #sheet .topNotes {
   margin-bottom: 1em;
   padding-bottom: 1em;
@@ -329,26 +338,32 @@ li i[class^="icon-"] {
   border: none;
   border-bottom: solid 1px #b3b3b3;
 }
-.node {
-  margin-bottom: .5em;
+.options ul,
+ul.options {
+  list-style-type: none;
 }
-.node:not(#sheet) .body:hover {
-  background: #f2f2f2;
-}
-.node:not(#sheet) .body.active {
-  background: #e6e6e6;
-}
-.node:not(#sheet) .body:hover .headline .action-td .icon-check-empty,
-.node:not(#sheet) .body.active .headline .action-td .icon-check-empty,
-.node:not(#sheet) .body:hover .headline .action-td .icon-tag.addTag,
-.node:not(#sheet) .body.active .headline .action-td .icon-tag.addTag,
-.node:not(#sheet) .body:hover .headline .action-td .icon-time,
-.node:not(#sheet) .body.active .headline .action-td .icon-time {
-  visibility: visible;
-}
-.node:not(#sheet) .body:hover .headline .plus-td,
-.node:not(#sheet) .body.active .headline .plus-td {
-  opacity: 1;
+@media only screen and (min-width: 480px) {
+  .node {
+    margin-bottom: .5em;
+  }
+  .node:not(#sheet) .body:hover {
+    background: #f2f2f2;
+  }
+  .node:not(#sheet) .body.active {
+    background: #e6e6e6;
+  }
+  .node:not(#sheet) .body:hover .headline .action-td .icon-check-empty,
+  .node:not(#sheet) .body.active .headline .action-td .icon-check-empty,
+  .node:not(#sheet) .body:hover .headline .action-td .icon-tag.addTag,
+  .node:not(#sheet) .body.active .headline .action-td .icon-tag.addTag,
+  .node:not(#sheet) .body:hover .headline .action-td .icon-time,
+  .node:not(#sheet) .body.active .headline .action-td .icon-time {
+    visibility: visible;
+  }
+  .node:not(#sheet) .body:hover .headline .plus-td,
+  .node:not(#sheet) .body.active .headline .plus-td {
+    opacity: 1;
+  }
 }
 .node:not(#sheet) .body .headline table {
   width: 100%;
@@ -396,15 +411,6 @@ li i[class^="icon-"] {
   content: "write something";
   opacity: 0.5;
 }
-.node:not(#sheet) .body .notes > div {
-  font-size: 80%;
-  padding-left: 1.3em;
-  color: #666666;
-}
-.node:not(#sheet) .body .notes > div:not(:focus):empty:before {
-  content: "add some details";
-  opacity: 0.5;
-}
 .node > div.childrenOuter,
 .node .notes {
   padding-top: .5em;
@@ -442,6 +448,15 @@ li i[class^="icon-"] {
 }
 .bullet.full.open {
   background: #999999;
+}
+.notes > div {
+  font-size: 80%;
+  padding-left: 1.3em;
+  color: #666666;
+}
+.notes > div:not(:focus):empty:before {
+  content: "add some details";
+  opacity: 0.5;
 }
 @media only screen and (max-width: 480px) {
   i[class^="icon-"] {

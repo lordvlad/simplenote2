@@ -17,7 +17,7 @@ class Tag
     @color = obs options?.color or "white"
     @fgColor = obs => 
       x = []
-      c = ( x[0] = new RGBColor( @color() ) ).foreground()
+      c = ( x[0] = new RGBColor( @color() or "white" ) ).foreground()
       delete x[0]
       return c
     @count = obs => Node.nodes.filter((n)=> n.tags.has @).length
@@ -34,8 +34,8 @@ class Tag
     }
     
   edit : =>
-    @name prompt "change name from #{@name()} to ...", @name()
-    @color prompt "change color from #{@color()} to ...", @color()
+    @name prompt("change name from #{@name()} to ...", @name()) or @name()
+    @color prompt("change color from #{@color()} to ...", @color()) or @color()
     @model.save()
   
   remove : => 

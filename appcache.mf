@@ -1,10 +1,12 @@
 CACHE MANIFEST
 
-# rev 1020
+# rev 1225
 
 # BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee
 #  src/coffee/simplenote.coffee
+#  src/coffee/simplenote.attachevents.coffee
+#  src/coffee/simplenote.options.coffee
 #  src/coffee/tag.coffee
 #  src/coffee/node.coffee
 #  src/coffee/caudum.coffee

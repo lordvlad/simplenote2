@@ -12,14 +12,12 @@
         <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
       </td><td class="action-td">
         <!-- actions -->
-        <span class="info">
-          <i class="icon-file" title="edit attachments" data-bind="visible:files().length"></i>
-          <i class="icon-time" title="edit deadline" data-bind="click:editDeadline,text:deadlineDisplay,attr:{title:deadlineDisplay}"></i>
-          <span class="tags" data-bind="foreach:tags,click:editTags">
-            <i class="icon-tag" data-bind="text:name,style:{color:fgColor,background:color},attr:{title:name}"></i>
-          </span>
-          <i class="icon-tag tag addTag" data-bind="visible:!tags().length,click:editTags" title="edit tags"></i>
+        <i class="icon-file" title="edit attachments" data-bind="visible:files().length"></i>
+        <i class="icon-time" title="edit deadline" data-bind="click:editDeadline,text:deadlineDisplay,attr:{title:deadlineDisplay}"></i>
+        <span class="tags" data-bind="foreach:tags,click:editTags">
+          <i class="icon-tag" data-bind="text:name,style:{color:fgColor,background:color},attr:{title:name}"></i>
         </span>
+        <i class="icon-tag tag addTag" data-bind="visible:!tags().length,click:editTags" title="edit tags"></i>
         <i title="select" data-bind="css:{ 'icon-check': selected, 'icon-check-empty': !selected() },click:toggleSelected"></i>
       </td></tr></table>
     </div>

@@ -1,24 +1,30 @@
-.node {
-  margin-bottom: .5em;
-  &:not(#sheet) .body {
-    &:hover {
-      background: darken( @bright, 5% );
-    }
-    &.active {
-      background: darken( @bright, 10% );
-    }
-    &:hover, &.active {
-      .headline {
-        .action-td {
-          .icon-check-empty, .icon-tag.addTag, .icon-time {
-            visibility: visible;
+@media only screen and (min-width: @maxScreenWidthForMobile ) {
+  .node {
+    margin-bottom: .5em;
+    &:not(#sheet) .body {
+      &:hover {
+        background: darken( @bright, 5% );
+      }
+      &.active {
+        background: darken( @bright, 10% );
+      }
+      &:hover, &.active {
+        .headline {
+          .action-td {
+            .icon-check-empty, .icon-tag.addTag, .icon-time {
+              visibility: visible;
+            }
           }
-        }
-        .plus-td {
-          opacity: 1;
+          .plus-td {
+            opacity: 1;
+          }
         }
       }
     }
+  }
+}
+.node {
+  &:not(#sheet) .body {
     .headline {
       table {
         width: 100%;
@@ -65,15 +71,6 @@
         }
       }
     }
-    .notes > div {
-      font-size: 80%;
-      padding-left: 1.3em;
-      color: lighten( @dark, 20% );
-      &:not(:focus):empty:before {
-        content: "add some details";
-        opacity: 0.5;
-      }
-    }
   }
   > div.childrenOuter, .notes {
     padding-top: .5em;
@@ -111,4 +108,14 @@
 }
 .bullet.full.open {
   background: lighten( @dark, 40% );
+}
+
+.notes > div {
+  font-size: 80%;
+  padding-left: 1.3em;
+  color: lighten( @dark, 20% );
+  &:not(:focus):empty:before {
+    content: "add some details";
+    opacity: 0.5;
+  }
 }

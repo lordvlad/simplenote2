@@ -6,6 +6,8 @@
 @info      : #FFC604;
 @shadow    : #888888;
 
+@maxScreenWidthForMobile : 480px;
+
 /* function declarations */
 
 .rounded-corners (@radius: 5px) {
@@ -23,6 +25,11 @@
   min-width: @min;
   max-width: @max;
   margin: 0 auto;
+}
+
+/* fontawesome fix for checkboxes */
+i.icon-check:before{
+  padding-left: 1px;
 }
 
 /* body and general declarations */
@@ -43,6 +50,7 @@ a {
 
 [contenteditable]:focus {
   outline: none;
+  background: darken( @bright, 10% );
 }
 .bullet, i[class^="icon-"], .addChild {
   cursor: pointer;
@@ -233,6 +241,10 @@ li i[class^="icon-"]{
   }
   #sheet {
     padding: 1em 2em;
+    h1 {
+      font-size: 1.5em;
+      margin: 0;
+    }
     .topNotes {
       margin-bottom: 1em;
       padding-bottom: 1em;
@@ -320,4 +332,8 @@ li i[class^="icon-"]{
     border: none;
     border-bottom: solid 1px lighten(@dark,50%);
   }
+}
+
+.options ul, ul.options {
+  list-style-type: none;
 }

@@ -39,6 +39,7 @@ class Node
         if v is active() or v is off then return active v
         node.active off for node in @model.nodes()
         active on
+        @editingTitle on
       }
     @hasNote = obs => @notes().length
     @hasChildren = obs => @children().length

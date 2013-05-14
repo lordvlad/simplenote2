@@ -22,8 +22,10 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     ko.applyBindings model, model.view[0]
     # revive model
     model.revive()
+    # get build info
+    model.getBuild()
     # apply key bindings
-    model.applyEvents()
+    model.attachEvents()
     # start periodical saving
     model.startPeriodicalSave()
     # start checking for connectionStatus

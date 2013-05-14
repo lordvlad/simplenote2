@@ -10,6 +10,7 @@ class SimpleNote
     @timeout = null
     @interval = null
     @root = null
+    @archive = null
     # observable variables
     @searchFilter = obs ""
     @editingFilter = obs false
@@ -54,8 +55,8 @@ class SimpleNote
     @selectedNodes = obs => @nodes.filter 'selected'
     @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
     @breadcrumbs = obs => 
-      @current()
-      ( @current()?.parents?().concat [@current()] ) or []
+      a = if @options.appearance.titles() then "" else @current()
+      @current()?.parents?().concat( a ) or []
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
@@ -67,6 +68,8 @@ class SimpleNote
   # @param {Object} data json object containting all needed data
   revive : =>
     @root = store.get( 'root' ) ? new Node( { id : 'root', title : 'home' } )
+    if options = store.get( 'options' )
+      koMap @options, options
     # update current viewed node from location.hash
     hash.valueHasMutated()
     delay =>
@@ -80,7 +83,9 @@ class SimpleNote
     @timeout = timeout.set 100, => 
       store.set 'root', @root.toJSON()
       store.set 'tags', @tags()
-      store.set( 'archive', @archive.toJSON() ) if @archive
+      store.set 'options', ko.toJSON @options
+      if @archive
+        store.set 'archive', @archive.toJSON()
     @
   
   # set up online check
@@ -102,77 +107,6 @@ class SimpleNote
       )
     checkConnection()
     
-  # apply keyBindings
-  applyEvents : =>
-    [ model, $doc, $view ] = [ @, @doc, @view ]
-    # set up event listeners
-    $view.on "click", ".headline", (e)->
-      $t = $ e.target
-      $t.parents(".headline").find("title").focus() unless $t.is(".bullet, .action, .info")
-    # $view.on  "keydown", wre.HotKeyHandler( model.hotkeys, model )
-    $view.on "keyup, click", => model.save()
-    
-    # tags menu 
-    $tagsMenu = $( '#tagsMenu', $view )
-    $tagsMenu.data( 'node', 
-      null
-    ).on( 'dismiss', ->
-      $( this ).fadeOut 'fast',->$( this ).css { top: '', left: '' }
-    ).on( 'call', (e,node,o) ->
-      $doc.off 'click.tagsmenu'
-      $this = $(this).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast').data('node',node)
-      $this.find( 'input' ).focus()
-      $doc.on 'click.tagsmenu', (e)->
-        return if e.timeStamp is o.timeStamp or $( e.target ).parents( '#tagsMenu' ).length isnt 0
-        $doc.off 'click.tagsmenu'
-        $this.trigger( 'dismiss' )
-    ).on( 'click', 'li.list', -> 
-      tag = ko.dataFor this; node = $#tagsMenu.data( 'node' );
-      if node.tags.remove(tag).length is 0 then node.tags.push tag
-    ).on( 'click', 'i.icon-tag.addTag', ->
-      return if not ( name = $(this).prev().val() )
-      $tagsMenu.data( 'node' ).tags.push new Tag( { name: name } )
-      $(this).next().val( '' ).focus()
-    ).on( 'keydown', 'input', (e)->
-      $tagsMenu.trigger( 'dismiss' ) if e.which is k.ESC
-      return if e.which isnt k.ENTER
-      $( this ).next().trigger( 'click' )
-    )
-    
-    # searchbar tags
-    $( '#search > div >.icon-tags', $view ).click (e)->
-      model.editingFilter on
-      t = $ '#tags'
-      return t.slideUp() if t.is 'visible'
-      t.slideDown 'fast'
-      $doc.on 'click.tagsfilter', (f)->
-        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-trash')
-        $doc.off 'click.tagsfilter'
-        t.slideUp 'fast'
-        
-    # searchbar bookmarks
-    $( '#search > div >.icon-star', $view ).click (e)->
-      model.editingFilter on
-      b = $ '#bookmarks'
-      return b.slideUp() if b.is 'visible'
-      b.slideDown 'fast'
-      $doc.on 'click.bookmarks', (f)->
-        return if e.timeStamp is f.timeStamp or $(f.target).is('.icon-star-half')
-        $doc.off 'click.bookmarks'
-        b.slideUp 'fast'   
-        
-    # searchbar more
-    $( '#search > div > .icon-ellipsis-vertical' ).click (e) ->
-      s = $( '#specialPages' )
-      if s.is 'visible' then return s.slideUp()
-      s.slideDown 'fast'
-      $doc.on 'click.specialPages', (f)->
-        return if e.timeStamp is f.timeStamp
-        $doc.off 'click.specialPages'
-        s.slideUp 'fast'
-     
-    @
-  
   # functions on self
   startPeriodicalSave : ->
     @interval = interval.set 6e4, @save
@@ -232,6 +166,10 @@ class SimpleNote
   # filter functions
   clearSearchFilter :=> @searchFilter ''
   
+  # get build information
+  getBuild : =>
+    $.getJSON 'build.json', ( d ) =>
+      @build = d
 
 # static values
 SimpleNote.liststyletypes = [

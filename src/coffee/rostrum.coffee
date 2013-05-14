@@ -73,35 +73,20 @@ sizeOf = ( v ) ->
 
 # map values to an knockout model
 koMap = ( model, map ) ->
-  for key, value of map
-    if ko.isWriteableObservable model[ key ] then model[ key ] value
-    else model[ key ] = value
+  for key of map
+    if isObj model[ key ] then koMap model[ key ], map[ key ]
+    else if ko.isWriteableObservable model[ key ] then model[ key ] map[ key ]
+    else model[ key ] = map[ key ]
   model
 
 # wrap location.hash in a ko.computed
 hash = do ->
   h = obs ""
   s =-> h location.hash.replace(/#/,"") or ""
-  $(window).on "hashchange", s
+  $( window ).on "hashchange", s
   h.subscribe (v) -> location.hash = v
   s(); h
     
 # get intersecting elements of two arrays    
 intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
 
-# supply shortcuts for popular keys
-k =
-  BACKSPACE : 8
-  TAB       : 9
-  ENTER     : 13
-  ESC       : 27
-  PGUP      : 33
-  PGDOWN    : 34
-  END       : 35
-  HOME      : 36
-  LEFT      : 37
-  UP        : 38
-  RIGHT     : 39
-  DOWN      : 40
-  SPACE     : 32
-  DEL       : 46
