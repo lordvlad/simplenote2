@@ -106,8 +106,11 @@
   
   <div id="sheet" class="node">
     <div class="body" data-bind="visible: $data!==$root.root" >
-      <div data-bind="if:$root.options.appearance.titles">
-        <h1 data-bind="editable:$data.title"></h1>
+      <div data-bind="if:$root.options.appearance.titles&&!$data.readonly">
+        <h1 data-bind="editable:$data.title,hasfocus:$data.editingTitle"></h1>
+      </div>
+      <div data-bind="if:$root.options.appearance.titles&&$data.readonly">
+        <h1 data-bind="html:$data.title"></h1>
       </div>
       <div class="notes topNotes" data-bind="ifnot:$data.readonly,visible:!$data.readonly">
         <div data-bind="editable:notes,hasfocus:editingNote"></div>

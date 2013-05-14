@@ -22,12 +22,12 @@
       </td></tr></table>
     </div>
     <!-- notes -->
-    <div class="notes" data-bind=" visible:expanded()">
+    <div class="notes" data-bind=" visible:expanded()&&hasNote()||editingNote()">
       <div data-bind="editable:notes,hasfocus:editingNote"></div>
     </div>
   </div>
   <!-- children -->
-  <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()" class="childrenOuter">
+  <div data-bind="ifnot:$data.readonly,visible:!$data.readonly&&expanded()&&hasChildren()" class="childrenOuter">
       <div class="children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet',start:$root.startSort,stop:$root.stopSort}}"></div>
   </div>
   <div data-bind="if:$data.readonly,visible:$data.readonly&&expanded()" class="childrenOuter">

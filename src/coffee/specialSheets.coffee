@@ -131,6 +131,15 @@ do ->
             <p>to delete a deadline, simply pass an empty string in the prompt</p>
           """
         }, {
+          id : 'help-hotkeys'
+          title : 'simplenote hotkeys'
+          notes : """
+            <div class='options'>
+            <p>making hotkeys available through javascript is not the easiest task, so bear with me if one or the other does not work in your favorite browser.</p>
+            <table data-bind='table:{data:options.hotkeys,cols:[\"hotkey\",\"works on\",\"does\"]}'></table>
+            </div>
+          """        
+        }, {
           id : 'help-offline'
           title : 'simplenote offline'
           notes : """

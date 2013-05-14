@@ -25,7 +25,8 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     # get build info
     model.getBuild()
     # apply key bindings
-    model.attachEvents()
+    model.attachClicks()
+    model.attachHotkeys()
     # start periodical saving
     model.startPeriodicalSave()
     # start checking for connectionStatus

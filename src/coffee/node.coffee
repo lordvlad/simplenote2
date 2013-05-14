@@ -109,7 +109,8 @@ class Node
   toggleSelected : =>
     @selected !@selected()
   toggleExpanded : =>
-    return @open() if ( window.innerWidth < maxScreenWidthForMobile )
+    return @open() if ( window.innerWidth < maxScreenWidthForMobile ) 
+    return if ( !@hasNote() and !@hasChildren() )
     @expanded !@expanded()
   toggleBookmarked : =>
     @bookmarked !@bookmarked()

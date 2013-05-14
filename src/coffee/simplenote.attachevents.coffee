@@ -1,4 +1,4 @@
-SimpleNote::attachEvents = ->
+SimpleNote::attachClicks = ->
   
   [ model, $view, $doc ] = [ @, @view, @doc ]
   
@@ -77,55 +77,62 @@ SimpleNote::attachEvents = ->
       $doc.off 'click.specialPages'
       s.slideUp 'fast'
    
-  # keydown events
-  
-  do ->
-    keys =
-      BACKSPACE : 8
-      TAB       : 9
-      ENTER     : 13
-      ESC       : 27
-      PGUP      : 33
-      PGDOWN    : 34
-      END       : 35
-      HOME      : 36
-      LEFT      : 37
-      UP        : 38
-      RIGHT     : 39
-      DOWN      : 40
-      SPACE     : 32
-      DEL       : 46
+# keydown events
 
-    stop =(e)-> e.stopPropagation(); e.preventDefault();
+SimpleNote::detachHotkeys = ->
+    @doc.off 'keydown.hotkeys'
+
+SimpleNote::attachHotkeys = ->
+  
+  model = @
+  keys =
+    BACKSPACE : 8
+    TAB       : 9
+    ENTER     : 13
+    ESC       : 27
+    PGUP      : 33
+    PGDOWN    : 34
+    END       : 35
+    HOME      : 36
+    LEFT      : 37
+    UP        : 38
+    RIGHT     : 39
+    DOWN      : 40
+    SPACE     : 32
+    DEL       : 46
+
+  stop =(e)-> 
+    e.stopPropagation()
+    e.preventDefault()
+  
+  eventToBits = ( e ) ->
+    [ 
+      if e.altKey then 1 else 0
+      if e.ctrlKey then 1 else 0
+      if e.shiftKey then 1 else 0
+      e.which
+    ].join ""
     
-    eventToBits = ( e ) ->
-      [ 
-        if e.altKey then 1 else 0
-        if e.ctrlKey then 1 else 0
-        if e.shiftKey then 1 else 0
-        e.which
-      ].join ""
-      
-    keysToBits = ( a ) ->
-      [ 
-        if a.match /alt/i then 1 else 0
-        if a.match /ctrl/i then 1 else 0
-        if a.match /shift/i then 1 else 0
-      (( c = a.match( /(?:ctrl|alt|shift|\s)*(?:\s|^)(\w{2,})(?=\s|$)/i ) ) and ( keys[ c[1].toUpperCase() ] )) or (( c = a.match(/(?:ctrl|alt|shift|\s)*(?:\s|^)(\w{1})(?=\s|$)/i ) ) and (c = c[1].toUpperCase().charCodeAt(0)))
-      ].join ""
-    
-    hotkeybits = {}
-    
-    for h in model.options.hotkeys
-      if not hotkeybits[ keysToBits( h[0] ) ]
-        hotkeybits[ keysToBits( h[0] ) ] = [[ h[1],h[2] ]]
-      else
-        hotkeybits[ keysToBits( h[0] ) ].push [ h[1],h[2] ]
-    
-    $doc.off 'keydown.hotkeys'
-    $doc.on 'keydown.hotkeys', ( e )->
-      if ( h = hotkeybits[ eventToBits( e ) ] ) 
-        for k in h
-          if ( not k[0] or $(e.target).is(k[0]) )
-            stop e
-            model.functions[ k[1] ]?( e )
+  keysToBits = ( a ) ->
+    [ 
+      if a.match /alt/i then 1 else 0
+      if a.match /ctrl/i then 1 else 0
+      if a.match /shift/i then 1 else 0
+    (( c = a.match( /(?:ctrl|alt|shift|\s)*(?:\s|^)(\w{2,})(?=\s|$)/i ) ) and ( keys[ c[1].toUpperCase() ] )) or (( c = a.match(/(?:ctrl|alt|shift|\s)*(?:\s|^)([\w\d]{1})(?=\s|$)/i ) ) and (c = c[1].toUpperCase().charCodeAt(0)))
+    ].join ""
+  
+  hotkeybits = {}
+  
+  for h in @options.hotkeys
+    if not hotkeybits[ keysToBits( h[0] ) ]
+      hotkeybits[ keysToBits( h[0] ) ] = [[ h[1],h[2] ]]
+    else
+      hotkeybits[ keysToBits( h[0] ) ].push [ h[1],h[2] ]
+  @doc.on 'keydown.hotkeys', ( e )->
+    if h = hotkeybits[ eventToBits( e ) ]
+      $t = $ e.target
+      if not $t[0].nodeType then $t = $view
+      for k in h
+        if not k[0] or $t.is(k[0])
+          stop e
+          model.functions[ k[1] ]?( e, $t, ko.dataFor( $t[0] ) , ko.contextFor( $t[0] ).$root )

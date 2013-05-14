@@ -74,9 +74,10 @@ sizeOf = ( v ) ->
 # map values to an knockout model
 koMap = ( model, map ) ->
   for key of map
-    if isObj model[ key ] then koMap model[ key ], map[ key ]
-    else if ko.isWriteableObservable model[ key ] then model[ key ] map[ key ]
-    else model[ key ] = map[ key ]
+    switch 
+      when isObj model[ key ] then return koMap model[ key ], map[ key ]
+      when ko.isWriteableObservable model[ key ] then model[ key ] map[ key ]
+      else model[ key ] = map[ key ]
   model
 
 # wrap location.hash in a ko.computed
