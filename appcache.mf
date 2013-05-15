@@ -1,12 +1,13 @@
 CACHE MANIFEST
 
-# rev 1377
+# rev 1493
 
 # BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee
 #  src/coffee/simplenote.coffee
-#  src/coffee/simplenote.attachevents.coffee
+#  src/coffee/simplenote.events.coffee
 #  src/coffee/simplenote.options.coffee
+#  src/coffee/simplenote.connect.coffee
 #  src/coffee/tag.coffee
 #  src/coffee/node.coffee
 #  src/coffee/caudum.coffee
@@ -27,16 +28,13 @@ build.json
 pub/app.min.js
 pub/app.css
 lib/normalize/normalize.min.css
-lib/jqueryui/jquery-ui-1.10.2.custom.min.css
-lib/fancybox/jquery.fancybox.min.css
 lib/fontawesome/font-awesome.min.css
-lib/contextMenu/jquery.contextMenu.css
+lib/fontawesome/fontawesome-webfont.woff?v=3.1.01
+lib/fontawesome/fontawesome-webfont.ttf?v=3.1.01
 lib/jquery/jquery-1.9.1.js
 lib/jqueryui/jquery-ui-1.10.2.custom.min.js
-lib/fancybox/jquery.fancybox.fix.js
-lib/doubletap/jquery.doubletap.js
+lib/contextMenu/jquery.contextMenu.css
 lib/rgbcolor/rgbcolor.js
-lib/fancybox/jquery.fancybox.min.js
 lib/knockout/knockout.js
 lib/knockout/knockout.sortable.js
 lib/dropbox/dropbox.js
@@ -47,8 +45,6 @@ lib/wre/wre.knockout.extenders.js
 lib/wre/wre.knockout.filter.js
 lib/wre/wre.knockout.bindingHandlers.js
 lib/wre/wre.jquery.inject.js
-lib/fontawesome/fontawesome-webfont.woff?v=3.1.01
-lib/fontawesome/fontawesome-webfont.ttf?v=3.1.01
 tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
 tmpl/readonlyNodeTemplate.html

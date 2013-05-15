@@ -1,4 +1,5 @@
 SimpleNote::attachClicks = ->
+  console.log @
   
   [ model, $view, $doc ] = [ @, @view, @doc ]
   

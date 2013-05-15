@@ -67,12 +67,9 @@ do ->
             },{
               id : 'help-menu-options'
               title : '<i class=\'icon-cog\'></i>&nbsp;options'
-            },{
-              id : 'help-menu-help'
-              title : '<i class=\'icon-question\'></i>&nbsp;help'
-            },{
-              id : 'help-menu-about'
-              title : '<i class=\'icon-info\'></i>&nbsp;about'
+              notes : """
+                <p> well, thats obvious, isn't it? </p>
+              """
             }
           ]
         },{
@@ -187,8 +184,13 @@ do ->
           title : 'dropbox sync'
           notes : """
             <div class='options'>
-            <p>your dropbox account is <span data-bind='text:syncStatusText,style:{color:syncStatusColor}'</span></p>
-            <p>work in progress</p>
+            <p>your dropbox account is <span data-bind='html:connection.dropbox.statusText,style:{color:connection.dropbox.statusColor}'</span></p>
+            <p data-bind='ifnot:connection.dropbox.status'>
+              <a href='javascript:;' data-bind='click:connection.dropbox.connect'><i class='icon-cloud'></i>&nbsp;connect your dropbox</a>
+            </p>
+            <p data-bind='if:connection.dropbox.status'>
+              <a href='javascipt:;' data-bind='click:connection.dropbox.disconnect'><i class='icon-cloud'></i>&nbsp;disconnect your dropbox</a>
+            </p>
             </div>
           """
         }

@@ -2,8 +2,8 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
 
   applicationCache.onchecking =-> $.holdReady(on)
   applicationCache.ondownloading =-> $.holdReady(on)
-  applicationCache.onerror =-> $.holdReady(off); model.connectionStatus(0)
-  applicationCache.onnoupdate =-> $.holdReady(off); model.connectionStatus(1)
+  applicationCache.onerror =-> $.holdReady(off);
+  applicationCache.onnoupdate =-> $.holdReady(off);
   applicationCache.onprogress =-> $.holdReady( on ); delay -> $( '#curtain' ).find('i').after('.');
   applicationCache.onupdateready = applicationCache.oncached = ->
     $.holdReady( on )
@@ -18,6 +18,8 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     model.win = $ window
     model.view = $ view
     delay -> model.pop = $('audio')[0] # this needs to be delayed. due to a bug maybe?
+    # start the sync/online check modules
+    model.connect()
     # apply knockout bindings
     ko.applyBindings model, model.view[0]
     # revive model
@@ -29,8 +31,6 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     model.attachHotkeys()
     # start periodical saving
     model.startPeriodicalSave()
-    # start checking for connectionStatus
-    model.startOnlineCheck()
         
     # lift the curtains
     delay -> $("#curtain").fadeOut("slow", -> $('body').css('overflow','auto') )    

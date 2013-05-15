@@ -40,8 +40,6 @@
       <li title="timesheet"><a href="#timesheet"><i class="icon-ticket"></i>&nbsp;timesheet</a></li> -->
       <li title="archive"><a href="#archive"><i class="icon-folder-open-alt"></i>&nbsp;archive</a></li>
       <li title="options"><a href="#options"><i class="icon-cog"></i>&nbsp;options</a></li>
-      <li title="help"><a href="#help"><i class="icon-question"></i>&nbsp;help</a></li>
-      <li title="about"><a href="#about"><i class="icon-info"></i>&nbsp;about</a></li>
     </ul>
     
   </div>
@@ -133,11 +131,11 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  you're <a href="#help-offline" data-bind="text:connectionStatusText,style:{color:connectionStatusColor}"></a>
-  &nbsp;|&nbsp;
-  sync is <a href="#help-sync" data-bind="text:syncStatusText,style:{color:syncStatusColor}"></a>
+  <a href="#help-sync" data-bind="text:sync.name"></a>&nbspis&nbsp<a href="#options" data-bind="html:sync.status,style:{color:sync.statusColor}">not set up</a>
   &nbsp;|&nbsp;
   need <a href="#help">help</a>?
+  &nbsp;|&nbsp;
+  wanna know <a href="#about">more</a>?
 </div>
 
 <!-- MENUS -->

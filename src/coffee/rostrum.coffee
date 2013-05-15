@@ -28,6 +28,7 @@ revive.constructors = {}
   
 # create storage
 store =
+  data : localStorage
   set : ( key, val ) -> localStorage.setItem key, ( if isStr val then val else JSON.stringify val )
   get : ( key ) -> 
     try 

@@ -17,28 +17,6 @@ class SimpleNote
     @current = obs null    
     @alerts = obs []
     @notifications = obs []    
-    @connectionStatus = obs 0
-    @connectionStatusText = obs =>
-      switch @connectionStatus()
-        when 0 then 'offline'
-        when 1 then 'online'
-    @connectionStatusColor = obs =>
-      switch @connectionStatus()
-        when 0 then 'red'
-        when 1 then 'green'
-    @syncStatus = obs 0
-    @syncStatusText = obs =>
-      switch @syncStatus()
-        when 0 then 'not set up'
-        when 1 then 'connected'
-        when 2 then 'disconnected'
-        when 3 then 'synchronizing'
-    @syncStatusColor = obs =>
-      switch @syncStatus()
-        when 0 then ''
-        when 1 then 'green'
-        when 2 then 'red'
-        when 3 then 'orange'
     # observable Arrays
     @nodes = obs []
     @tags = obs []
@@ -61,8 +39,6 @@ class SimpleNote
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
       @current()?.editingNote on
-  
-
 
   # revive from JSON data
   # @param {Object} data json object containting all needed data
@@ -88,25 +64,6 @@ class SimpleNote
         store.set 'archive', @archive.toJSON()
     @
   
-  # set up online check
-  startOnlineCheck : ->
-    offlineCount = 0
-    numShortChecks = 5 # how often to check with a short interval before switching to long interval
-    short = 2 # seconds
-    long = 60 # seconds
-    checkConnection = =>
-      $.get( 
-        'online/online.json' 
-      ).error( =>
-        @connectionStatus 0
-        timeout.set ( if offlineCount++ < numShortChecks then short else long )*1e3, checkConnection
-      ).done( =>
-        @connectionStatus 1
-        offlineCount = 0
-        timeout.set long*1e3, checkConnection
-      )
-    checkConnection()
-    
   # functions on self
   startPeriodicalSave : ->
     @interval = interval.set 6e4, @save
@@ -124,9 +81,8 @@ class SimpleNote
   selectionEditTags : =>
   
   # functions that create nodes
-  addNodeTo : ( parent, options ) =>( new Node $.extend (if isObj options then options else {}), { parent: parent } ).editingTitle on
-  addNodeHere : ( options ) => 
-    @addNodeTo ( options.id? and options or @current() ), options
+  addNodeTo : ( parent, options ) =>( new Node $.extend (if isObj options then options else {}), { parent: parent } ).active(on).editingTitle(on)
+  addNodeHere : ( options ) => @addNodeTo ( options.id? and options or @current() ), options
   insertNodeAfter : ( node, options ) => @addNodeTo @current().parent(), options
   
   # functions that work with nodes
@@ -147,18 +103,6 @@ class SimpleNote
     if ( domnode = $( '.options', el ) ).length > 0 and $( '[data-bind]', el ).length > 0
       ko.applyBindings @, domnode[0]
       
-  # helping with sorting
-  startSort :=>
-    # console.log 'starting sort'
-    $( '.node', @view ).on({ "mouseover.sort": ->
-      ko.dataFor( $(this)[0] ).expanded( true )
-    , "mouseout.sort" : ->
-      ko.dataFor( $(this)[0] ).expanded( false )
-    })
-  stopSort :=>
-    $( '.node', @view ).off( '.sort' )
-    # console.log 'stopping sort'
-  
   # notificationsystem
   removeNotification : (item) => @notifications.remove item
   removeAlert : ( item ) => @alerts.remove item
