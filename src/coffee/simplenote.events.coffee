@@ -34,29 +34,28 @@ SimpleNote::attachClicks = ->
   # tags menu 
   @$tagsMenu = $tagsMenu = $( '#tagsMenu', $view )
   $tagsMenu.off 'dismiss, call, click.li, click.addtag, keydown.input'
-  $tagsMenu.data( 'node', 
+  $tagsMenu.data( 'activeNode', 
     null
   ).on( 'dismiss', ->
-    $( this ).fadeOut 'fast',->$( this ).css { top : '', left : '' }
+    $( this ).data( 'activeNode', null ).fadeOut 'fast',->$( this ).css { top : '', left : '' }
   ).on( 'call', (e,node,o) ->
     $doc.off 'click.tagsmenu'
-    $this = $(this).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast').data('node',node)
+    $this = $(this).data('activeNode',node).position({my:'right top',at:'right bottom',of:o.target}).fadeIn('fast')
     $this.find( 'input' ).focus()
     $doc.on 'click.tagsmenu', (e)->
       return if e.timeStamp is o.timeStamp or $( e.target ).parents( '#tagsMenu' ).length isnt 0
       $doc.off 'click.tagsmenu'
       $this.trigger( 'dismiss' )
   ).on( 'click.li', 'li.list', -> 
-    tag = ko.dataFor this; node = $#tagsMenu.data( 'node' );
+    tag = ko.dataFor this; node = $tagsMenu.data( 'activeNode' );
     if node.tags.remove(tag).length is 0 then node.tags.push tag
   ).on( 'click.addtag', 'i.icon-tag.addTag', ->
-    console.log 'clicked'
     return if not ( name = $(this).prev().val() )
     $tagsMenu.data( 'node' ).tags.push new Tag( { name: name } )
     $(this).next().val( '' ).focus()
+    if window.innerWidth < maxScreenWidthForMobile then $tagsMenu.trigger 'dismiss'
   )
   .on( 'keydown.input', 'input', (e)->
-    $("body").append(e.which)
     $tagsMenu.trigger( 'dismiss' ) if e.which is keys.ESC
     return if e.which isnt keys.ENTER
     $( this ).next().trigger( 'click' )

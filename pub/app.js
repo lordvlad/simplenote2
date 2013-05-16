@@ -558,8 +558,8 @@
     });
     this.$tagsMenu = $tagsMenu = $('#tagsMenu', $view);
     $tagsMenu.off('dismiss, call, click.li, click.addtag, keydown.input');
-    $tagsMenu.data('node', null).on('dismiss', function() {
-      return $(this).fadeOut('fast', function() {
+    $tagsMenu.data('activeNode', null).on('dismiss', function() {
+      return $(this).data('activeNode', null).fadeOut('fast', function() {
         return $(this).css({
           top: '',
           left: ''
@@ -569,11 +569,11 @@
       var $this;
 
       $doc.off('click.tagsmenu');
-      $this = $(this).position({
+      $this = $(this).data('activeNode', node).position({
         my: 'right top',
         at: 'right bottom',
         of: o.target
-      }).fadeIn('fast').data('node', node);
+      }).fadeIn('fast');
       $this.find('input').focus();
       return $doc.on('click.tagsmenu', function(e) {
         if (e.timeStamp === o.timeStamp || $(e.target).parents('#tagsMenu').length !== 0) {
@@ -586,23 +586,24 @@
       var node, tag;
 
       tag = ko.dataFor(this);
-      node = $;
+      node = $tagsMenu.data('activeNode');
       if (node.tags.remove(tag).length === 0) {
         return node.tags.push(tag);
       }
     }).on('click.addtag', 'i.icon-tag.addTag', function() {
       var name;
 
-      console.log('clicked');
       if (!(name = $(this).prev().val())) {
         return;
       }
       $tagsMenu.data('node').tags.push(new Tag({
         name: name
       }));
-      return $(this).next().val('').focus();
+      $(this).next().val('').focus();
+      if (window.innerWidth < maxScreenWidthForMobile) {
+        return $tagsMenu.trigger('dismiss');
+      }
     }).on('keydown.input', 'input', function(e) {
-      $("body").append(e.which);
       if (e.which === keys.ESC) {
         $tagsMenu.trigger('dismiss');
       }

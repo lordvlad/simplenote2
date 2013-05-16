@@ -183,6 +183,7 @@ i[class^="icon-check"]:before {
   opacity: 0.5;
 }
 #fixedTopCentered #search > ul li {
+  margin-bottom: .2em;
   cursor: pointer;
 }
 #fixedTopCentered #search > ul li a i {
@@ -485,6 +486,9 @@ ul.options {
 @media only screen and (max-width: 480px) {
   i[class^="icon-"] {
     font-size: 110%;
+  }
+  #fixedTopCentered #search > ul li {
+    margin-bottm: .4em;
   }
   #notebook #sheet .addChild {
     margin-left: 0;
