@@ -27,11 +27,6 @@
   margin: 0 auto;
 }
 
-/* fontawesome fix for checkboxes */
-i.icon-check:before{
-  padding-left: 1px;
-}
-
 /* body and general declarations */
 
 body {
@@ -71,12 +66,21 @@ a {
 .bullet:hover, i[class^="icon-"]:hover {
   opacity: 1;
 }
-
+i[class^="icon-"]:hover {
+  color: @highlight;
+}
 li i[class^="icon-"]{
   display: inline-block;
   width: 1em;
   text-align: center;
   margin-right: .2em;
+}
+
+/* fontawesome fix for checkboxes */
+i[class^="icon-check"]:before{
+  display: inline-block;
+  text-align: left;
+  width: .7em;
 }
 
 /* header */
@@ -102,7 +106,7 @@ li i[class^="icon-"]{
     color: @dark;
   }
   
-  .alert .icon-remove, .note .icon-remove, #tags .icon-pencil, #tags .icon-trash, #bookmarks .icon-star-half-full {
+  .alert .icon-remove, .note .icon-remove {
     float: right;
   }
   
@@ -178,6 +182,7 @@ li i[class^="icon-"]{
     > ul {
       display: none;
       list-style-type: none;
+      text-align: right;
       padding: 0 1em;
       margin: .5em 0 0 0;
       &:empty:after {
@@ -186,6 +191,12 @@ li i[class^="icon-"]{
       }
       li {
         cursor: pointer;
+        a i {
+          margin-left: .5em;
+        }
+        .icon-pencil, .icon-trash, .icon-star-half-full {
+          float: left;
+        }
       }
       li:hover {
         color: @highlight;
@@ -203,10 +214,10 @@ li i[class^="icon-"]{
   }
 }
 
-.icon-tag {
+.icon-tag:not(:empty) {
   .rounded-corners;
   padding: 0 .4em;
-  &:not(:empty):before {
+  &:before {
     font-size: 80%;
   }
 }
@@ -224,7 +235,7 @@ li i[class^="icon-"]{
   
   #topActions {
     margin-top: .5em;
-    margin-right: 1em;
+    margin-right: 1.8em;
     margin-bottom: -.5em;
     text-align: right;
     i:before {
@@ -317,6 +328,9 @@ li i[class^="icon-"]{
   overflow: hidden;
   i {
     white-space: nowrap;
+    &:hover {
+      color: white;
+    }
   }
   ul {
     list-style-type: none;

@@ -1,3 +1,19 @@
+keys =
+    BACKSPACE : 8
+    TAB       : 9
+    ENTER     : 13
+    ESC       : 27
+    PGUP      : 33
+    PGDOWN    : 34
+    END       : 35
+    HOME      : 36
+    LEFT      : 37
+    UP        : 38
+    RIGHT     : 39
+    DOWN      : 40
+    SPACE     : 32
+    DEL       : 46
+
 SimpleNote::attachClicks = ->
   console.log @
   
@@ -16,7 +32,7 @@ SimpleNote::attachClicks = ->
   $view.on 'keyup.doc, click.doc', => model.save()
 
   # tags menu 
-  $tagsMenu = $( '#tagsMenu', $view )
+  @$tagsMenu = $tagsMenu = $( '#tagsMenu', $view )
   $tagsMenu.off 'dismiss, call, click.li, click.addtag, keydown.input'
   $tagsMenu.data( 'node', 
     null
@@ -34,15 +50,17 @@ SimpleNote::attachClicks = ->
     tag = ko.dataFor this; node = $#tagsMenu.data( 'node' );
     if node.tags.remove(tag).length is 0 then node.tags.push tag
   ).on( 'click.addtag', 'i.icon-tag.addTag', ->
+    console.log 'clicked'
     return if not ( name = $(this).prev().val() )
     $tagsMenu.data( 'node' ).tags.push new Tag( { name: name } )
     $(this).next().val( '' ).focus()
-  ).on( 'keydown.input', 'input', (e)->
-    $tagsMenu.trigger( 'dismiss' ) if e.which is ESC
-    return if e.which isnt ENTER
+  )
+  .on( 'keydown.input', 'input', (e)->
+    $("body").append(e.which)
+    $tagsMenu.trigger( 'dismiss' ) if e.which is keys.ESC
+    return if e.which isnt keys.ENTER
     $( this ).next().trigger( 'click' )
   )
-  
   # searchbar tags
   $( '#search > div > .icon-tags', $view ).off 'click.icontag'
   $( '#search > div >.icon-tags', $view ).on 'click.icontag', (e)->
@@ -86,21 +104,6 @@ SimpleNote::detachHotkeys = ->
 SimpleNote::attachHotkeys = ->
   
   model = @
-  keys =
-    BACKSPACE : 8
-    TAB       : 9
-    ENTER     : 13
-    ESC       : 27
-    PGUP      : 33
-    PGDOWN    : 34
-    END       : 35
-    HOME      : 36
-    LEFT      : 37
-    UP        : 38
-    RIGHT     : 39
-    DOWN      : 40
-    SPACE     : 32
-    DEL       : 46
 
   stop =(e)-> 
     e.stopPropagation()

@@ -15,10 +15,10 @@
     
     <ul id="tags" data-bind="foreach:tags">
       <li data-bind="click:$data.toggleInFilter">
-        <i class="icon-tag"></i>
-        <span data-bind="html:name,style:{color:fgColor,background:color}"></span>
-        <i class="icon-trash" title="delete tag" data-bind="click:remove"></i>
         <i class="icon-pencil" title="edit tag" data-bind="click:edit"></i>
+        <i class="icon-trash" title="delete tag" data-bind="click:remove"></i>
+        <span data-bind="html:name,style:{color:fgColor,background:color}"></span>
+        <i class="icon-tag"></i>
       </li>
     </ul>
     
@@ -26,20 +26,20 @@
     
     <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
       <li data-bind="click:open">
-        <i class="icon-star"></i>
-        <span data-bind="html:title"></span>
         <i class="icon-star-half-full" title="remove bookmark" data-bind="click:toggleBookmarked"></i>
+        <span data-bind="html:title"></span>
+        <i class="icon-star"></i>
       </li>
     </ul>
     
     <!-- MORE DROPDOWN -->
     <ul id="specialPages">
-      <li title="notebook"><a href="#"><i class="icon-book"></i>&nbsp;notebook</a></li>
-    <!--  <li title="agenda"><a href="#agenda"><i class="icon-time"></i>&nbsp;agenda</a></li>
-      <li title="calendar"><a href="#calendar"><i class="icon-calendar"></i>&nbsp;calendar</a></li>
-      <li title="timesheet"><a href="#timesheet"><i class="icon-ticket"></i>&nbsp;timesheet</a></li> -->
-      <li title="archive"><a href="#archive"><i class="icon-folder-open-alt"></i>&nbsp;archive</a></li>
-      <li title="options"><a href="#options"><i class="icon-cog"></i>&nbsp;options</a></li>
+      <li title="notebook"><a href="#">notebook<i class="icon-book"></i></a></li>
+    <!--  <li title="agenda"><a href="#agenda">&nbsp;agenda<i class="icon-time"></i></a></li>
+      <li title="calendar"><a href="#calendar">&nbsp;calendar<i class="icon-calendar"></i></a></li>
+      <li title="timesheet"><a href="#timesheet">&nbsp;timesheet<i class="icon-ticket"></i></a></li> -->
+      <li title="archive"><a href="#archive">archive<i class="icon-folder-open-alt"></i></a></li>
+      <li title="options"><a href="#options">options<i class="icon-cog"></i></a></li>
     </ul>
     
   </div>
@@ -52,7 +52,6 @@
       <span class="options">
         <i class="icon-refresh" title="invert selection" data-bind="click:selectionInvert"></i>
         <i class="icon-tags" title="edit tags for all" data-bind="click:selectionEditTags"></i>
-        <i class="icon-time" title="remove all deadlines" data-bind="click:selectionEditDeadlines"></i>
         <i class="icon-folder-open" title="archive all" data-bind="click:selectionArchive"></i>
         <i class="icon-trash" title="delete all" data-bind="click:selectionRemove"></i>
         &nbsp;&nbsp;
@@ -97,6 +96,7 @@
     <i class="icon-paper-clip" title="files" data-bind="click:$data.editFiles,visible:!$data.files().length"></i>
     <i class="icon-time" title="deadline" data-bind="click:$data.editDeadline,text:$data.deadlineDisplay()"></i>
     <i class="icon-trash" title="delete" data-bind="click: $data.remove"></i>
+    <i class="icon-folder-open-alt" title="archive" data-bind="click: $data.archive"></i>
     <i title="bookmark" data-bind="css:{'icon-star' : $data.bookmarked, 'icon-star-empty' : !$data.bookmarked() }, click:$data.toggleBookmarked"></i>
   </div>
   
@@ -104,11 +104,13 @@
   
   <div id="sheet" class="node">
     <div class="body" data-bind="visible: $data!==$root.root" >
-      <div data-bind="if:$root.options.appearance.titles&&!$data.readonly">
-        <h1 data-bind="editable:$data.title,hasfocus:$data.editingTitle"></h1>
-      </div>
-      <div data-bind="if:$root.options.appearance.titles&&$data.readonly">
-        <h1 data-bind="html:$data.title"></h1>
+      <div data-bind="if:$root.options.appearance.title">
+        <div data-bind="ifnot:$data.readonly">
+          <h1 data-bind="editable:$data.title,hasfocus:$data.editingTitle"></h1>
+        </div>
+        <div data-bind="if:$data.readonly">
+          <h1 data-bind="html:$data.title"></h1>
+        </div>
       </div>
       <div class="notes topNotes" data-bind="ifnot:$data.readonly,visible:!$data.readonly">
         <div data-bind="editable:notes,hasfocus:editingNote"></div>

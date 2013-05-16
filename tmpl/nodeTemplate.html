@@ -1,5 +1,5 @@
 <div class="node" data-bind="attr:{'nodeId':id}, if: $data.visible">
-  <div class="body" data-bind="css:{active:active},click:makeActive">
+  <div class="body" data-bind="css:{active:active}">
     <div class="headline">
       <!-- headline -->
       <table><tr><td class="plus-td">
@@ -8,7 +8,7 @@
         <span class="bullet" title="open|move" data-bind="css:bullet,click:open"></span>
       </td><td class="listType-td">
         <span class="listType" title="change type"></span>
-      </td><td class="title-td">
+      </td><td class="title-td" data-bind="click:makeActive">
         <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
       </td><td class="action-td">
         <!-- actions -->
@@ -22,7 +22,7 @@
       </td></tr></table>
     </div>
     <!-- notes -->
-    <div class="notes" data-bind=" visible:expanded()&&hasNote()||editingNote()">
+    <div class="notes" data-bind="visible:expanded()&&hasNote()||editingNote()">
       <div data-bind="editable:notes,hasfocus:editingNote"></div>
     </div>
   </div>

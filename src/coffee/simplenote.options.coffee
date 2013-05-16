@@ -11,8 +11,8 @@ jump = ( e, n, dir ) ->
 SimpleNote::functions = 
   nextItem : ( e, n ) -> jump e, n, 'Next'
   prevItem : ( e, n )-> jump e, n, 'Prev'
-  focusSearch : -> $( '#search input' ).focus()
-  blurSearch : -> $( '#search input' ).blur()
+  focusSearch : -> $( '#tagsmenu' ).trigger( 'dismiss' ); $( '#search input' ).focus()
+  blurSearch : ->  $( '#tagsmenu' ).trigger( 'dismiss' );  $( '#search input' ).blur()
   selectItem : ( e, n, d ) -> d.toggleSelected?()
   zoomIn : ( e, n, d ) -> d.open?()
   zoomOut : ( e, n, d, r ) -> (y=(x=r.current()).editingNote(off).editingTitle(off).parent())?.open?();y.editingNote(off);x.active(on);
@@ -20,8 +20,7 @@ SimpleNote::functions =
   addSibling : ( e, n, d, r ) -> r.addNodeTo?( d.parent() )
   editNotes : ( e, n, d ) -> d.expanded(on).editingNote(on)
   editTitle : ( e, n, d ) -> d.editingTitle on
-  foldItem : ( e, n, d, r ) ->
-    d.toggleExpanded()
+  foldItem : ( e, n, d, r ) -> d.toggleExpanded()
   foldAll : ( e, n, d, r ) ->
     f = ( x )->
       x.expanded off
