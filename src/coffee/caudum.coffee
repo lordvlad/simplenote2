@@ -1,4 +1,8 @@
 do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance = new SimpleNote()  ) ->
+  
+  SimpleNote.activeInstance.activeBookmark = Bookmark.active
+  SimpleNote.activeInstance.toggleBookmark = Bookmark.toggle
+
 
   applicationCache.onchecking =-> $.holdReady(on)
   applicationCache.ondownloading =-> $.holdReady(on)
@@ -31,7 +35,8 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     model.attachHotkeys()
     # start periodical saving
     model.startPeriodicalSave()
-        
     # lift the curtains
-    delay -> $("#curtain").fadeOut("slow", -> $('body').css('overflow','auto') )    
+    delay -> $("#curtain").fadeOut("slow")
+    # focus first item
+    model.nodes()[0]?.active?(on).editingTitle?(on)
     null

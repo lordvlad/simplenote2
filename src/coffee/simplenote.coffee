@@ -8,6 +8,7 @@ class SimpleNote
     SimpleNote.instances.push @
     # simple variables
     @timeout = null
+    @revived = false
     @interval = null
     @root = null
     @archive = null
@@ -20,6 +21,7 @@ class SimpleNote
     # observable Arrays
     @nodes = obs []
     @tags = obs []
+    @bookmarks = obs []
     # computed variables
     @realFilter = obs( =>
       f = @searchFilter().split(/\s+/)
@@ -31,7 +33,6 @@ class SimpleNote
       }
     ).extend({ debounce: 500 })
     @selectedNodes = obs => @nodes.filter 'selected'
-    @bookmarkedNodes = obs => @nodes.filter 'bookmarked'
     @breadcrumbs = obs => 
       a = if @options.appearance.titles() then "" else @current()
       @current()?.parents?().concat( a ) or []
@@ -39,6 +40,7 @@ class SimpleNote
     hash.subscribe ( id ) =>
       @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
       @current()?.editingNote on
+      title( @current().title() )
 
   # revive from JSON data
   # @param {Object} data json object containting all needed data
@@ -49,16 +51,20 @@ class SimpleNote
     # update current viewed node from location.hash
     hash.valueHasMutated()
     delay =>
-      store.get( 'tags' ) ? []
+      store.get( 'tags' )
+      store.get( 'bookmarks' )
       @archive = store.get( 'archive' ) ? new Node( { id : 'archive', title : 'archive' } )
+    @revived = true
     @
   
   # saves own data to localStorage
   save : =>
+    return if not @revived
     timeout.clear @timeout
     @timeout = timeout.set 100, => 
       store.set 'root', @root.toJSON()
       store.set 'tags', @tags()
+      store.set 'bookmarks', @bookmarks()
       store.set 'options', ko.toJSON @options
       if @archive
         store.set 'archive', @archive.toJSON()
@@ -81,9 +87,9 @@ class SimpleNote
   selectionEditTags : =>
   
   # functions that create nodes
-  addNodeTo : ( parent, options ) =>( new Node $.extend (if isObj options then options else {}), { parent: parent } ).active(on).editingTitle(on)
-  addNodeHere : ( options ) => @addNodeTo ( options.id? and options or @current() ), options
-  insertNodeAfter : ( node, options ) => @addNodeTo @current().parent(), options
+  addNodeTo : ( parent, options ) =>
+    if not parent?.id then parent = @current()
+    ( new Node $.extend (if isObj options then options else {}), { parent: parent } ).active(on).editingTitle(on)
   
   # functions that work with nodes
   openNode : ( el ) =>

@@ -12,7 +12,6 @@ class Node
     @notes = obs( "" ).extend parse : Node.parseNote
     @deadline = obs( null ).extend parse : Node.parseDate
     active = obs false
-    @bookmarked = obs false
     @selected = obs false
     @realExpanded = obs false
     @expanded = obs {
@@ -82,7 +81,10 @@ class Node
     Node.nodes.push @
     # push self to parent
     if options?.parent
-      options.parent.children.push @
+      if options.position
+        options.parent.children.splice options.position, 0, @
+      else 
+        options.parent.children.push @
     @
   
   # triggers hash change to open the node
@@ -134,7 +136,6 @@ class Node
       title : escape @title()
       notes : escape @notes()
       deadline : @deadline()
-      bookmarked : @bookmarked()
       expanded : ( @hasNote() || @hasChildren() ) && @realExpanded()
       listStyleType : @listStyleType()
       children : @children()

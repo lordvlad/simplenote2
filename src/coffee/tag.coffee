@@ -15,12 +15,7 @@ class Tag
     
     @name = obs options?.name or ""
     @color = obs options?.color or "white"
-    @fgColor = obs => 
-      x = []
-      c = ( x[0] = new RGBColor( @color() or "white" ) ).foreground()
-      delete x[0]
-      return c
-    @count = obs => Node.nodes.filter((n)=> n.tags.has @).length
+    @fgColor = obs => if $.Color( @color() ).lightness() < .33 then "white" else "black"
     
     @model.tags.push @
     @model.save()
@@ -46,7 +41,6 @@ class Tag
     node.tags.remove @ for node in @model.nodes()
     
   toggleInFilter :(i,e)=>
-    console.log arguments
     return if $( e.target ).is( '.icon-trash, .icon-pencil' )
     if @model.searchFilter().match( '#' + @name() )
       @model.searchFilter( @model.searchFilter().replace( '#' + @name(), '' ).replace(/\s{2,}/g," ").replace(/^\s*|\s*$/g,"") + " " )
@@ -55,4 +49,39 @@ class Tag
     @model.editingFilter on
       
       
+
+
+class Bookmark
+  @fromJSON : ( data ) ->
+    return bm if bm = SimpleNote.activeInstance.bookmarks.find 'href', data.href
+    delete data.__constructor
+    instance = new Bookmark()
+    koMap instance, data
+  @active : obs(
+    read: -> 
+      hash()
+      SimpleNote.activeInstance.bookmarks.find 'href', location.href
+    write: null
+    deferEvaluation: true
+  )
+  @toggle : ->
+    if a = SimpleNote.activeInstance.bookmarks.find 'href', location.href
+      SimpleNote.activeInstance.bookmarks.remove a
+    else
+      new Bookmark
+    
+  constructor : ( options ) ->
+    @model = SimpleNote.activeInstance
+    @title = options?.name or document.title.replace 'simpleNote | ', ''
+    @href = options?.name or location.href
+    @model.bookmarks.push @
+    @model.save()
+    
+  toJSON : =>
+    {
+      __constructor : 'Bookmark'
+      title : @title
+      href : @href
+    }
 revive.constructors[ 'Tag' ] = Tag
+revive.constructors[ 'Bookmark' ] = Bookmark

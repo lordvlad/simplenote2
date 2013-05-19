@@ -8,8 +8,8 @@
         <span class="bullet" title="open|move" data-bind="css:bullet,click:open"></span>
       </td><td class="listType-td">
         <span class="listType" title="change type"></span>
-      </td><td class="title-td" data-bind="click:makeActive">
-        <span class="title" data-bind="dblclick:open,editable:title,hasfocus:editingTitle"></span>
+      </td><td class="title-td" data-bind="dblclick:open,click:makeActive">
+        <div class="title" data-bind="editable:title,hasfocus:editingTitle"></div>
       </td><td class="action-td">
         <!-- actions -->
         <i class="icon-file" title="edit attachments" data-bind="visible:files().length"></i>

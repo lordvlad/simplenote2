@@ -1,6 +1,6 @@
 # helper functions
 jump = ( e, n, dir ) ->
-  c = n.filter( '.title:visible,.topNotes:visible>div,#sheet>.body>div>h1:visible' ).xor( '.body.active .title:visible:first' ).xor( 'body' )
+  c = n.filter( '.title:visible,.title:focus,.topNotes:visible>div,#sheet>.body>div>h1:visible' ).xor( '.body.active .title:visible:first' ).xor( 'body' )
   t = c['find'+dir]?( '#sheet>.body>div>h1:visible, .topNotes:visible>div, .title:visible' )[0]
   if ( t ) and d = ko.dataFor( t )
     ko.dataFor( c[0] ).active?( off )
@@ -15,12 +15,26 @@ SimpleNote::functions =
   blurSearch : ->  $( '#tagsmenu' ).trigger( 'dismiss' );  $( '#search input' ).blur()
   selectItem : ( e, n, d ) -> d.toggleSelected?()
   zoomIn : ( e, n, d ) -> d.open?()
-  zoomOut : ( e, n, d, r ) -> (y=(x=r.current()).editingNote(off).editingTitle(off).parent())?.open?();y.editingNote(off);x.active(on);
+  zoomOut : ( e, n, d, r ) -> 
+    return if r.root is r.current()
+    (y=(x=r.current()).editingNote(off).editingTitle(off).parent())?.open?();y.editingNote(off);x.active(on);
   addChild : ( e, n, d, r ) -> r.addNodeTo?( d.expanded?( on ) )
-  addSibling : ( e, n, d, r ) -> r.addNodeTo?( d.parent() )
+  addSibling : ( e, n, d, r ) -> r.addNodeTo?( d.parent(), { position: d.parent().children().indexOf(d)+1 } )
   editNotes : ( e, n, d ) -> d.expanded(on).editingNote(on)
   editTitle : ( e, n, d ) -> d.editingTitle on
   foldItem : ( e, n, d, r ) -> d.toggleExpanded()
+  deleteIfEmpty : ( e, n, d, r ) -> 
+    return -1 if d.title().length
+    a = d.parent().children()
+    b = a[a.indexOf(d)-1]
+    d._delete()
+    if b then b.active(on).editingTitle(on)
+  deleteIfEmptyAndStayOnPosition : ( e, n, d, r ) ->
+    return -1 if d.title().length
+    a = d.parent().children()
+    b = a[a.indexOf(d)+1]
+    d._delete()
+    if b then b.active(on).editingTitle(on)
   foldAll : ( e, n, d, r ) ->
     f = ( x )->
       x.expanded off
@@ -46,9 +60,9 @@ SimpleNote::options =
   hotkeys : [
     # manouvering
     [ 'ctrl j', null, 'nextItem' ]
-    [ 'down', null, 'nextItem' ]
+    # [ 'down', null, 'nextItem' ]
     [ 'ctrl k', null, 'prevItem' ]
-    [ 'up', null, 'prevItem' ]
+    # [ 'up', null, 'prevItem' ]
     [ 'shift up', null, 'zoomOut' ]
     [ 'shift down', '.title', 'zoomIn' ]
     [ 'ctrl i', '.title', 'zoomIn' ]
@@ -71,4 +85,6 @@ SimpleNote::options =
     [ 'shift enter', '.title', 'editNotes' ]
     [ 'shift enter', '.notes>div', 'editTitle' ]
     [ 'ctrl enter', null, 'addChild' ]
+    [ 'backspace', '.title', 'deleteIfEmpty' ]
+    [ 'del', '.title', 'deleteIfEmptyAndStayOnPosition' ]
   ]

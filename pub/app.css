@@ -4,7 +4,7 @@
 body {
   background-color: #e6e6e6;
   color: #333333;
-  overflow: hidden;
+  overflow: scroll;
 }
 a {
   color: #333333;
@@ -194,9 +194,6 @@ i[class^="icon-check"]:before {
 #fixedTopCentered #search > ul li .icon-star-half-full {
   float: left;
 }
-#fixedTopCentered #search > ul li:hover {
-  color: #00d0ff;
-}
 #fixedTopCentered #search > ul .icon-tag {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -236,10 +233,12 @@ i[class^="icon-check"]:before {
   margin: 3.3em auto 2em auto;
   min-height: 400px;
 }
+#notebook > div {
+  margin-left: 2em;
+  margin-right: 2em;
+}
 #notebook #topActions {
-  margin-top: .5em;
-  margin-right: 1.8em;
-  margin-bottom: -0.5em;
+  padding-top: .5em;
   text-align: right;
 }
 #notebook #topActions i:before {
@@ -265,7 +264,7 @@ i[class^="icon-check"]:before {
   display: none;
 }
 #notebook #sheet {
-  padding: 1em 2em;
+  padding: 1em 0em;
 }
 #notebook #sheet h1 {
   font-size: 1.5em;

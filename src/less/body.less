@@ -32,7 +32,7 @@
 body {
   background-color: darken( @bright, 10% );
   color: @dark;
-  overflow: hidden;
+  overflow: scroll;
 }
 a {
   color : @dark;
@@ -137,7 +137,7 @@ i[class^="icon-check"]:before{
     a {
       text-decoration: none;
     }
-  }
+  } 
   #selectOptions {
     background: @highlight;
     > div {
@@ -199,9 +199,6 @@ i[class^="icon-check"]:before{
           float: left;
         }
       }
-      li:hover {
-        color: @highlight;
-      }
       .icon-tag {
         .rounded-corners( 0 );
         padding: 0;
@@ -233,11 +230,13 @@ i[class^="icon-check"]:before{
   color: @dark;
   margin: 3.3em auto 2em auto;
   min-height: 400px;
+  > div {
+    margin-left: 2em;
+    margin-right: 2em;
+  }
   
   #topActions {
-    margin-top: .5em;
-    margin-right: 1.8em;
-    margin-bottom: -.5em;
+    padding-top: .5em;
     text-align: right;
     i:before {
       margin-right: .2em;
@@ -262,7 +261,7 @@ i[class^="icon-check"]:before{
     }
   }
   #sheet {
-    padding: 1em 2em;
+    padding: 1em 0em;
     h1 {
       font-size: 1.5em;
       margin: 0;

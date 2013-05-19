@@ -24,11 +24,13 @@
     
     <!-- BOOKMARKS DROPDOWN -->
     
-    <ul id="bookmarks" data-bind="foreach:bookmarkedNodes">
-      <li data-bind="click:open">
-        <i class="icon-star-half-full" title="remove bookmark" data-bind="click:toggleBookmarked"></i>
-        <span data-bind="html:title"></span>
-        <i class="icon-star"></i>
+    <ul id="bookmarks" data-bind="foreach:bookmarks">
+      <li>
+        <i class="icon-star-half-full" title="remove bookmark" data-bind="click:$root.toggleBookmark"></i>
+        <a data-bind="attr:{href:href}">
+          <span data-bind="html:title"></span>
+          <i class="icon-star"></i>
+        </a>
       </li>
     </ul>
     
@@ -85,7 +87,7 @@
     <span class="gt">&nbsp;&gt;&nbsp;</span><a data-bind="attr:{'href':'#'+$data.id}, html: $data.title" href=""></a>
   </div>
   
-  <div id="topActions" data-bind="visible: ($data!==$root.root)&&(!$data.readonly)">      
+  <div id="topActions" data-bind="if:($data!==$root.root)&&(!$data.readonly)">      
     <span class="tags" data-bind="foreach:tags,click:$data.editTags">
       <i class="icon-tag" data-bind="text:name,attr:{title:name},style:{background:color,color:fgColor}"></i>
     </span>
@@ -97,14 +99,14 @@
     <i class="icon-time" title="deadline" data-bind="click:$data.editDeadline,text:$data.deadlineDisplay()"></i>
     <i class="icon-trash" title="delete" data-bind="click: $data.remove"></i>
     <i class="icon-folder-open-alt" title="archive" data-bind="click: $data.archive"></i>
-    <i title="bookmark" data-bind="css:{'icon-star' : $data.bookmarked, 'icon-star-empty' : !$data.bookmarked() }, click:$data.toggleBookmarked"></i>
+    <i title="bookmark" data-bind="css:{'icon-star' : $root.activeBookmark, 'icon-star-empty' : !$root.activeBookmark() }, click:$root.toggleBookmark"></i>
   </div>
   
   <!-- SHEET -->
   
   <div id="sheet" class="node">
-    <div class="body" data-bind="visible: $data!==$root.root" >
-      <div data-bind="if:$root.options.appearance.title">
+    <div class="body" data-bind="if: $data!==$root.root" >
+      <div data-bind="if:$root.options.appearance.titles">
         <div data-bind="ifnot:$data.readonly">
           <h1 data-bind="editable:$data.title,hasfocus:$data.editingTitle"></h1>
         </div>
@@ -121,7 +123,7 @@
     </div>
     <div data-bind="ifnot:$data.readonly">
       <div class="topChildren children" data-bind="sortable:{template:'nodeTemplate',data:children,connectClass:'children',options:{handle:'.bullet'}}"></div>
-      <span class="addChild" data-bind="click:$root.addNodeHere">+&nbsp;add something</span>
+      <span class="addChild" data-bind="click:$root.addNodeTo">+&nbsp;add something</span>
     </div>
     <div data-bind="if:$data.readonly">
       <div class="topChildren readonly children" data-bind="template:{name:'readonlyNodeTemplate',foreach:children}"></div>

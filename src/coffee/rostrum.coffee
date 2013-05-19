@@ -88,7 +88,12 @@ hash = do ->
   $( window ).on "hashchange", s
   h.subscribe (v) -> location.hash = v
   s(); h
-    
+
+title = window.tit = obs {
+  read: -> hash(); document.title.replace 'simpleNote | ', ''
+  write: (v)-> document.title = 'simpleNote | ' + v
+}
+  
 # get intersecting elements of two arrays    
 intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
 

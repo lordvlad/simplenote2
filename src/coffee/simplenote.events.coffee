@@ -15,7 +15,6 @@ keys =
     DEL       : 46
 
 SimpleNote::attachClicks = ->
-  console.log @
   
   [ model, $view, $doc ] = [ @, @view, @doc ]
   
@@ -131,11 +130,13 @@ SimpleNote::attachHotkeys = ->
       hotkeybits[ keysToBits( h[0] ) ] = [[ h[1],h[2] ]]
     else
       hotkeybits[ keysToBits( h[0] ) ].push [ h[1],h[2] ]
+      
   @doc.on 'keydown.hotkeys', ( e )->
     if h = hotkeybits[ eventToBits( e ) ]
       $t = $ e.target
       if not $t[0].nodeType then $t = $view
       for k in h
         if not k[0] or $t.is(k[0])
-          stop e
-          model.functions[ k[1] ]?( e, $t, ko.dataFor( $t[0] ) , ko.contextFor( $t[0] ).$root )
+          if model.functions[ k[1] ]
+            if model.functions[ k[1] ]?( e, $t, ko.dataFor( $t[0] ) , ko.contextFor( $t[0] ).$root ) isnt -1
+              stop e
