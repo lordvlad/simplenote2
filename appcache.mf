@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# rev 1681
+# rev 1698
 
 # BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee

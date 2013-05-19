@@ -23,14 +23,14 @@ SimpleNote::functions =
   editNotes : ( e, n, d ) -> d.expanded(on).editingNote(on)
   editTitle : ( e, n, d ) -> d.editingTitle on
   foldItem : ( e, n, d, r ) -> d.toggleExpanded()
-  deleteIfEmpty : ( e, n, d, r ) -> 
-    return -1 if d.title().length
+  deleteIfEmpty : ( e, n, d, r ) ->
+    return -1 if n.html().length
     a = d.parent().children()
     b = a[a.indexOf(d)-1]
     d._delete()
     if b then b.active(on).editingTitle(on)
   deleteIfEmptyAndStayOnPosition : ( e, n, d, r ) ->
-    return -1 if d.title().length
+    return -1 if n.html().length
     a = d.parent().children()
     b = a[a.indexOf(d)+1]
     d._delete()

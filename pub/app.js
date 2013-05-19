@@ -809,7 +809,7 @@
     deleteIfEmpty: function(e, n, d, r) {
       var a, b;
 
-      if (d.title().length) {
+      if (n.html().length) {
         return -1;
       }
       a = d.parent().children();
@@ -822,7 +822,7 @@
     deleteIfEmptyAndStayOnPosition: function(e, n, d, r) {
       var a, b;
 
-      if (d.title().length) {
+      if (n.html().length) {
         return -1;
       }
       a = d.parent().children();
