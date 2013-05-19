@@ -1469,7 +1469,7 @@
       });
     };
     return $(function() {
-      var _base, _ref1;
+      var lastElement, _base, _ref1;
 
       model.doc = $(document);
       model.win = $(window);
@@ -1494,7 +1494,9 @@
           }
         }
       }
-      return null;
+      null;
+      (function() {})();
+      return lastElement = false;
     });
   })(jQuery, "body", window.note = SimpleNote.activeInstance = new SimpleNote());
 

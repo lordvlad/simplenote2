@@ -135,11 +135,15 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  <a href="#help-sync" data-bind="text:sync.name"></a>&nbspis&nbsp<a href="#options" data-bind="html:sync.status,style:{color:sync.statusColor}">not set up</a>
-  &nbsp;|&nbsp;
+  <span>
+    <a href="#help-sync" data-bind="text:sync.name"></a>
+    is
+    <a href="#options" data-bind="html:sync.status,style:{color:sync.statusColor}">not set up</a>
+  </span><span>
   need <a href="#help">help</a>?
-  &nbsp;|&nbsp;
+  </span><span>
   wanna know <a href="#about">more</a>?
+  </span>
 </div>
 
 <!-- MENUS -->

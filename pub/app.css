@@ -299,6 +299,13 @@ i[class^="icon-check"]:before {
   font-size: 80%;
   margin-bottom: 1em;
 }
+#footer span {
+  white-space: nowrap;
+}
+#footer span:not(:last-child):after {
+  content: " | ";
+  white-space: normal;
+}
 #curtain {
   z-index: 999;
   width: 100%;

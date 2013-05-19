@@ -295,6 +295,13 @@ i[class^="icon-check"]:before{
   text-align: center;
   font-size: 80%;
   margin-bottom: 1em;
+  span {
+    white-space: nowrap;
+  }
+  span:not(:last-child):after {
+    content: " | ";
+    white-space: normal;
+  }
 }
 
 #curtain {

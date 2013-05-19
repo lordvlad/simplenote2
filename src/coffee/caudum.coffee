@@ -40,3 +40,6 @@ do ( $ = jQuery, view = "body", model = window.note = SimpleNote.activeInstance 
     # focus first item
     model.nodes()[0]?.active?(on).editingTitle?(on)
     null
+    # remove pipes from last item in line
+    do ->
+    lastElement = false;
