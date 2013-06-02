@@ -32,9 +32,10 @@
 body {
   background-color: darken( @bright, 10% );
   color: @dark;
-  overflow: scroll;
+  overflow: scroll; 
 }
-a {
+a, .a {
+  cursor: pointer;
   color : @dark;
   text-decoration: underline;
   &:hover {
@@ -173,6 +174,9 @@ i[class^="icon-check"]:before{
       }
       .icon-tags {
         right: 4em;
+      }
+      input {
+        background: transparent;
       }
       /* switch the magnifying glass for a cross */
       &:hover .icon-search:before {
@@ -367,4 +371,13 @@ i[class^="icon-check"]:before{
 
 .options ul, ul.options {
   list-style-type: none;
+}
+.flat {
+  .alert, .note, #fixedTopCentered #search, #notebook {
+    .rounded-corners( 0 );
+    box-shadow: none;
+  }
+  #fixedTopCentered #search{
+    border-bottom: solid 10px darken( @bright, 10% );
+  }
 }

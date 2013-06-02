@@ -55,6 +55,7 @@ SimpleNote::options =
     colors : obs on
   appearance :
     titles : obs on
+    flatUI   : obs off
   dropbox : 
     sync : obs off
   hotkeys : [
@@ -88,3 +89,4 @@ SimpleNote::options =
     [ 'backspace', '.title', 'deleteIfEmpty' ]
     [ 'del', '.title', 'deleteIfEmptyAndStayOnPosition' ]
   ]
+  

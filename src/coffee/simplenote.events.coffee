@@ -15,6 +15,7 @@ keys =
     DEL       : 46
 
 SimpleNote::attachClicks = ->
+
   
   [ model, $view, $doc ] = [ @, @view, @doc ]
   
@@ -52,7 +53,7 @@ SimpleNote::attachClicks = ->
     return if not ( name = $(this).prev().val() )
     $tagsMenu.data( 'node' ).tags.push new Tag( { name: name } )
     $(this).next().val( '' ).focus()
-    if window.innerWidth < maxScreenWidthForMobile then $tagsMenu.trigger 'dismiss'
+    if window.innerWidth < MAXSCREENWIDTHFORMOBILE then $tagsMenu.trigger 'dismiss'
   )
   .on( 'keydown.input', 'input', (e)->
     $tagsMenu.trigger( 'dismiss' ) if e.which is keys.ESC
@@ -131,7 +132,7 @@ SimpleNote::attachHotkeys = ->
     else
       hotkeybits[ keysToBits( h[0] ) ].push [ h[1],h[2] ]
       
-  @doc.on 'keydown.hotkeys', ( e )->
+  @$doc.on 'keydown.hotkeys', ( e )->
     if h = hotkeybits[ eventToBits( e ) ]
       $t = $ e.target
       if not $t[0].nodeType then $t = $view
@@ -140,3 +141,9 @@ SimpleNote::attachHotkeys = ->
           if model.functions[ k[1] ]
             if model.functions[ k[1] ]?( e, $t, ko.dataFor( $t[0] ) , ko.contextFor( $t[0] ).$root ) isnt -1
               stop e
+
+  @$doc.on 'click', 'i.icon-remove', (e)->
+    $model.trigger 'remove', e.target.nodeType and ko.dataFor( e.target )
+  
+  $model.on 'remove', ->
+    console.log arguments

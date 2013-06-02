@@ -1,60 +1,78 @@
-###
-@class simpleNote
-###
-
 class SimpleNote
-  @instances : []
+  
+  # static properties
+  @activeInstance : null
+  @syncModules = {}
+  @syncModulesCount = null
+  
+  
+  # constructor 
   constructor : ( element ) ->
-    SimpleNote.instances.push @
-    # simple variables
+    @$ = $ @
+    SimpleNote.activeInstance = @
+    SimpleNote.syncModulesCount = SimpleNote.syncModules.length
+    
+    # event listeners
+    @$.on 'initialized', => $win.trigger 'appInitialized', @
+    @$.on 'appsetupready', => 
+    @$.on 'ready', => $win.trigger 'appReady', @
+    @$.on 'online, offline', => console.log( 'app on/offline', arguments )
+
+    # plain instance properties
     @timeout = null
     @revived = false
     @interval = null
     @root = null
     @archive = null
-    # observable variables
+    # observable instance properties
     @searchFilter = obs ""
     @editingFilter = obs false
-    @current = obs null    
+    @currentNode = obs null    
     @alerts = obs []
     @notifications = obs []    
-    # observable Arrays
     @nodes = obs []
     @tags = obs []
     @bookmarks = obs []
-    # computed variables
+    
+    # create observable for selectedNodes
+    @selectedNodes = obs => @nodes.filter 'selected'
+    
+    # set up search filter
     @realFilter = obs( =>
       f = @searchFilter().split(/\s+/)
-      return {tags:[],times:[],words:[]} if  not f[0] or f[0]?[0] is '!'
+      return {tags:[],times:[],words:[]} if not f[0] or f[0]?[0] is '!'
       {
-        tags : f.filter((n)-> n.match /^#/).map((n)->n.replace(/#/,''))
+        tags : f.filter((n)-> n.match /^#/).map((n)->n.replace(//,''))
         times : f.filter((n)-> n.match /^@/).map((n)->n.replace(/@/,''))
         words : f.filter((n)-> n.match /^[^#@]/)
       }
     ).extend({ debounce: 500 })
-    @selectedNodes = obs => @nodes.filter 'selected'
+    
+    # create breadcrumbs
     @breadcrumbs = obs => 
-      a = if @options.appearance.titles() then "" else @current()
-      @current()?.parents?().concat( a ) or []
+      a = if @options.appearance.titles() then "" else @currentNode()
+      @currentNode()?.parents?().concat( a ) or []
+      
     # subscribe to location hash changes    
     hash.subscribe ( id ) =>
-      @current ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
-      @current()?.editingNote on
-      title( @current().title() )
+      @currentNode ( id and id.length and @nodes.find("id", id) ) or ( id and id.length and hash( '' ) and @root ) or @root
+      @currentNode()?.editingNote on
+      title( @currentNode().title() )
 
+      
+    
   # revive from JSON data
   # @param {Object} data json object containting all needed data
+  ###
   revive : =>
-    @root = store.get( 'root' ) ? new Node( { id : 'root', title : 'home' } )
-    if options = store.get( 'options' )
-      koMap @options, options
-    # update current viewed node from location.hash
-    hash.valueHasMutated()
-    delay =>
-      store.get( 'tags' )
-      store.get( 'bookmarks' )
-      @archive = store.get( 'archive' ) ? new Node( { id : 'archive', title : 'archive' } )
-    @revived = true
+    @sync.load ( err, data ) =>
+      throw err if err
+      @root = data.root
+      @archive = data.archive
+      koMap @options, data.options
+      @revived = true
+      # update current viewed node from location.hash
+      hash.valueHasMutated()
     @
   
   # saves own data to localStorage
@@ -69,6 +87,9 @@ class SimpleNote
       if @archive
         store.set 'archive', @archive.toJSON()
     @
+  ###
+
+  # instance functions
   
   # functions on self
   startPeriodicalSave : ->
@@ -117,7 +138,7 @@ class SimpleNote
   clearSearchFilter :=> @searchFilter ''
   
   # get build information
-  getBuild : =>
+  getBuild : ->
     $.getJSON 'build.json', ( d ) =>
       @build = d
 

@@ -166,7 +166,7 @@ do ->
           notes : """
             <ul class='options'>
               <li><input type='checkbox' data-bind='checkbox:options.appearance.titles' />show current title on sheet instead of breadcrumbs</li>
-
+              <li><input type='checkbox' data-bind='checkbox:options.appearance.flatUI' />use flat UI theme</li>
             </ul>
           """
         },{
@@ -180,16 +180,21 @@ do ->
             </ul>
           """
         },{
-          id : 'options-dropbox'
-          title : 'dropbox sync'
+          id : 'options-storage'
+          title : 'data storage options'
           notes : """
             <div class='options'>
-            <p>your dropbox account is <span data-bind='html:connection.dropbox.statusText,style:{color:connection.dropbox.statusColor}'</span></p>
+            <h3>localStorage</h3>
+            <p>localStorage is the limited space simplenote has reserved within your browser. this will allow you to save notes across different tabs, but not across different browsers, nor across different devices. it will allow you to work offline, though, and is thus an essential part of simplenote. but because the space is limited, simplenote won't save any attachments ( lets say, a picture ) in the localStorage. therefore, you won't be able to add attachments when you're not connected to a storage service. you may be able to view attachments offline, if your browser cached it, but i won't guarantee that.</p>
+            <p>if you decide to connect simplenote to a storage service of your choice ( and well, MY choice too ), you will be able to upload attachments and view them right out of simplenote as long as you're online and connected to this service. if you want to change your online storage service, please make sure to download all your attachments and then upload them to your new provider.</p>
+            <h3>Dropbox</h3>
+            <div class='options'>
+              <p>your dropbox account is <span data-bind='html:syncModules.dropbox.statusText,style:{color:syncModules.dropbox.statusColor}'</span></p>
             <p data-bind='ifnot:connection.dropbox.status'>
-              <a href='javascript:;' data-bind='click:connection.dropbox.connect'><i class='icon-cloud'></i>&nbsp;connect your dropbox</a>
+              <span class='a dropbox' href='javascript:;' data-bind='click:syncModules.dropbox.connect'><i class='icon-cloud'></i>&nbsp;connect your dropbox</span>
             </p>
             <p data-bind='if:connection.dropbox.status'>
-              <a href='javascipt:;' data-bind='click:connection.dropbox.disconnect'><i class='icon-cloud'></i>&nbsp;disconnect your dropbox</a>
+              <span class='a' data-bind='click:sync.disconnect'><i class='icon-cloud'></i>&nbsp;disconnect your dropbox</span>
             </p>
             </div>
           """
@@ -215,8 +220,6 @@ do ->
     n.readonly = on
     addconstructor c for c in n.children if n.children
 
-  do ( $ = jQuery, view = 'body', model = SimpleNote.activeInstance ) ->
-    addconstructor page for page in specialPages
-    $ ->
-      JSON.parse( JSON.stringify( specialPages ), revive )
+  addconstructor page for page in specialPages
+  $( window ).on( 'appReady', -> JSON.parse( JSON.stringify( specialPages ), revive ) )
  

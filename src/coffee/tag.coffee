@@ -71,7 +71,8 @@ class Bookmark
       new Bookmark
     
   constructor : ( options ) ->
-    @model = SimpleNote.activeInstance
+    @model = SimpleNote.actimd
+    e
     @title = options?.name or document.title.replace 'simpleNote | ', ''
     @href = options?.name or location.href
     @model.bookmarks.push @
@@ -83,5 +84,8 @@ class Bookmark
       title : @title
       href : @href
     }
+    
+    
+    
 revive.constructors[ 'Tag' ] = Tag
 revive.constructors[ 'Bookmark' ] = Bookmark

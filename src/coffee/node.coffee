@@ -4,7 +4,6 @@
 class Node
   constructor : ( options ) ->
     # simple variables
-    @model = SimpleNote.activeInstance
     @id = options?.id || uuid()
     @originalParent = null
     # observable variables      
@@ -15,7 +14,7 @@ class Node
     @selected = obs false
     @realExpanded = obs false
     @expanded = obs {
-      read : => if window.innerWidth < maxScreenWidthForMobile then false else @realExpanded()
+      read : => if window.innerWidth < MAXSCREENWIDTHFORMOBILE then false else @realExpanded()
       write : @realExpanded
     }
     @listStyleType = obs []
@@ -24,19 +23,19 @@ class Node
     # observable arrays  
     @children = obs []
     @tags = obs []
-    @tags.extend pickFrom : { array: @model.tags, key : "name" }
+    @tags.extend pickFrom : { array: vm.tags, key : "name" }
     @files = obs []
     # computed variables
     @visible = obs =>
-      {tags,words} = @model.realFilter()
-      @model.current is @ or ( !!@children.filter( 'visible' ).length ) or (( if tags.length then !!intersect( @tags.map('name'), tags ).length else yes ) and ( if words.length then !!(@title()+' '+@notes()).match( new RegExp( words.join('|'), 'i' ) ) else yes ))
+      {tags,words} = vm.realFilter()
+      vm.current is @ or ( !!@children.filter( 'visible' ).length ) or (( if tags.length then !!intersect( @tags.map('name'), tags ).length else yes ) and ( if words.length then !!(@title()+' '+@notes()).match( new RegExp( words.join('|'), 'i' ) ) else yes ))
 
       
     @active = obs {
       read: active,
       write : (v) => 
         if v is active() or v is off then return active v
-        node.active off for node in @model.nodes()
+        node.active off for node in vm.nodes()
         active on
         @editingTitle on
       }
@@ -46,7 +45,7 @@ class Node
     @bullet = obs => ( ( @hasNote() or @hasChildren() ) and ( ( not @expanded() and Node.bullets.right ) or( @expanded() and Node.bullets.down ) ) ) or Node.bullets.round
     @forcedparent = obs null
     @parent = obs {
-      read : => @forcedparent() || @model.nodes.find( (n) => n.children.has( @ ) )
+      read : => @forcedparent() || vm.nodes.find( (n) => n.children.has( @ ) )
       write : (v) => @forcedparent v
       }
     @parents = obs =>
@@ -77,7 +76,7 @@ class Node
       ).extend({throttle:1})
     
     # push self to simplenote nodes
-    @model.nodes.push @
+    vm.nodes.push @
     Node.nodes.push @
     # push self to parent
     if options?.parent
@@ -95,15 +94,15 @@ class Node
     if confirm 'really delete this node?'
       @_delete()
   _delete :=>
-    if ( @ is @model.current() ) then @model.current( @parent() )
+    if ( @ is vm.current() ) then vm.current( @parent() )
     @parent().children.remove @
-    @model.nodes.remove @
-    @model.save()
+    vm.nodes.remove @
+    vm.save()
   alarm : =>
-    @model.save()
-    @model.notifications.push @deadline() + '\n' + @title()
+    vm.save()
+    vm.notifications.push @deadline() + '\n' + @title()
     @deadline null
-    @model.pop.play?()
+    vm.pop.play?()
     
   # toggle some switches
   makeActive : =>
@@ -111,7 +110,7 @@ class Node
   toggleSelected : =>
     @selected !@selected()
   toggleExpanded : =>
-    return @open() if ( window.innerWidth < maxScreenWidthForMobile ) 
+    return @open() if ( window.innerWidth < MAXSCREENWIDTHFORMOBILE ) 
     return if ( !@hasNote() and !@hasChildren() )
     @expanded !@expanded()
   toggleBookmarked : =>
@@ -120,10 +119,10 @@ class Node
     @selected off
     @originalParent = @parent()
     @parent().children.remove @
-    @model.archive.children.push @
+    vm.archive.children.push @
   editTags : ( n, e ) =>
     @active on
-    @model.$tagsMenu.trigger 'call', [ n, e ]
+    vm.$tagsMenu.trigger 'call', [ n, e ]
   editDeadline : =>
     @deadline (prompt 'set a deadline', new Date()) or null
   editListType : =>
@@ -148,7 +147,7 @@ class Node
   @fromJSON : ( data ) ->
     delete data.__constructor
     instance = new Node()
-    koMap instance, data
+    ko.map instance, data
     
   # STATIC parser functions
   @parseNote : (v) -> v.replace /(<br>|\n|\r)$/i, ""

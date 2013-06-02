@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# rev 1735
+# rev 2427
 
 # BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee
@@ -21,29 +21,23 @@ CACHE MANIFEST
 # THEN less TO pub/app.css
 
 CACHE:
-appcache.mf
 favicon.ico
 index.html
 build.json
 pub/app.min.js
+pub/app.js
 pub/app.css
 lib/normalize/normalize.min.css
 lib/fontawesome/font-awesome.min.css
 lib/fontawesome/fontawesome-webfont.woff?v=3.1.01
 lib/fontawesome/fontawesome-webfont.ttf?v=3.1.01
-lib/jquery/jquery-1.9.1.js
-lib/jqueryui/jquery-ui-1.10.2.custom.min.js
-lib/contextMenu/jquery.contextMenu.css
+lib/jquery/jquery+ui.js
 lib/knockout/knockout.js
-lib/knockout/knockout.sortable.js
 lib/dropbox/dropbox.js
 lib/moment/moment.js
+lib/wre/wre.knockout.js
+lib/wre/wre.jquery.js
 lib/wre/wre.date.js
-lib/wre/wre.findNextAll.js
-lib/wre/wre.knockout.extenders.js
-lib/wre/wre.knockout.filter.js
-lib/wre/wre.knockout.bindingHandlers.js
-lib/wre/wre.jquery.inject.js
 tmpl/nodeTemplate.html
 tmpl/bodyTemplate.html
 tmpl/readonlyNodeTemplate.html

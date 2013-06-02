@@ -6,11 +6,14 @@ body {
   color: #333333;
   overflow: scroll;
 }
-a {
+a,
+.a {
+  cursor: pointer;
   color: #333333;
   text-decoration: underline;
 }
-a:hover {
+a:hover,
+.a:hover {
   color: #00d0ff;
 }
 .notes table {
@@ -167,6 +170,9 @@ i[class^="icon-check"]:before {
 }
 #fixedTopCentered #search > div .icon-tags {
   right: 4em;
+}
+#fixedTopCentered #search > div input {
+  background: transparent;
 }
 #fixedTopCentered #search > div:hover .icon-search:before {
   content: "\f00d";
@@ -372,6 +378,20 @@ i[class^="icon-check"]:before {
 .options ul,
 ul.options {
   list-style-type: none;
+}
+.flat .alert,
+.flat .note,
+.flat #fixedTopCentered #search,
+.flat #notebook {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.flat #fixedTopCentered #search {
+  border-bottom: solid 10px #e6e6e6;
 }
 @media only screen and (min-width: 480px) {
   .node:not(#sheet) .body:hover {

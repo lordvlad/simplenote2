@@ -1,50 +1,26 @@
 <!DOCTYPE HTML>
-<html  manifest="appcache.mf">
+<html manifest="appcache.mf">
   <head>
-    <!-- title -->
     <title>simpleNote</title>
-    <!-- meta data -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-    <!-- favicon -->
     <link rel="icon" type="image/ico" href="favicon.ico" />
-      <!-- library styles -->
     <link rel="stylesheet" href="lib/normalize/normalize.min.css" />
-    <link rel="stylesheet" href="lib/contextMenu/jquery.contextMenu.css" />
     <link rel="stylesheet" href="lib/fontawesome/font-awesome.min.css" />
-    <!-- own stylesheets -->
     <link rel="stylesheet" href="pub/app.css" />
   </head>
-  <body>
-    <div id="curtain"><div><i class="icon-cog icon-spin"></i></div></div>
+  <body data-bind="css:{'flat':options.appearance.flatUI}">
+    <div id="curtain"><div><i class="icon-cog icon-spin" title="loading. if this takes too long, please let me know, because probably, something's wrong. waldemar.reusch@googlemail.com"></i></div></div>
     <div data-bind="template:'bodyTemplate'"></div>
-    
-    <!-- libraries' scripts -->
-    <script src="lib/jquery/jquery-1.9.1.js"></script>
-    <script src="lib/jqueryui/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="lib/jquery/jquery+ui.js"></script>
     <script src="lib/knockout/knockout.js"></script>
-    <script src="lib/knockout/knockout.sortable.js"></script>
     <script src="lib/dropbox/dropbox.js"></script>
     <script src="lib/moment/moment.js"></script>
-    <!-- my own library of library extensions -->
+    <script src="lib/wre/wre.jquery.js"></script>
     <script src="lib/wre/wre.date.js"></script>
-    <script src="lib/wre/wre.findNextAll.js"></script>
-    <script src="lib/wre/wre.knockout.bindingHandlers.js"></script>
-    <script src="lib/wre/wre.knockout.extenders.js"></script>
-    <script src="lib/wre/wre.knockout.filter.js"></script>
-    <script src="lib/wre/wre.jquery.inject.js"></script>
-    <!-- inject knockout templates -->
-    <script type="text/html" id="optionsTemplate"><div data-bind="html:notes"></div></script>
-    <script>
-      $.injectScript(
-        {src: "tmpl/nodeTemplate.html", type:"text/html", id:"nodeTemplate"},
-        {src: "tmpl/readonlyNodeTemplate.html", type:"text/html", id:"readonlyNodeTemplate"},
-        {src: "tmpl/bodyTemplate.html", type:"text/html", id:"bodyTemplate"}
-      );
-    </script>
-    <!-- own scripts -->
-    <script src="pub/app.min.js" /></script>
+    <script src="lib/wre/wre.knockout.js"></script>
+    <script src="pub/app.js" /></script>
   </body>
 </html>

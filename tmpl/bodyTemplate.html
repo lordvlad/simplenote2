@@ -4,7 +4,7 @@
   
   <div id="search" data-bind="visible: !$root.selectedNodes().length">
     <div>
-      <i class="icon-search" title="clear" data-bind="click:clearSearchFilter"></i>
+      <i class="icon-search" title="clear" data-bind="$click:clearSearchFilter"></i>
       <input type="text" placeholder="search..." data-bind="value:searchFilter,valueUpdate:'afterkeydown',hasfocus:editingFilter"/>
       <i class="icon-tags" title="tags"></i>
       <i class="icon-star" title="bookmarks"></i>
@@ -66,20 +66,20 @@
   
   <div data-bind="foreach: { data: alerts, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="alert">
       <span data-bind="html:$data"></span>
-      <i class="icon-remove" title="close" data-bind="click:$root.removeAlert"></i>
+      <i class="icon-remove" title="close"></i>
   </div></div>
   
   <!-- NOTIFICATIONS -->
   
   <div data-bind="foreach: { data: notifications, afterAdd: fadeIn, beforeRemove: fadeOut }"><div class="note">
       <span data-bind="html:$data"></span>
-      <i class="icon-remove" title="close" data-bind="click:$root.removeNotification"></i>
+      <i class="icon-remove" title="close"></i>
   </div></div>
 </div>
 
 <!-- NOTEBOOK -->
 
-<div id="notebook" data-bind="with:current">
+<div id="notebook" data-bind="with:currentNode">
 
   <!-- HEADER -->
   
@@ -138,7 +138,9 @@
   <span>
     <a href="#help-sync" data-bind="text:sync.name"></a>
     is
-    <a href="#options" data-bind="html:sync.status,style:{color:sync.statusColor}">not set up</a>
+    <a href="#options" data-bind="html:sync.statusText,style:{color:sync.statusColor}">not set up</a>
+  </span><span>
+    <span class="a" data-bind="click:sync.save">save now</span>
   </span><span>
   need <a href="#help">help</a>?
   </span><span>
