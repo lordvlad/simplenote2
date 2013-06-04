@@ -9,7 +9,16 @@
 @maxScreenWidthForMobile : 480px;
 
 /* function declarations */
-
+.background-gradient ( @position: 0% ) {background: #00d0ff;
+  background: @highlight;
+  background: -moz-linear-gradient(left, @highlight 0%, @highlight (@position - 1%), @bright (@position), @bright 100%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,@highlight), color-stop((@position - 1%),@highlight), color-stop((@position),@bright), color-stop(100%,@bright));
+  background: -webkit-linear-gradient(left, @highlight 0%,@highlight (@position - 1%),@bright (@position),@bright 100%);
+  background: -o-linear-gradient(left, @highlight 0%,@highlight (@position - 1%),@bright (@position),@bright 100%);
+  background: -ms-linear-gradient(left, @highlight 0%,@highlight (@position - 1%),@bright (@position),@bright 100%);
+  background: linear-gradient(to right, @highlight 0%,@highlight (@position - 1%),@bright (@position),@bright 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@highlight', endColorstr='@bright',GradientType=1 );
+}
 .rounded-corners (@radius: 5px) {
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
@@ -137,6 +146,36 @@ i[class^="icon-check"]:before{
     }
     a {
       text-decoration: none;
+    }
+    &.busy-10 {
+      .background-gradient( 10% );
+    }
+    &.busy-20 {
+      .background-gradient( 20% );
+    }
+    &.busy-30 {
+      .background-gradient( 30% );
+    }
+    &.busy-40 {
+      .background-gradient( 40% );
+    }
+    &.busy-50 {
+      .background-gradient( 50% );
+    }
+    &.busy-60 {
+      .background-gradient( 60% );
+    }
+    &.busy-70 {
+      .background-gradient( 70% );
+    }
+    &.busy-80 {
+      .background-gradient( 80% );
+    }
+    &.busy-90 {
+      .background-gradient( 90% );
+    }
+    &.busy-100 {
+      .background-gradient( 100% );
     }
   } 
   #selectOptions {
@@ -299,10 +338,10 @@ i[class^="icon-check"]:before{
   text-align: center;
   font-size: 80%;
   margin-bottom: 1em;
-  span {
+  span.b {
     white-space: nowrap;
   }
-  span:not(:last-child):after {
+  span.b:not(:last-child):after {
     content: " | ";
     white-space: normal;
   }

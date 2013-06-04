@@ -135,15 +135,16 @@
 <!-- FOOTER -->
 
 <div id="footer">
-  <span>
-    <a href="#help-sync" data-bind="text:sync.name"></a>
-    is
-    <a href="#options" data-bind="html:sync.statusText,style:{color:sync.statusColor}">not set up</a>
-  </span><span>
-    <span class="a" data-bind="click:sync.save">save now</span>
-  </span><span>
+  <span data-bind="with:sync">
+    <span class="b">
+      <a href="#help-sync" data-bind="text:name"></a>
+      <a href="#options" data-bind="html:statusText,style:{color:statusColor}">not set up</a>
+    </span><span>
+      <span class="a b" data-bind="click:save">save now</span>
+    </span>
+  </span><span class="b">
   need <a href="#help">help</a>?
-  </span><span>
+  </span><span class="b">
   wanna know <a href="#about">more</a>?
   </span>
 </div>

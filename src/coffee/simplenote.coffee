@@ -3,20 +3,57 @@ class SimpleNote
   # static properties
   @activeInstance : null
   @syncModules = {}
-  @syncModulesCount = null
+  @liststyletypes = [
+    { name : "none", value : [] }
+    { name : "1, 2, 3", value: ["decimal"] }
+    { name : "1., 2., 3.", value: ["decimal","dot"] }
+    { name : "1.1, 1.2, 1.3", value : ["decimal","dot","add"] }
+    { name : "a, b, c", value: ["lowerAlpha"] }
+    { name : "(a), (b), (c)", value : ["lowerAlpha","dot"] }
+    { name : "A, B, C", value: ["upperAlpha"] }
+    { name : "(A), (B), (C)", value : ["upperAlpha","dot"] }
+  ]
   
   
   # constructor 
   constructor : ( element ) ->
     @$ = $ @
+    @syncModules = {}
     SimpleNote.activeInstance = @
-    SimpleNote.syncModulesCount = SimpleNote.syncModules.length
-    
+    for modulename, module of SimpleNote.syncModules
+      mod = new module( @ )
+      @syncModules[ modulename.toLowerCase() ] = mod
+      $( mod ).on
+        'statuschange' : => @$.trigger( 'modulestatuschange', [ modulename, this, mod, arguments[1], arguments[2] ] )
+        'connected' : => @$.trigger( 'moduleconnected', [ modulename, this, mod ] )
+        'disconnected' : => @$.trigger( 'moduledisconnected', [ modulename, this, mod ] )
+        'ready' : => @$.trigger( 'moduleready', [modulename, this, mod ] )
+        'loading' : => @$.trigger( 'moduleloading', [modulename, this, mod, arguments[1] ] )
+        'loaded' : => @$.trigger( 'moduleloaded', [modulename, this, mod].concat([].slice.call(arguments,1)) )
+        'saving' : => @$.trigger( 'modulesaving', [modulename, this, mod, arguments[1] ] )
+        'error' : => @$.trigger( 'moduleerror', [modulename, this, mod].concat([].slice.call(arguments,1)) )
     # event listeners
-    @$.on 'initialized', => $win.trigger 'appInitialized', @
-    @$.on 'appsetupready', => 
-    @$.on 'ready', => $win.trigger 'appReady', @
-    @$.on 'online, offline', => console.log( 'app on/offline', arguments )
+    @$.on
+      'ready': => $win.trigger 'appReady', @
+      'online': => log( 'app online', arguments )
+      'offline': => log( 'app offline', arguments )
+      'modulestatuschange' : (ev,name,vm,mod,to,from) => 
+        log "#{name} changed status from #{from} to #{to}"
+        if to is 1 and from is 0
+          vm.sync( mod )
+          mod.load?()
+      'moduleloading' : => 
+        log arguments[4]
+        if arguments[4] is 0
+          dimCurtains()
+      'moduleloaded' : =>
+        liftCurtains()
+        log arguments
+      'moduleerror' : =>
+        liftCurtains()
+        log arguments
+        
+      'appsetupready' : => @load()
 
     # plain instance properties
     @timeout = null
@@ -25,6 +62,7 @@ class SimpleNote
     @root = null
     @archive = null
     # observable instance properties
+    @sync = obs null
     @searchFilter = obs ""
     @editingFilter = obs false
     @currentNode = obs null    
@@ -60,6 +98,16 @@ class SimpleNote
       title( @currentNode().title() )
 
       
+  load : =>
+    @root = store.get 'root'
+    @archive = store.get 'archive'
+    ko.map @options, store.get 'options'
+    store.get 'bookmarks'
+    store.get 'tags'
+    @revived = true
+    # update current viewed node from location.hash
+    hash.valueHasMutated()
+    @$.trigger 'ready'
     
   # revive from JSON data
   # @param {Object} data json object containting all needed data
@@ -67,12 +115,6 @@ class SimpleNote
   revive : =>
     @sync.load ( err, data ) =>
       throw err if err
-      @root = data.root
-      @archive = data.archive
-      koMap @options, data.options
-      @revived = true
-      # update current viewed node from location.hash
-      hash.valueHasMutated()
     @
   
   # saves own data to localStorage
@@ -143,15 +185,5 @@ class SimpleNote
       @build = d
 
 # static values
-SimpleNote.liststyletypes = [
-  { name : "none", value : [] }
-  { name : "1, 2, 3", value: ["decimal"] }
-  { name : "1., 2., 3.", value: ["decimal","dot"] }
-  { name : "1.1, 1.2, 1.3", value : ["decimal","dot","add"] }
-  { name : "a, b, c", value: ["lowerAlpha"] }
-  { name : "(a), (b), (c)", value : ["lowerAlpha","dot"] }
-  { name : "A, B, C", value: ["upperAlpha"] }
-  { name : "(A), (B), (C)", value : ["upperAlpha","dot"] }
-]
     
 revive.constructors[ "SimpleNote" ] = SimpleNote

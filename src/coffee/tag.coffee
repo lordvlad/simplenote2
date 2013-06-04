@@ -7,7 +7,7 @@ class Tag
     return tag if tag = SimpleNote.activeInstance.tags.find 'id', data.id
     delete data.__constructor
     instance = new Tag()
-    koMap instance, data
+    ko.map instance, data
     
   constructor : ( options ) -> 
     @id = uuid()
@@ -18,7 +18,7 @@ class Tag
     @fgColor = obs => if $.Color( @color() ).lightness() < .33 then "white" else "black"
     
     @model.tags.push @
-    @model.save()
+    #@model.save()
   
   toJSON : =>
     {
@@ -31,7 +31,7 @@ class Tag
   edit : =>
     @name prompt("change name from #{@name()} to ...", @name()) or @name()
     @color prompt("change color from #{@color()} to ...", @color()) or @color()
-    @model.save()
+    #@model.save()
   
   remove : => 
     @_delete if confirm "really delete tag '#{@name()}'?"
@@ -56,7 +56,7 @@ class Bookmark
     return bm if bm = SimpleNote.activeInstance.bookmarks.find 'href', data.href
     delete data.__constructor
     instance = new Bookmark()
-    koMap instance, data
+    ko.map instance, data
   @active : obs(
     read: -> 
       hash()
@@ -76,7 +76,7 @@ class Bookmark
     @title = options?.name or document.title.replace 'simpleNote | ', ''
     @href = options?.name or location.href
     @model.bookmarks.push @
-    @model.save()
+    #@model.save()
     
   toJSON : =>
     {

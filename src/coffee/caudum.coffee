@@ -1,24 +1,24 @@
 $( window ).on
-  'noupdate' : ->
-    console.log 'appcache is bubbling'
   # pass online offline events to app
-  'online, offline' : -> $vm.trigger?.apply vm, arguments
+  'online' : -> $vm.trigger?( 'online' )
+  'offline' : -> $vm.trigger?( 'offline' )
   # while applicationCache is updating
   'appupdating' : ->
     $ -> $( '#curtain div' ).append( '.' )
   # when update is ready
   'appupdateready' : ->
-    console.log 'app update ready'
+    log 'app update ready'
     $ -> $( '#curtain div' ).append( '<br>new version available.<br>please wait a second, or reload<br>the page manually' )
     timeout.set 1000, -> location.reload()
   # when applicationcache is ready
   'appcacheready' : ->
-    console.log 'appCache is ready'
+    log 'appCache is ready'
     view = 'body'
     vm = new SimpleNote()
     
     # only for debugging purposes
     window.note = vm
+    window.SN = SimpleNote
   
     vm.activeBookmark = Bookmark.active
     vm.toggleBookmark = Bookmark.toggle
@@ -26,7 +26,6 @@ $( window ).on
     $vm = $ vm
     # jquery onload event
     $ ->
-      console.log @, arguments
       $.extend vm, 
         $doc  : $ document
         doc   : document
@@ -35,13 +34,12 @@ $( window ).on
         $view : $ view
         view  : $( view )[0]
         pop   : $( 'audio' )[0]
-            
+      
       ko.applyBindings vm, vm.view
       $vm.trigger 'appsetupready'
     null
   'appReady' : ->
-    console.log @
-    $( '#curtain' ).show(1).delay(1).fadeOut( 'slow' ) # i need to show and delay the curtain first, else it disappears instantly. bug?
+    liftCurtains()
     
     # vm.init()
     # some fixed jquery elements
@@ -57,7 +55,7 @@ $( window ).on
     
     # try
     # catch e
-    #  console.log e
+    #  log e
     #  alert 'there has been an error loading the app, please notify me: waldemar.reusch@googlemail.com. if you know how, it would be awesome if you could provide the console log message.'
     # revive vm
     

@@ -97,9 +97,9 @@ class Node
     if ( @ is vm.current() ) then vm.current( @parent() )
     @parent().children.remove @
     vm.nodes.remove @
-    vm.save()
+    # vm.save()
   alarm : =>
-    vm.save()
+    # vm.save()
     vm.notifications.push @deadline() + '\n' + @title()
     @deadline null
     vm.pop.play?()

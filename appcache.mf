@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# rev 2427
+# rev 2773
 
 # BUILD pub/app.coffee from
 #  src/coffee/rostrum.coffee
@@ -32,6 +32,7 @@ lib/fontawesome/font-awesome.min.css
 lib/fontawesome/fontawesome-webfont.woff?v=3.1.01
 lib/fontawesome/fontawesome-webfont.ttf?v=3.1.01
 lib/jquery/jquery+ui.js
+lib/jquery/jquery.color.js
 lib/knockout/knockout.js
 lib/dropbox/dropbox.js
 lib/moment/moment.js

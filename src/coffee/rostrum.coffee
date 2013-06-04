@@ -37,6 +37,9 @@ isDate = ( v ) -> if Object.prototype.toString.call(v) isnt '[object Date]' then
 
 
 # more consistent access to common javascript apis
+# console.log
+log = ->
+  window.console?.log?.apply( window.console, arguments )
 # timeout
 timeout =
   set : ( ms, fn ) -> setTimeout fn, ms
@@ -111,3 +114,11 @@ title = obs {
 # get intersecting elements of two arrays    
 intersect = (a,b)-> a.filter( (n)-> return ~b.indexOf(n) )
 
+liftCurtains = ->
+  return if not $( '#curtain' ).is( ':visible' )
+  $( '#curtain' ).show(1).delay(1).fadeOut() # i need to show and delay the curtain first, else it disappears instantly. bug?
+lowerCurtains = ->
+  return if $( '#curtain' ).is( ':visible' )
+  $( '#curtain' ).show(1).delay(1).fadeIn()
+dimCurtains = ->
+  $( '#curtain' ).show(1).delay(1).css( 'opacity', 0 ).fadeTo( 'medium', 0.5 )
